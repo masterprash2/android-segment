@@ -11,13 +11,15 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.manager.Segment;
+import com.clumob.segment.manager.SegmentLifecycle;
+import com.clumob.segment.manager.SegmentView;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.support.appcompact.SegmentAppCompatActivity;
 
-public class MainActivity extends SegmentAppCompatActivity {
+public class MainActivity extends SegmentAppCompatActivity  {
 
 
     @Override
@@ -33,7 +35,16 @@ public class MainActivity extends SegmentAppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSegmentManager().getNavigation().navigateToScreen(new SegmentInfo<Storable, Storable>(1, null));
+        SegmentView segmentView = new SegmentView(this);
+        SegmentInfo<Storable, Storable> segmentInfo = new SegmentInfo<>(1, null);
+        segmentView.setSegment(new Segment(segmentInfo, new SegmentController(segmentInfo.getArguments(), null), new SegmentViewHolderFactory() {
+            @Override
+            public SegmentViewHolder<?, ?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
+                return new TestSegmentScreenHolder(context, layoutInflater, parentView);
+            }
+        }));
+        setContentView(segmentView);
+//        getSegmentManager().getNavigation().navigateToScreen(new SegmentInfo<Storable, Storable>(1, null));
     }
 
     @Override

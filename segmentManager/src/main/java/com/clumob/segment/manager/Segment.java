@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.clumob.log.AppLog;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.Storable;
@@ -206,7 +207,15 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
     }
 
     public boolean handleBackPressed() {
-        return boundedView.handleBackPressed();
+        if(boundedView == null) {
+            AppLog.d("SEGMENT","SegmentInfo " + segmentInfo);
+            AppLog.printStack(new NullPointerException("Cannot handle backpressed SegmentView is Null"));
+            return false;
+        }
+        else {
+            return boundedView.handleBackPressed();
+        }
+
     }
 
     public boolean isResumed() {

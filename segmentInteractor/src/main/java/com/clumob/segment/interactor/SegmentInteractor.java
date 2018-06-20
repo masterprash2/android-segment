@@ -46,11 +46,11 @@ public class SegmentInteractor<T extends SegmentViewModel> {
 
     }
 
-    public void resume() {
+    public void onResume() {
 
     }
 
-    public void pause() {
+    public void onPause() {
 
     }
 

@@ -92,12 +92,12 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
     public void onResume() {
         currentState = ScreenState.RESUME;
         boundedView.resume();
-        interactor.resume();
+        interactor.onResume();
     }
 
     public void onPause() {
         currentState = ScreenState.PAUSE;
-        interactor.pause();
+        interactor.onPause();
         boundedView.pause();
         Bundle viewState = new Bundle();
         Bundle viewModleState = new Bundle();

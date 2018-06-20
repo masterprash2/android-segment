@@ -8,10 +8,10 @@ import io.reactivex.disposables.Disposable;
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentInteractor {
+public class SegmentInteractor<T extends SegmentViewModel> {
 
     private CompositeDisposable compositeDisposable;
-    private SegmentViewModel segmentViewModel;
+    private T segmentViewModel;
 
 
     public void supplyParams(Bundle params) {
@@ -22,12 +22,15 @@ public class SegmentInteractor {
         return this.segmentViewModel.getParams();
     }
 
-    public void bindSegmentViewModel(SegmentViewModel segmentViewModel) {
+    public void bindSegmentViewModel(T segmentViewModel) {
         unBindSegmentViewModel();
         this.segmentViewModel = segmentViewModel;
         compositeDisposable = new CompositeDisposable();
     }
 
+    public T getViewModel() {
+        return segmentViewModel;
+    }
 
     public void onCreate() {
         segmentViewModel.freezeParams();

@@ -69,11 +69,10 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onCreate() {
         currentState = ScreenState.CREATE;
-        interactor.bindSegmentViewModel(this.viewModel);
-        interactor.supplyParams(segmentInfo.getParams());
-        interactor.onCreate();
+        interactor.supplyParams(viewModel,segmentInfo.getParams());
+        interactor.onCreate(viewModel);
         Bundle savedState = segmentInfo.getSavedState();
-        interactor.restoreState(savedState.getBundle(KEY_VIEWMODEL_STATE));
+        interactor.restoreState(viewModel,savedState.getBundle(KEY_VIEWMODEL_STATE));
     }
 
     public void bindView(SegmentView<VM,SI> view) {
@@ -85,24 +84,24 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onStart() {
         currentState = ScreenState.START;
-        interactor.willShow();
+        interactor.willShow(viewModel);
         boundedView.willShow();
     }
 
     public void onResume() {
         currentState = ScreenState.RESUME;
         boundedView.resume();
-        interactor.onResume();
+        interactor.onResume(viewModel);
     }
 
     public void onPause() {
         currentState = ScreenState.PAUSE;
-        interactor.onPause();
+        interactor.onPause(viewModel);
         boundedView.pause();
         Bundle viewState = new Bundle();
         Bundle viewModleState = new Bundle();
 
-        interactor.saveState(viewModleState);
+        interactor.saveState(viewModel,viewModleState);
         boundedView.saveState(viewState);
 
         segmentInfo.getSavedState().putBundle(KEY_VIEWMODEL_STATE, viewModleState);
@@ -112,7 +111,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
     public void onStop() {
         currentState = ScreenState.STOP;
         boundedView.willHide();
-        interactor.willHide();
+        interactor.willHide(viewModel);
     }
 
     public void unBindView() {
@@ -122,7 +121,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onDestroy() {
         currentState = ScreenState.DESTROY;
-        interactor.onDestroy();
+        interactor.onDestroy(viewModel);
     }
 
     void dettach() {
@@ -131,7 +130,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
     }
 
     public boolean handleBackPressed() {
-        return interactor.handleBackPressed();
+        return interactor.handleBackPressed(viewModel);
     }
 
 }

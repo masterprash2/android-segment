@@ -10,76 +10,50 @@ import io.reactivex.disposables.Disposable;
  */
 public class SegmentInteractor<T extends SegmentViewModel> {
 
-    private CompositeDisposable compositeDisposable;
-    private T segmentViewModel;
 
-
-    public void supplyParams(Bundle params) {
-        segmentViewModel.supplyParams(params);
+    public void supplyParams(T viewModel, Bundle params) {
+        viewModel.supplyParams(params);
     }
 
-    protected  Bundle getParams() {
-        return this.segmentViewModel.getParams();
-    }
-
-    public void bindSegmentViewModel(T segmentViewModel) {
-        unBindSegmentViewModel();
-        this.segmentViewModel = segmentViewModel;
-        compositeDisposable = new CompositeDisposable();
-    }
-
-    public T getViewModel() {
-        return segmentViewModel;
-    }
-
-    public void onCreate() {
-        segmentViewModel.freezeParams();
-
+    public void onCreate(T viewModel) {
+        viewModel.freezeParams();
+        viewModel.prepare();
     }
 
 
-    public void willShow() {
+    public void willShow(T viewModel) {
 
     }
 
-    public void restoreState(Bundle inBundle) {
+    public void restoreState(T viewModel, Bundle inBundle) {
 
     }
 
-    public void onResume() {
+    public void onResume(T viewModel) {
 
     }
 
-    public void onPause() {
+    public void onPause(T viewModel) {
 
     }
 
-    public void saveState(Bundle outBundle) {
+    public void saveState(T viewModel, Bundle outBundle) {
 
     }
 
-    public void willHide() {
+    public void willHide(T viewModel) {
 
     }
 
-    protected void addDisposable(Disposable disposable) {
-        compositeDisposable.add(disposable);
+    protected void addDisposable(T viewModel, Disposable disposable) {
+        viewModel.addDisposable(disposable);
     }
 
-    public void unBindSegmentViewModel() {
-        this.segmentViewModel = null;
-        if(this.compositeDisposable != null) {
-            this.compositeDisposable.dispose();
-        }
-
+    public void onDestroy(T viewModel) {
+        viewModel.flush();
     }
 
-    public void onDestroy() {
-        compositeDisposable.dispose();
-        compositeDisposable = null;
-    }
-
-    public boolean handleBackPressed() {
+    public boolean handleBackPressed(T viewModel) {
         return false;
     }
 }

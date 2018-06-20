@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import com.clumob.segment.interactor.SegmentInteractor;
 import com.clumob.segment.interactor.SegmentViewModel;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 public abstract class SegmentView<VM extends SegmentViewModel, SI extends SegmentInteractor> {
 
-    private CompositeDisposable compositeDisposable;
 
     private final Context context;
     private VM viewModel;
@@ -51,7 +48,6 @@ public abstract class SegmentView<VM extends SegmentViewModel, SI extends Segmen
     protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
 
     public void bind(VM viewModel, SI interactor) {
-        this.compositeDisposable = new CompositeDisposable();
         this.viewModel = viewModel;
         this.interactor = interactor;
         onBind();
@@ -96,12 +92,6 @@ public abstract class SegmentView<VM extends SegmentViewModel, SI extends Segmen
     public final void unBind() {
         onUnBind();
         this.viewModel = null;
-        this.compositeDisposable.dispose();
-        this.compositeDisposable = null;
-    }
-
-    protected void addDisposable(Disposable disposable) {
-        this.compositeDisposable.add(disposable);
     }
 
     protected abstract void onUnBind();

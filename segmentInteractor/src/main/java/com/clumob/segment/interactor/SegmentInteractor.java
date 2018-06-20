@@ -2,14 +2,11 @@ package com.clumob.segment.interactor;
 
 import android.os.Bundle;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
 public class SegmentInteractor<T extends SegmentViewModel> {
-
 
     public void supplyParams(T viewModel, Bundle params) {
         viewModel.supplyParams(params);
@@ -17,7 +14,6 @@ public class SegmentInteractor<T extends SegmentViewModel> {
 
     public void onCreate(T viewModel) {
         viewModel.freezeParams();
-        viewModel.prepare();
     }
 
 
@@ -45,12 +41,7 @@ public class SegmentInteractor<T extends SegmentViewModel> {
 
     }
 
-    protected void addDisposable(T viewModel, Disposable disposable) {
-        viewModel.addDisposable(disposable);
-    }
-
     public void onDestroy(T viewModel) {
-        viewModel.flush();
     }
 
     public boolean handleBackPressed(T viewModel) {

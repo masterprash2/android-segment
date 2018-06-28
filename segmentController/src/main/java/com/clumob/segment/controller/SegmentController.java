@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.clumob.segment.interactor.SegmentViewModel;
-import com.clumob.segment.screen.SegmentView;
 import com.clumob.segment.interactor.SegmentInteractor;
+import com.clumob.segment.interactor.SegmentViewModel;
+import com.clumob.segment.interactor.Storable;
+import com.clumob.segment.screen.SegmentView;
 
 
 /**
@@ -26,17 +27,13 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
         DESTROY
     }
 
-
-
     private final VM viewModel;
     private final SI interactor;
     private final SegmentFactory screenFactory;
 
-    private SegmentView<VM,SI> boundedView = null;
+    private SegmentView<VM, SI> boundedView = null;
     private SegmentInfo segmentInfo;
 
-    private static final String KEY_VIEW_STATE = "viewState";
-    private static final String KEY_VIEWMODEL_STATE = "viewModelState";
     private Context context;
     private LayoutInflater layoutInflater;
 
@@ -58,8 +55,8 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
         return segmentInfo;
     }
 
-    public SegmentView<VM,SI> createView(ViewGroup parentView) {
-        return (SegmentView<VM,SI>) screenFactory.create(context, layoutInflater, parentView);
+    public SegmentView createView(ViewGroup parentView) {
+        return screenFactory.create(context, layoutInflater, parentView);
     }
 
     public SegmentView getBoundedView() {
@@ -69,17 +66,14 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onCreate() {
         currentState = ScreenState.CREATE;
-        interactor.supplyParams(viewModel,segmentInfo.getParams());
         interactor.onCreate(viewModel);
-        Bundle savedState = segmentInfo.getSavedState();
-        interactor.restoreState(viewModel,savedState.getBundle(KEY_VIEWMODEL_STATE));
+        interactor.restoreState(viewModel, segmentInfo.getRestorableModelState());
     }
 
-    public void bindView(SegmentView<VM,SI> view) {
+    public void bindView(SegmentView<VM, SI> view) {
         boundedView = view;
-        boundedView.bind(viewModel,interactor);
-        Bundle savedState = segmentInfo.getSavedState();
-        boundedView.restoreState(savedState.getBundle(KEY_VIEW_STATE));
+        boundedView.bind(viewModel, interactor);
+        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 
     public void onStart() {
@@ -99,13 +93,10 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
         interactor.onPause(viewModel);
         boundedView.pause();
         Bundle viewState = new Bundle();
-        Bundle viewModleState = new Bundle();
-
-        interactor.saveState(viewModel,viewModleState);
+        Storable stateSnapshot = interactor.createStateSnapshot(viewModel);
+        segmentInfo.setRestorableModelState(stateSnapshot);
         boundedView.saveState(viewState);
-
-        segmentInfo.getSavedState().putBundle(KEY_VIEWMODEL_STATE, viewModleState);
-        segmentInfo.getSavedState().putBundle(KEY_VIEW_STATE, viewState);
+        segmentInfo.setSavedViewState(viewState);
     }
 
     public void onStop() {

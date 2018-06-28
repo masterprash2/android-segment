@@ -2,7 +2,6 @@ package com.clumob.segment.controller;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -10,16 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 
 import com.clumob.log.AppLog;
-import com.clumob.segment.interactor.SegmentViewModel;
 import com.clumob.segment.interactor.activity.ActivityInteractor;
 import com.clumob.segment.interactor.activity.ActivityPermissionResult;
 import com.clumob.segment.interactor.activity.ActivityResult;
 import com.clumob.segment.interactor.util.ParcelableUtil;
 import com.clumob.segment.screen.SegmentView;
-import com.clumob.segment.interactor.SegmentInteractor;
 
 /**
  * Created by prashant.rathore on 23/02/18.
@@ -63,7 +59,7 @@ public abstract class SegmentControllerActivity extends Activity {
     }
 
     protected void attachSegment() {
-        if(segmentController == null) {
+        if (segmentController == null) {
             return;
         }
         segmentController.onCreate();
@@ -245,7 +241,7 @@ public abstract class SegmentControllerActivity extends Activity {
         super.onDestroy();
     }
 
-    protected abstract SegmentController<? extends SegmentViewModel,? extends SegmentInteractor> provideController(SegmentInfo segmentInfo);
+    protected abstract SegmentController provideController(SegmentInfo segmentInfo);
 
     @NonNull
     protected abstract SegmentNavigation getScreenNavigation();

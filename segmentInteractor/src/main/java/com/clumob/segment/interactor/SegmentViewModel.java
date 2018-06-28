@@ -1,29 +1,25 @@
 package com.clumob.segment.interactor;
 
-import android.os.Bundle;
+import android.os.Parcelable;
 
 
 /**
  * Created by prashant.rathore on 20/06/18.
  */
 
-public class SegmentViewModel {
+public class SegmentViewModel<Args extends Storable, RestorableState extends Storable> {
 
-    private boolean isParamsFrozen;
+    private Args arguments;
 
-    void supplyParams(Bundle params) {
-        if (!isParamsFrozen) {
-            processParams(params);
-        }
+    public SegmentViewModel(Args arguments) {
+        this.arguments = arguments;
     }
 
-    protected void processParams(Bundle params) {
+    public void restoreState(RestorableState restorableState) {
 
     }
 
-    void freezeParams() {
-        this.isParamsFrozen = true;
+    public RestorableState createSnapshot() {
+        return null;
     }
-
-
 }

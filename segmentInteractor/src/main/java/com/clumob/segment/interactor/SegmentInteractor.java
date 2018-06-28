@@ -1,50 +1,43 @@
 package com.clumob.segment.interactor;
 
-import android.os.Bundle;
-
-
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentInteractor<T extends SegmentViewModel> {
+public class SegmentInteractor<Args extends Storable, RestorableState extends Storable, SVM extends SegmentViewModel<Args, RestorableState>> {
 
-    public void supplyParams(T viewModel, Bundle params) {
-        viewModel.supplyParams(params);
-    }
-
-    public void onCreate(T viewModel) {
-        viewModel.freezeParams();
-    }
-
-
-    public void willShow(T viewModel) {
+    public void onCreate(SVM viewModel) {
 
     }
 
-    public void restoreState(T viewModel, Bundle inBundle) {
+    public void restoreState(SVM viewModel, RestorableState restorableState) {
+        viewModel.restoreState(restorableState);
+    }
+
+    public void willShow(SVM viewModel) {
 
     }
 
-    public void onResume(T viewModel) {
+    public void onResume(SVM viewModel) {
 
     }
 
-    public void onPause(T viewModel) {
+    public void onPause(SVM viewModel) {
 
     }
 
-    public void saveState(T viewModel, Bundle outBundle) {
+    public RestorableState createStateSnapshot(SVM viewModel) {
+        return viewModel.createSnapshot();
+    }
+
+    public void willHide(SVM viewModel) {
 
     }
 
-    public void willHide(T viewModel) {
-
+    public void onDestroy(SVM viewModel) {
     }
 
-    public void onDestroy(T viewModel) {
-    }
-
-    public boolean handleBackPressed(T viewModel) {
+    public boolean handleBackPressed(SVM viewModel) {
         return false;
     }
+
 }

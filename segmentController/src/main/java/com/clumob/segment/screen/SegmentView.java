@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.clumob.segment.interactor.SegmentInteractor;
-import com.clumob.segment.interactor.SegmentViewModel;
+import com.clumob.segment.presenter.SegmentPresenter;
+import com.clumob.segment.presenter.SegmentViewModel;
 
 
-public abstract class SegmentView<VM extends SegmentViewModel, SI extends SegmentInteractor> {
+public abstract class SegmentView<VM extends SegmentViewModel, SI extends SegmentPresenter> {
 
 
     private final Context context;

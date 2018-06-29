@@ -5,16 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.clumob.segment.interactor.SegmentInteractor;
-import com.clumob.segment.interactor.SegmentViewModel;
-import com.clumob.segment.interactor.Storable;
+import com.clumob.segment.presenter.SegmentPresenter;
+import com.clumob.segment.presenter.SegmentViewModel;
+import com.clumob.segment.presenter.Storable;
 import com.clumob.segment.screen.SegmentView;
 
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentController<VM extends SegmentViewModel, SI extends SegmentInteractor> {
+public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPresenter> {
+
 
 
     enum ScreenState {
@@ -66,8 +67,8 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onCreate() {
         currentState = ScreenState.CREATE;
-        interactor.onCreate(viewModel);
-        interactor.restoreState(viewModel, segmentInfo.getRestorableModelState());
+        interactor.onCreate();
+        interactor.restoreState(segmentInfo.getRestorableModelState());
     }
 
     public void bindView(SegmentView<VM, SI> view) {
@@ -78,22 +79,22 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onStart() {
         currentState = ScreenState.START;
-        interactor.willShow(viewModel);
+        interactor.willShow();
         boundedView.willShow();
     }
 
     public void onResume() {
         currentState = ScreenState.RESUME;
         boundedView.resume();
-        interactor.onResume(viewModel);
+        interactor.onResume();
     }
 
     public void onPause() {
         currentState = ScreenState.PAUSE;
-        interactor.onPause(viewModel);
+        interactor.onPause();
         boundedView.pause();
         Bundle viewState = new Bundle();
-        Storable stateSnapshot = interactor.createStateSnapshot(viewModel);
+        Storable stateSnapshot = interactor.createStateSnapshot();
         segmentInfo.setRestorableModelState(stateSnapshot);
         boundedView.saveState(viewState);
         segmentInfo.setSavedViewState(viewState);
@@ -102,7 +103,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
     public void onStop() {
         currentState = ScreenState.STOP;
         boundedView.willHide();
-        interactor.willHide(viewModel);
+        interactor.willHide();
     }
 
     public void unBindView() {
@@ -112,7 +113,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
 
     public void onDestroy() {
         currentState = ScreenState.DESTROY;
-        interactor.onDestroy(viewModel);
+        interactor.onDestroy();
     }
 
     void dettach() {
@@ -121,7 +122,8 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentIn
     }
 
     public boolean handleBackPressed() {
-        return interactor.handleBackPressed(viewModel);
+        return interactor.handleBackPressed();
     }
+
 
 }

@@ -11,7 +11,7 @@ import com.clumob.segment.controller.SegmentControllerActivity;
 import com.clumob.segment.controller.SegmentFactory;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentNavigation;
-import com.clumob.segment.interactor.SegmentInteractor;
+import com.clumob.segment.presenter.SegmentPresenter;
 import com.clumob.segment.screen.SegmentView;
 
 public class MainActivity extends SegmentControllerActivity {
@@ -23,7 +23,8 @@ public class MainActivity extends SegmentControllerActivity {
 
     @Override
     protected SegmentController provideController(SegmentInfo segmentInfo) {
-        return new SegmentController(segmentInfo, new TestSegmentViewModel(segmentInfo.getArguments()), new SegmentInteractor(), new SegmentFactory() {
+        TestSegmentViewModel viewModel = new TestSegmentViewModel();
+        return new SegmentController(segmentInfo,viewModel, new SegmentPresenter(segmentInfo.getArguments(),viewModel), new SegmentFactory() {
             @Override
             public SegmentView<?, ?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new TestSegmentScreen(context,layoutInflater,parentView);

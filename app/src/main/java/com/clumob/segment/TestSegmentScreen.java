@@ -11,7 +11,7 @@ import com.clumob.segment.screen.SegmentView;
  * Created by prashant.rathore on 20/06/18.
  */
 
-public class TestSegmentScreen extends SegmentView<TestSegmentViewModel, TestSegmentInteractor> {
+public class TestSegmentScreen extends SegmentView<TestSegmentViewModel, TestSegmentPresenter> {
 
 
     public TestSegmentScreen(Context context, LayoutInflater layoutInflater, ViewGroup parentView) {

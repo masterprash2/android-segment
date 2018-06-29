@@ -11,10 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.clumob.log.AppLog;
-import com.clumob.segment.interactor.activity.ActivityInteractor;
-import com.clumob.segment.interactor.activity.ActivityPermissionResult;
-import com.clumob.segment.interactor.activity.ActivityResult;
-import com.clumob.segment.interactor.util.ParcelableUtil;
+import com.clumob.segment.presenter.activity.ActivityInteractor;
+import com.clumob.segment.presenter.activity.ActivityPermissionResult;
+import com.clumob.segment.presenter.activity.ActivityResult;
+import com.clumob.segment.presenter.util.ParcelableUtil;
 import com.clumob.segment.screen.SegmentView;
 
 /**

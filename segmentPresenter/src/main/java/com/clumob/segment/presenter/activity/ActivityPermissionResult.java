@@ -1,4 +1,4 @@
-package com.clumob.segment.interactor.activity;
+package com.clumob.segment.presenter.activity;
 
 
 import com.google.auto.value.AutoValue;

@@ -1,4 +1,4 @@
-package com.clumob.segment.interactor.util;
+package com.clumob.segment.presenter.util;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -2,9 +2,9 @@ package com.clumob.segment.controller;
 
 import android.app.Activity;
 
-import com.clumob.segment.interactor.activity.ActivityInteractor;
-import com.clumob.segment.interactor.activity.ActivityPermissionResult;
-import com.clumob.segment.interactor.activity.ActivityResult;
+import com.clumob.segment.presenter.activity.ActivityInteractor;
+import com.clumob.segment.presenter.activity.ActivityPermissionResult;
+import com.clumob.segment.presenter.activity.ActivityResult;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;

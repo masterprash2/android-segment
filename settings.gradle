@@ -1,1 +1,1 @@
-include ':app', ':segmentInteractor', ':segmentController',':androidStubs'
+include ':app', ':segmentPresenter', ':segmentController',':androidStubs'

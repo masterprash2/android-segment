@@ -11,18 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.clumob.segment.interactor.SegmentViewModel;
-import com.clumob.segment.interactor.activity.ActivityInteractor;
-import com.clumob.segment.interactor.activity.ActivityPermissionResult;
-import com.clumob.segment.interactor.activity.ActivityResult;
+import com.clumob.segment.presenter.SegmentViewModel;
+import com.clumob.segment.presenter.activity.ActivityInteractor;
+import com.clumob.segment.presenter.activity.ActivityPermissionResult;
+import com.clumob.segment.presenter.activity.ActivityResult;
 import com.clumob.segment.screen.SegmentView;
-import com.clumob.segment.interactor.SegmentInteractor;
+import com.clumob.segment.presenter.SegmentPresenter;
 
 /**
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentControllerFragment<VM extends SegmentViewModel,SI extends SegmentInteractor> extends Fragment {
+public abstract class SegmentControllerFragment<VM extends SegmentViewModel,SI extends SegmentPresenter> extends Fragment {
 
     private SegmentController<VM,SI> segmentController;
     private SegmentView<VM,SI> screenView;

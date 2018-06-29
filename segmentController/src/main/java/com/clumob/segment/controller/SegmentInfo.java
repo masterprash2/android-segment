@@ -3,8 +3,8 @@ package com.clumob.segment.controller;
 import android.os.Bundle;
 import android.os.Parcel;
 
-import com.clumob.segment.interactor.Storable;
-import com.clumob.segment.interactor.util.ParcelableUtil;
+import com.clumob.segment.presenter.Storable;
+import com.clumob.segment.presenter.util.ParcelableUtil;
 
 /**
  * Created by prashant.rathore on 02/02/18.

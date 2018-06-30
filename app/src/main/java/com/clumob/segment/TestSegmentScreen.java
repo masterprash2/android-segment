@@ -11,7 +11,7 @@ import com.clumob.segment.screen.SegmentView;
  * Created by prashant.rathore on 20/06/18.
  */
 
-public class TestSegmentScreen extends SegmentView<TestSegmentViewModel, TestSegmentPresenter> {
+public class TestSegmentScreen extends SegmentView<TestSegmentPresenter> {
 
 
     public TestSegmentScreen(Context context, LayoutInflater layoutInflater, ViewGroup parentView) {
@@ -32,4 +32,5 @@ public class TestSegmentScreen extends SegmentView<TestSegmentViewModel, TestSeg
     protected void onUnBind() {
 
     }
+
 }

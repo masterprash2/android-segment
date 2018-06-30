@@ -9,15 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clumob.segment.presenter.SegmentPresenter;
-import com.clumob.segment.presenter.SegmentViewModel;
+import com.clumob.segment.presenter.Storable;
 
 
-public abstract class SegmentView<VM extends SegmentViewModel, SI extends SegmentPresenter> {
+public abstract class SegmentView<Presenter extends SegmentPresenter<Storable, Storable>> {
 
 
     private final Context context;
-    private VM viewModel;
-    private SI interactor;
+    private Presenter presenter;
     private final LayoutInflater layoutInflater;
     private final View view;
 
@@ -37,19 +36,14 @@ public abstract class SegmentView<VM extends SegmentViewModel, SI extends Segmen
         return this.view;
     }
 
-    public VM getViewModel() {
-        return viewModel;
-    }
-
-    public SI getInteractor() {
-        return interactor;
+    public Presenter getPresenter() {
+        return presenter;
     }
 
     protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
 
-    public void bind(VM viewModel, SI interactor) {
-        this.viewModel = viewModel;
-        this.interactor = interactor;
+    public void bind(Presenter presenter) {
+        this.presenter = presenter;
         onBind();
     }
 
@@ -91,7 +85,6 @@ public abstract class SegmentView<VM extends SegmentViewModel, SI extends Segmen
 
     public final void unBind() {
         onUnBind();
-        this.viewModel = null;
     }
 
     protected abstract void onUnBind();

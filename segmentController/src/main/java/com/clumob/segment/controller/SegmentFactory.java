@@ -8,5 +8,5 @@ import android.view.ViewGroup;
 import com.clumob.segment.screen.SegmentView;
 
 public interface SegmentFactory {
-    SegmentView<?,?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView);
+    SegmentView<?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView);
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.clumob.segment.presenter.SegmentInfo;
 import com.clumob.segment.presenter.SegmentPresenter;
 import com.clumob.segment.presenter.SegmentViewModel;
 import com.clumob.segment.presenter.Storable;
@@ -14,9 +15,7 @@ import com.clumob.segment.screen.SegmentView;
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPresenter> {
-
-
+public class SegmentController<Presenter extends SegmentPresenter<Storable, Storable>> {
 
     enum ScreenState {
         FRESH,
@@ -28,11 +27,10 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
         DESTROY
     }
 
-    private final VM viewModel;
-    private final SI interactor;
+    private final Presenter presenter;
     private final SegmentFactory screenFactory;
 
-    private SegmentView<VM, SI> boundedView = null;
+    private SegmentView<Presenter> boundedView = null;
     private SegmentInfo segmentInfo;
 
     private Context context;
@@ -40,11 +38,10 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
 
     ScreenState currentState = ScreenState.FRESH;
 
-    public SegmentController(SegmentInfo segmentInfo, VM viewModel, SI interactor, SegmentFactory screenFactory) {
+    public SegmentController(SegmentInfo segmentInfo, Presenter presenter, SegmentFactory screenFactory) {
         this.screenFactory = screenFactory;
         this.segmentInfo = segmentInfo;
-        this.viewModel = viewModel;
-        this.interactor = interactor;
+        this.presenter = presenter;
     }
 
     void attach(Context context, LayoutInflater layoutInflater) {
@@ -67,34 +64,34 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
 
     public void onCreate() {
         currentState = ScreenState.CREATE;
-        interactor.onCreate();
-        interactor.restoreState(segmentInfo.getRestorableModelState());
+        presenter.onCreate();
+        presenter.restoreState(segmentInfo.getRestorableModelState());
     }
 
-    public void bindView(SegmentView<VM, SI> view) {
+    public void bindView(SegmentView<Presenter> view) {
         boundedView = view;
-        boundedView.bind(viewModel, interactor);
+        boundedView.bind(presenter);
         boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 
     public void onStart() {
         currentState = ScreenState.START;
-        interactor.willShow();
+        presenter.willShow();
         boundedView.willShow();
     }
 
     public void onResume() {
         currentState = ScreenState.RESUME;
         boundedView.resume();
-        interactor.onResume();
+        presenter.onResume();
     }
 
     public void onPause() {
         currentState = ScreenState.PAUSE;
-        interactor.onPause();
+        presenter.onPause();
         boundedView.pause();
         Bundle viewState = new Bundle();
-        Storable stateSnapshot = interactor.createStateSnapshot();
+        Storable stateSnapshot = presenter.createStateSnapshot();
         segmentInfo.setRestorableModelState(stateSnapshot);
         boundedView.saveState(viewState);
         segmentInfo.setSavedViewState(viewState);
@@ -103,7 +100,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
     public void onStop() {
         currentState = ScreenState.STOP;
         boundedView.willHide();
-        interactor.willHide();
+        presenter.willHide();
     }
 
     public void unBindView() {
@@ -113,7 +110,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
 
     public void onDestroy() {
         currentState = ScreenState.DESTROY;
-        interactor.onDestroy();
+        presenter.onDestroy();
     }
 
     void dettach() {
@@ -122,7 +119,7 @@ public class SegmentController<VM extends SegmentViewModel, SI extends SegmentPr
     }
 
     public boolean handleBackPressed() {
-        return interactor.handleBackPressed();
+        return presenter.handleBackPressed();
     }
 
 

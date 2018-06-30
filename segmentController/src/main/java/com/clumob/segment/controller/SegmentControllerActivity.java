@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.clumob.log.AppLog;
+import com.clumob.segment.presenter.SegmentInfo;
 import com.clumob.segment.presenter.activity.ActivityInteractor;
 import com.clumob.segment.presenter.activity.ActivityPermissionResult;
 import com.clumob.segment.presenter.activity.ActivityResult;

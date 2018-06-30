@@ -1,11 +1,9 @@
 package com.clumob.segment.controller;
 
+import com.clumob.segment.presenter.SegmentInfo;
+
 import java.util.Deque;
 import java.util.LinkedList;
-
-/**
- * Created by arpit.toshniwal on 10/03/18.
- */
 
 public abstract class SegmentNavigation {
 

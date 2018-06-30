@@ -11,21 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.clumob.segment.presenter.SegmentViewModel;
+import com.clumob.segment.presenter.SegmentPresenter;
+import com.clumob.segment.presenter.Storable;
 import com.clumob.segment.presenter.activity.ActivityInteractor;
 import com.clumob.segment.presenter.activity.ActivityPermissionResult;
 import com.clumob.segment.presenter.activity.ActivityResult;
 import com.clumob.segment.screen.SegmentView;
-import com.clumob.segment.presenter.SegmentPresenter;
 
 /**
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentControllerFragment<VM extends SegmentViewModel,SI extends SegmentPresenter> extends Fragment {
+public abstract class SegmentControllerFragment<SP extends SegmentPresenter<Storable, Storable>> extends Fragment {
 
-    private SegmentController<VM,SI> segmentController;
-    private SegmentView<VM,SI> screenView;
+    private SegmentController<SP> segmentController;
+    private SegmentView<SP> screenView;
     private View.OnKeyListener backPressListener;
 
     private ActivityInteractorImpl activityInteractor = new ActivityInteractorImpl() {
@@ -163,5 +163,5 @@ public abstract class SegmentControllerFragment<VM extends SegmentViewModel,SI e
         return activityInteractor;
     }
 
-    protected abstract SegmentController<VM,SI> provideController();
+    protected abstract SegmentController<SP> provideController();
 }

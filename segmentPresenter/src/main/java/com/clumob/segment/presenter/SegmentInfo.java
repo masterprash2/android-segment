@@ -1,9 +1,8 @@
-package com.clumob.segment.controller;
+package com.clumob.segment.presenter;
 
 import android.os.Bundle;
 import android.os.Parcel;
 
-import com.clumob.segment.presenter.Storable;
 import com.clumob.segment.presenter.util.ParcelableUtil;
 
 /**

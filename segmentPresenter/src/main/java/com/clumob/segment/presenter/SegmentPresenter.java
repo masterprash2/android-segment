@@ -3,14 +3,12 @@ package com.clumob.segment.presenter;
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentPresenter<Args extends Storable, RestorableState extends Storable, SVM extends SegmentViewModel<Args, RestorableState>> {
+public class SegmentPresenter<Args extends Storable, RestorableState extends Storable> {
 
     protected final Args args;
-    protected final SVM viewModel;
 
-    public SegmentPresenter(Args args, SVM viewModel) {
+    public SegmentPresenter(Args args) {
         this.args = args;
-        this.viewModel = viewModel;
     }
 
     public void onCreate() {
@@ -33,7 +31,7 @@ public class SegmentPresenter<Args extends Storable, RestorableState extends Sto
     }
 
     public RestorableState createStateSnapshot() {
-        return viewModel.createSnapshot();
+        return null;
     }
 
     public void willHide() {

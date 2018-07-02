@@ -49,7 +49,7 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
         this.layoutInflater = layoutInflater;
     }
 
-    SegmentInfo getSegmentInfo() {
+    public SegmentInfo getSegmentInfo() {
         return segmentInfo;
     }
 

@@ -1,4 +1,5 @@
-import com.clumob.segment.presenter.Storable;
+package com.clumob.segment.presenter;
+
 import com.google.auto.value.AutoValue;
 
 /**

@@ -44,7 +44,7 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
         this.presenter = presenter;
     }
 
-    void attach(Context context, LayoutInflater layoutInflater) {
+    public void attach(Context context, LayoutInflater layoutInflater) {
         this.context = context;
         this.layoutInflater = layoutInflater;
     }
@@ -71,7 +71,7 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
     public void bindView(SegmentView<Presenter> view) {
         boundedView = view;
         boundedView.bind(presenter);
-        boundedView.restoreState(segmentInfo.getSavedViewState());
+//        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 
     public void onStart() {
@@ -90,11 +90,11 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
         currentState = ScreenState.PAUSE;
         presenter.onPause();
         boundedView.pause();
-        Bundle viewState = new Bundle();
+//        Bundle viewState = new Bundle();
         Storable stateSnapshot = presenter.createStateSnapshot();
         segmentInfo.setRestorableModelState(stateSnapshot);
-        boundedView.saveState(viewState);
-        segmentInfo.setSavedViewState(viewState);
+//        boundedView.saveState(viewState);
+//        segmentInfo.setSavedViewState(viewState);
     }
 
     public void onStop() {

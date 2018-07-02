@@ -12,8 +12,6 @@ buildscript {
     }
 }
 
-
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -21,6 +19,12 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
     implementation 'com.google.guava:guava:24.0-android'
+
+    apt 'com.google.auto.value:auto-value:1.5.2'
+    compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
+    compile 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
+
 
     compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
     compileOnly project(':androidStubs')

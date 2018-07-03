@@ -7,10 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.presenter.SegmentInfo;
 import com.clumob.segment.screen.SegmentView;
-
-import java.util.ArrayList;
 
 /**
  * Created by prashant.rathore on 02/07/18.
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     private SegmentController<?> primaryItem;
-
 
     @NonNull
     @Override
@@ -46,6 +42,14 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         }
     }
 
+    @Override
+    final public int getItemPosition(@NonNull Object object) {
+        return computeItemPosition((SegmentController<?>) object);
+    }
+
+    public int computeItemPosition(SegmentController<?> segmentController) {
+        return POSITION_UNCHANGED;
+    }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {

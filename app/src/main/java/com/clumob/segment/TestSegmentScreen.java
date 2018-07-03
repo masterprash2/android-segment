@@ -18,6 +18,7 @@ import com.clumob.segment.controller.SegmentFactory;
 import com.clumob.segment.pager.SegmentControllerFactory;
 import com.clumob.segment.pager.SegmentStatePagerAdapter;
 import com.clumob.segment.presenter.SegmentInfo;
+import com.clumob.segment.presenter.SegmentPagerItemPresenter;
 import com.clumob.segment.presenter.SegmentPresenter;
 import com.clumob.segment.presenter.Storable;
 import com.clumob.segment.presenter.TestStore;
@@ -53,7 +54,7 @@ public class TestSegmentScreen extends SegmentView<TestSegmentPresenter> {
     }
 
     private PagerAdapter createPagerAdapter() {
-        PresenterSource<ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>> presenterSource = createPresenterSource();
+        PresenterSource<SegmentPagerItemPresenter> presenterSource = createPresenterSource();
         SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
         return pagerAdapter;
     }
@@ -68,16 +69,16 @@ public class TestSegmentScreen extends SegmentView<TestSegmentPresenter> {
     }
 
 
-    private PresenterSource<ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>> createPresenterSource() {
-        ArraySource<ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>> source = new ArraySource<>();
+    private PresenterSource<SegmentPagerItemPresenter> createPresenterSource() {
+        ArraySource<SegmentPagerItemPresenter> source = new ArraySource<>();
         source.switchItems(createSegmentList());
         return source;
     }
 
-    private List<ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>> createSegmentList() {
-        ArrayList<ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>> segmentInfos = new ArrayList<>();
+    private List<SegmentPagerItemPresenter> createSegmentList() {
+        ArrayList<SegmentPagerItemPresenter> segmentInfos = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            segmentInfos.add(new ViewModelPresenter<SegmentInfo<? extends Storable, ? extends Storable>>(new SegmentInfo<Storable, TestStore>(i, null)));
+            segmentInfos.add(new SegmentPagerItemPresenter(new SegmentInfo<Storable, TestStore>(i, null)));
         }
         return segmentInfos;
     }

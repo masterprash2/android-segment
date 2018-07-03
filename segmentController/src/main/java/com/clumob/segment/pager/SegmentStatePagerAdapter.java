@@ -5,10 +5,9 @@ import android.view.View;
 
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.list.presenter.source.SourceUpdateEvent;
-import com.clumob.list.presenter.source.ViewModelPresenter;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.presenter.SegmentInfo;
-import com.clumob.segment.presenter.Storable;
+import com.clumob.segment.presenter.SegmentPagerItemPresenter;
 import com.clumob.segment.screen.SegmentView;
 
 import io.reactivex.observers.DisposableObserver;
@@ -19,10 +18,10 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
-    private final PresenterSource<ViewModelPresenter<SegmentInfo<?,?>>> dataSource;
+    private final PresenterSource<SegmentPagerItemPresenter> dataSource;
     private final SegmentControllerFactory factory;
 
-    public SegmentStatePagerAdapter(PresenterSource<ViewModelPresenter<SegmentInfo<? extends Storable,? extends  Storable>>> dataSource, SegmentControllerFactory factory) {
+    public SegmentStatePagerAdapter(PresenterSource<SegmentPagerItemPresenter> dataSource, SegmentControllerFactory factory) {
         this.dataSource = dataSource;
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
@@ -45,7 +44,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public SegmentController<?> instantiateItem(int index) {
-        ViewModelPresenter<SegmentInfo<?,?>> item = dataSource.getItem(index);
+        SegmentPagerItemPresenter item = dataSource.getItem(index);
         SegmentController<?> segmentController = factory.create(item.viewModel);
         segmentController.onCreate();
         return segmentController;
@@ -54,6 +53,21 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public int getCount() {
         return dataSource.getItemCount();
+    }
+
+
+    // ToDO: The lookup algorightm is slow;
+    @Override
+    public int computeItemPosition(SegmentController<?> segmentController) {
+        SegmentInfo segmentInfo = segmentController.getSegmentInfo();
+        int itemCount = dataSource.getItemCount();
+        for (int i = 0; i < itemCount; i++) {
+            SegmentPagerItemPresenter item = dataSource.getItem(i);
+            if (item.viewModel.getId() == segmentInfo.getId()) {
+                return i;
+            }
+        }
+        return POSITION_NONE;
     }
 
     @Override

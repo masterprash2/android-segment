@@ -23,8 +23,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: '../libs-external', include: ['*.jar'])
-    implementation fileTree(dir: '../libs-external', include: ['*.aar'])
+    compileOnly fileTree(dir: '../libs-external', include: ['*.jar'])
+    compileOnly fileTree(dir: '../libs-external', include: ['*.aar'])
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
 

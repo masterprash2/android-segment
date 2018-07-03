@@ -27,7 +27,8 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
             @Override
             public void onNext(SourceUpdateEvent sourceUpdateEvent) {
-                notifyDataSetChanged();
+                if(sourceUpdateEvent.getType() == SourceUpdateEvent.Type.UPDATE_ENDS)
+                    notifyDataSetChanged();
             }
 
             @Override

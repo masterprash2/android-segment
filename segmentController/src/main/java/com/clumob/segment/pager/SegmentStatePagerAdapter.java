@@ -3,6 +3,7 @@ package com.clumob.segment.pager;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.clumob.list.presenter.source.Presenter;
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.list.presenter.source.SourceUpdateEvent;
 import com.clumob.segment.controller.SegmentController;
@@ -18,16 +19,16 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
-    private final PresenterSource<SegmentPagerItemPresenter> dataSource;
+    private final PresenterSource<? extends Presenter> dataSource;
     private final SegmentControllerFactory factory;
 
-    public SegmentStatePagerAdapter(PresenterSource<SegmentPagerItemPresenter> dataSource, SegmentControllerFactory factory) {
+    public SegmentStatePagerAdapter(PresenterSource<? extends Presenter> dataSource, SegmentControllerFactory factory) {
         this.dataSource = dataSource;
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
             @Override
             public void onNext(SourceUpdateEvent sourceUpdateEvent) {
-                if(sourceUpdateEvent.getType() == SourceUpdateEvent.Type.UPDATE_ENDS)
+                if (sourceUpdateEvent.getType() == SourceUpdateEvent.Type.UPDATE_ENDS)
                     notifyDataSetChanged();
             }
 
@@ -45,7 +46,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public SegmentController<?> instantiateItem(int index) {
-        SegmentPagerItemPresenter item = dataSource.getItem(index);
+        SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(index);
         SegmentController<?> segmentController = factory.create(item.viewModel);
         segmentController.onCreate();
         return segmentController;
@@ -63,7 +64,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         SegmentInfo segmentInfo = segmentController.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
-            SegmentPagerItemPresenter item = dataSource.getItem(i);
+            SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(i);
             if (item.viewModel.getId() == segmentInfo.getId()) {
                 return i;
             }

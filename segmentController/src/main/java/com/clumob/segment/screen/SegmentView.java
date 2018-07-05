@@ -12,7 +12,7 @@ import com.clumob.segment.presenter.SegmentPresenter;
 import com.clumob.segment.presenter.Storable;
 
 
-public abstract class SegmentView<Presenter extends SegmentPresenter<Storable, Storable>> {
+public abstract class SegmentView<Presenter extends SegmentPresenter<? extends Storable,? extends Storable>> {
 
 
     private final Context context;

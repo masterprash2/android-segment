@@ -7,14 +7,15 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.controller.SegmentControllerActivity;
-import com.clumob.segment.controller.SegmentFactory;
-import com.clumob.segment.presenter.SegmentInfo;
-import com.clumob.segment.controller.SegmentNavigation;
-import com.clumob.segment.presenter.SegmentPresenter;
-import com.clumob.segment.screen.SegmentView;
+import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.SegmentActivity;
+import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.controller.SegmentInfo;
+import com.clumob.segment.manager.SegmentNavigation;
+import com.clumob.segment.controller.SegmentPresenter;
+import com.clumob.segment.view.SegmentViewHolder;
 
-public class MainActivity extends SegmentControllerActivity {
+public class MainActivity extends SegmentActivity {
 
     @Override
     protected SegmentInfo provideDefaultScreenInfo() {
@@ -22,11 +23,11 @@ public class MainActivity extends SegmentControllerActivity {
     }
 
     @Override
-    protected SegmentController provideController(SegmentInfo segmentInfo) {
-        return new SegmentController(segmentInfo,new SegmentPresenter(segmentInfo.getArguments()), new SegmentFactory() {
+    protected SegmentManager provideController(SegmentInfo segmentInfo) {
+        return new SegmentManager(segmentInfo,new SegmentController(segmentInfo.getArguments(),new SegmentPresenter(null)), new SegmentFactory() {
             @Override
-            public SegmentView<?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
-                return new TestSegmentScreen(context,layoutInflater,parentView);
+            public SegmentViewHolder<?,?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
+                return new TestSegmentScreenHolder(context,layoutInflater,parentView);
             }
         });
     }

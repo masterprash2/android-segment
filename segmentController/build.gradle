@@ -1,42 +1,37 @@
-apply plugin: 'com.android.library'
+apply plugin: 'java-library'
+apply plugin: "net.ltgt.apt-idea"
 
-android {
-    compileSdkVersion 27
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
         }
     }
-
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
+    }
 }
 
 dependencies {
-    compileOnly fileTree(dir: '../libs-external', include: ['*.jar'])
-    compileOnly fileTree(dir: '../libs-external', include: ['*.aar'])
-
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation fileTree(dir: '../libs-external', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
 
+    implementation 'com.google.guava:guava:24.0-android'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
-    compile project(path: ':segmentPresenter')
+    apt 'com.google.auto.value:auto-value:1.5.2'
+    compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+    apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
+    compile 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
 
-    compileOnly project(path: ':androidStubs')
+
+    compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
+    compileOnly project(':androidStubs')
+
+    apt 'com.google.auto.value:auto-value:1.5.2'
 }
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

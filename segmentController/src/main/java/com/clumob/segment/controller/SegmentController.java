@@ -1,126 +1,58 @@
 package com.clumob.segment.controller;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-
-import com.clumob.segment.presenter.SegmentInfo;
-import com.clumob.segment.presenter.SegmentPresenter;
-import com.clumob.segment.presenter.SegmentViewModel;
-import com.clumob.segment.presenter.Storable;
-import com.clumob.segment.screen.SegmentView;
-
+import android.os.Parcel;
 
 /**
- * Created by prashant.rathore on 02/02/18.
+ * Created by prashant.rathore on 05/07/18.
  */
-public class SegmentController<Presenter extends SegmentPresenter<Storable, Storable>> {
 
-    enum ScreenState {
-        FRESH,
-        CREATE,
-        START,
-        RESUME,
-        PAUSE,
-        STOP,
-        DESTROY
-    }
+public class SegmentController<VM, Presenter extends SegmentPresenter<VM>> {
 
-    private final Presenter presenter;
-    private final SegmentFactory screenFactory;
+    protected final Storable args;
+    protected final Presenter presenter;
 
-    private SegmentView<Presenter> boundedView = null;
-    private SegmentInfo segmentInfo;
-
-    private Context context;
-    private LayoutInflater layoutInflater;
-
-    ScreenState currentState = ScreenState.FRESH;
-
-    public SegmentController(SegmentInfo segmentInfo, Presenter presenter, SegmentFactory screenFactory) {
-        this.screenFactory = screenFactory;
-        this.segmentInfo = segmentInfo;
+    public SegmentController(Storable args, Presenter presenter) {
+        this.args = args;
         this.presenter = presenter;
     }
 
-    public void attach(Context context, LayoutInflater layoutInflater) {
-        this.context = context;
-        this.layoutInflater = layoutInflater;
+    public VM getViewModel() {
+        return presenter.getViewModel();
     }
-
-    public SegmentInfo getSegmentInfo() {
-        return segmentInfo;
-    }
-
-    public SegmentView createView(ViewGroup parentView) {
-        return screenFactory.create(context, layoutInflater, parentView);
-    }
-
-    public SegmentView getBoundedView() {
-        return boundedView;
-    }
-
 
     public void onCreate() {
-        currentState = ScreenState.CREATE;
-        presenter.onCreate();
-        presenter.restoreState(segmentInfo.getRestorableModelState());
+
     }
 
-    public void bindView(SegmentView<Presenter> view) {
-        boundedView = view;
-        boundedView.bind(presenter);
-//        boundedView.restoreState(segmentInfo.getSavedViewState());
+    public void restoreState(Storable restorableState) {
+
     }
 
-    public void onStart() {
-        currentState = ScreenState.START;
-        presenter.willShow();
-        boundedView.willShow();
+    public void willShow() {
+
     }
 
     public void onResume() {
-        currentState = ScreenState.RESUME;
-        boundedView.resume();
-        presenter.onResume();
+
     }
 
     public void onPause() {
-        currentState = ScreenState.PAUSE;
-        presenter.onPause();
-        boundedView.pause();
-//        Bundle viewState = new Bundle();
-        Storable stateSnapshot = presenter.createStateSnapshot();
-        segmentInfo.setRestorableModelState(stateSnapshot);
-//        boundedView.saveState(viewState);
-//        segmentInfo.setSavedViewState(viewState);
+
     }
 
-    public void onStop() {
-        currentState = ScreenState.STOP;
-        boundedView.willHide();
-        presenter.willHide();
+    public Storable createStateSnapshot(Storable viewState) {
+        return null;
     }
 
-    public void unBindView() {
-        boundedView.unBind();
-        boundedView = null;
+    public void willHide() {
+
     }
 
     public void onDestroy() {
-        currentState = ScreenState.DESTROY;
-        presenter.onDestroy();
-    }
 
-    void dettach() {
-        this.context = null;
-        this.layoutInflater = null;
     }
 
     public boolean handleBackPressed() {
-        return presenter.handleBackPressed();
+        return false;
     }
-
-
 }

@@ -4,16 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
-import com.clumob.segment.screen.SegmentView;
+import com.clumob.segment.view.SegmentViewHolder;
 
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-public class SegmentController<Presenter extends SegmentPresenter<Storable, Storable>> {
+
+public class SegmentManager<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
 
     enum ScreenState {
         FRESH,
@@ -25,21 +27,21 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
         DESTROY
     }
 
-    private final Presenter presenter;
+    private final Controller controller;
     private final SegmentFactory screenFactory;
 
-    private SegmentView<Presenter> boundedView = null;
-    private SegmentInfo segmentInfo;
+    private SegmentViewHolder<VM, Controller> boundedView = null;
+    private SegmentInfo<Storable,Storable> segmentInfo;
 
     private Context context;
     private LayoutInflater layoutInflater;
 
     ScreenState currentState = ScreenState.FRESH;
 
-    public SegmentController(SegmentInfo segmentInfo, Presenter presenter, SegmentFactory screenFactory) {
+    public SegmentManager(SegmentInfo segmentInfo, Controller controller, SegmentFactory screenFactory) {
         this.screenFactory = screenFactory;
         this.segmentInfo = segmentInfo;
-        this.presenter = presenter;
+        this.controller = controller;
     }
 
     public void attach(Context context, LayoutInflater layoutInflater) {
@@ -51,54 +53,52 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
         return segmentInfo;
     }
 
-    public SegmentView createView(ViewGroup parentView) {
+    public SegmentViewHolder createView(ViewGroup parentView) {
         return screenFactory.create(context, layoutInflater, parentView);
     }
 
-    public SegmentView getBoundedView() {
+    public SegmentViewHolder getBoundedView() {
         return boundedView;
     }
 
 
     public void onCreate() {
         currentState = ScreenState.CREATE;
-        presenter.onCreate();
-        presenter.restoreState(segmentInfo.getRestorableModelState());
+        controller.onCreate();
+        controller.restoreState(segmentInfo.getRestorableSetmentState());
     }
 
-    public void bindView(SegmentView<Presenter> view) {
-        boundedView = view;
-        boundedView.bind(presenter);
+    public void bindView(SegmentViewHolder<VM, Controller> viewHolder) {
+        boundedView = viewHolder;
+        boundedView.bind(controller.getViewModel(), controller);
 //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 
     public void onStart() {
         currentState = ScreenState.START;
-        presenter.willShow();
+        controller.willShow();
         boundedView.willShow();
     }
 
     public void onResume() {
         currentState = ScreenState.RESUME;
         boundedView.resume();
-        presenter.onResume();
+        controller.onResume();
     }
 
     public void onPause() {
         currentState = ScreenState.PAUSE;
-        presenter.onPause();
+        controller.onPause();
         boundedView.pause();
-//        Bundle viewState = new Bundle();
-        Storable stateSnapshot = presenter.createStateSnapshot();
-        segmentInfo.setRestorableModelState(stateSnapshot);
-//        boundedView.saveState(viewState);
-//        segmentInfo.setSavedViewState(viewState);
+        final Storable viewState = boundedView.createStateSnapshot();
+        final Storable stateSnapshot = controller.createStateSnapshot(viewState);
+        segmentInfo.setRestorableSegmentState(stateSnapshot);
     }
 
     public void onStop() {
         currentState = ScreenState.STOP;
         boundedView.willHide();
-        presenter.willHide();
+        controller.willHide();
     }
 
     public void unBindView() {
@@ -108,7 +108,7 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
 
     public void onDestroy() {
         currentState = ScreenState.DESTROY;
-        presenter.onDestroy();
+        controller.onDestroy();
     }
 
     void dettach() {
@@ -117,7 +117,7 @@ public class SegmentController<Presenter extends SegmentPresenter<Storable, Stor
     }
 
     public boolean handleBackPressed() {
-        return presenter.handleBackPressed();
+        return controller.handleBackPressed();
     }
 
 

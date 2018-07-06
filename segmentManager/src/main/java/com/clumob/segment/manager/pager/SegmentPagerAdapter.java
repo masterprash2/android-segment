@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.view.SegmentViewHolder;
 
 /**
@@ -15,25 +15,25 @@ import com.clumob.segment.view.SegmentViewHolder;
 
 public abstract class SegmentPagerAdapter extends PagerAdapter {
 
-    private SegmentManager<?,?,?> primaryItem;
+    private Segment<?,?,?> primaryItem;
 
     @NonNull
     @Override
     final public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        SegmentManager<?,?,?> segmentManager = instantiateItem(position);
-        segmentManager.attach(container.getContext(), LayoutInflater.from(container.getContext()));
-        SegmentViewHolder view = segmentManager.createView(container);
+        Segment<?,?,?> segment = instantiateItem(position);
+        segment.attach(container.getContext(), LayoutInflater.from(container.getContext()));
+        SegmentViewHolder view = segment.createView(container);
         container.addView(view.getView());
-        segmentManager.bindView(view);
-        segmentManager.onStart();
-        return segmentManager;
+        segment.bindView(view);
+        segment.onStart();
+        return segment;
     }
 
     @Override
     public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         super.setPrimaryItem(container, position, object);
         if (primaryItem != object) {
-            SegmentManager newPrimaryItem = (SegmentManager) object;
+            Segment newPrimaryItem = (Segment) object;
             if (this.primaryItem != null) {
                 this.primaryItem.onPause();
             }
@@ -44,25 +44,25 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     @Override
     final public int getItemPosition(@NonNull Object object) {
-        return computeItemPosition((SegmentManager<?,?,?>) object);
+        return computeItemPosition((Segment<?,?,?>) object);
     }
 
-    public int computeItemPosition(SegmentManager<?,?,?> segmentManager) {
+    public int computeItemPosition(Segment<?,?,?> segment) {
         return POSITION_UNCHANGED;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        SegmentManager<?,?,?> segmentManager = (SegmentManager<?,?,?>) object;
-        View view = segmentManager.getBoundedView().getView();
-        destroyItem(segmentManager);
+        Segment<?,?,?> segment = (Segment<?,?,?>) object;
+        View view = segment.getBoundedView().getView();
+        destroyItem(segment);
         container.removeView(view);
     }
 
-    public abstract SegmentManager<?,?,?> instantiateItem(int position);
+    public abstract Segment<?,?,?> instantiateItem(int position);
 
-    public void destroyItem(SegmentManager<?,?,?> segmentManager) {
-        segmentManager.onStop();
-        segmentManager.unBindView();
+    public void destroyItem(Segment<?,?,?> segment) {
+        segment.onStop();
+        segment.unBindView();
     }
 }

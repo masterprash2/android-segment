@@ -15,7 +15,7 @@ import com.clumob.segment.view.SegmentViewHolder;
  * Created by prashant.rathore on 02/02/18.
  */
 
-public class SegmentManager<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
+public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
 
     enum ScreenState {
         FRESH,
@@ -38,7 +38,7 @@ public class SegmentManager<VM, Presenter extends SegmentPresenter<VM>, Controll
 
     ScreenState currentState = ScreenState.FRESH;
 
-    public SegmentManager(SegmentInfo segmentInfo, Controller controller, SegmentFactory screenFactory) {
+    public Segment(SegmentInfo segmentInfo, Controller controller, SegmentFactory screenFactory) {
         this.screenFactory = screenFactory;
         this.segmentInfo = segmentInfo;
         this.controller = controller;

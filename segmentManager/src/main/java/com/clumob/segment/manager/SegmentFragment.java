@@ -23,7 +23,7 @@ import com.clumob.segment.view.SegmentViewHolder;
 
 public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> extends Fragment {
 
-    private SegmentManager<VM, ?, SP> segmentManager;
+    private Segment<VM, ?, SP> segment;
     private SegmentViewHolder<VM, SP> screenView;
     private View.OnKeyListener backPressListener;
 
@@ -54,20 +54,20 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.segmentManager = provideController();
-        this.segmentManager.attach(context, LayoutInflater.from(context));
+        this.segment = provideController();
+        this.segment.attach(context, LayoutInflater.from(context));
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        segmentManager.onCreate();
+        segment.onCreate();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        screenView = segmentManager.createView(null);
+        screenView = segment.createView(null);
         return screenView.getView();
     }
 
@@ -77,7 +77,7 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                return segmentManager.handleBackPressed();
+                return segment.handleBackPressed();
             }
         });
     }
@@ -85,24 +85,24 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        segmentManager.bindView(screenView);
+        segment.bindView(screenView);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        segmentManager.onStart();
+        segment.onStart();
     }
 
     @Override
     public void onResume() {
-        segmentManager.onResume();
+        segment.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        segmentManager.onPause();
+        segment.onPause();
         super.onPause();
     }
 
@@ -113,27 +113,27 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
 
     @Override
     public void onStop() {
-        segmentManager.onStop();
+        segment.onStop();
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
         this.getView().setOnKeyListener(null);
-        this.segmentManager.unBindView();
+        this.segment.unBindView();
         this.screenView = null;
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        segmentManager.onDestroy();
+        segment.onDestroy();
         super.onDestroy();
     }
 
     @Override
     public void onDetach() {
-        this.segmentManager = null;
+        this.segment = null;
         super.onDetach();
     }
 
@@ -162,5 +162,5 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
         return activityInteractor;
     }
 
-    protected abstract SegmentManager<VM, ?, SP> provideController();
+    protected abstract Segment<VM, ?, SP> provideController();
 }

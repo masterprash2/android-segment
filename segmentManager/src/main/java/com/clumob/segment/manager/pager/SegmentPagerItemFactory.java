@@ -1,6 +1,6 @@
 package com.clumob.segment.manager.pager;
 
-import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
 
 /**
@@ -8,5 +8,5 @@ import com.clumob.segment.controller.SegmentInfo;
  */
 
 public interface SegmentPagerItemFactory {
-    public SegmentManager<?,?, ?> create(SegmentInfo segmentInfo);
+    public Segment<?,?, ?> create(SegmentInfo segmentInfo);
 }

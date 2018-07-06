@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.clumob.list.presenter.source.ArraySource;
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentFactory;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
@@ -61,8 +61,8 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
     private SegmentPagerItemFactory createControllerFactory() {
         return new SegmentPagerItemFactory() {
             @Override
-            public SegmentManager<?,?,?> create(SegmentInfo segmentInfo) {
-                return new SegmentManager<>(segmentInfo, createPresenter(), createScreenFactory());
+            public Segment<?,?,?> create(SegmentInfo segmentInfo) {
+                return new Segment<>(segmentInfo, createPresenter(), createScreenFactory());
             }
         };
     }

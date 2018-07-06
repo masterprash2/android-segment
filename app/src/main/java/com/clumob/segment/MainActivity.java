@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentActivity;
 import com.clumob.segment.manager.SegmentFactory;
 import com.clumob.segment.controller.SegmentInfo;
@@ -23,8 +23,8 @@ public class MainActivity extends SegmentActivity {
     }
 
     @Override
-    protected SegmentManager provideController(SegmentInfo segmentInfo) {
-        return new SegmentManager(segmentInfo,new SegmentController(segmentInfo.getArguments(),new SegmentPresenter(null)), new SegmentFactory() {
+    protected Segment provideSegment(SegmentInfo segmentInfo) {
+        return new Segment(segmentInfo,new SegmentController(segmentInfo.getArguments(),new SegmentPresenter(null)), new SegmentFactory() {
             @Override
             public SegmentViewHolder<?,?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new TestSegmentScreenHolder(context,layoutInflater,parentView);

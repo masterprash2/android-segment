@@ -11,13 +11,12 @@ public abstract class SegmentNavigation<T extends SegmentInfo> {
 
     public void addToBackStack(T segmentInfo) {
         T segmentInfoOld = navigateToScreen(segmentInfo);
-        if(segmentInfoOld != null) {
+        if (segmentInfoOld != null) {
             backStack.add(segmentInfoOld);
         }
     }
 
-    public abstract T navigateToScreen(SegmentInfo segmentInfo);
-
+    public abstract T navigateToScreen(T segmentInfo);
 
     public boolean popBackStack() {
         boolean b = this.backStack.size() > 0;

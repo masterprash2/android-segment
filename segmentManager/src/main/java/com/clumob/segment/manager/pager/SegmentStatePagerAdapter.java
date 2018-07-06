@@ -6,7 +6,7 @@ import android.view.View;
 import com.clumob.list.presenter.source.Presenter;
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.list.presenter.source.SourceUpdateEvent;
-import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
 import com.clumob.segment.view.SegmentViewHolder;
@@ -45,11 +45,11 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     }
 
     @Override
-    public SegmentManager<?,?,?> instantiateItem(int index) {
+    public Segment<?,?,?> instantiateItem(int index) {
         SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(index);
-        SegmentManager<?,?,?> segmentManager = factory.create(item.viewModel);
-        segmentManager.onCreate();
-        return segmentManager;
+        Segment<?,?,?> segment = factory.create(item.viewModel);
+        segment.onCreate();
+        return segment;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     // ToDO: The lookup algorightm is slow;
     @Override
-    public int computeItemPosition(SegmentManager<?,?,?> segmentManager) {
-        SegmentInfo segmentInfo = segmentManager.getSegmentInfo();
+    public int computeItemPosition(Segment<?,?,?> segment) {
+        SegmentInfo segmentInfo = segment.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
             SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(i);
@@ -74,14 +74,14 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        SegmentManager segmentManager = (SegmentManager) object;
-        SegmentViewHolder boundedView = segmentManager.getBoundedView();
+        Segment segment = (Segment) object;
+        SegmentViewHolder boundedView = segment.getBoundedView();
         return boundedView != null && boundedView.getView() == view;
     }
 
     @Override
-    public void destroyItem(SegmentManager<?,?,?> segmentManager) {
-        super.destroyItem(segmentManager);
-        segmentManager.onDestroy();
+    public void destroyItem(Segment<?,?,?> segment) {
+        super.destroyItem(segment);
+        segment.onDestroy();
     }
 }

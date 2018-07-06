@@ -22,9 +22,9 @@ import com.clumob.segment.view.SegmentViewHolder;
  * Created by prashant.rathore on 23/02/18.
  */
 
-public abstract class SegmentActivity extends Activity {
+public abstract class SegmentActivity<SI extends SegmentInfo<?, ?>> extends Activity {
 
-    private SegmentManager segmentManager;
+    private Segment segment;
     private SegmentViewHolder screenView;
 
     private ActivityInteractorImpl activityInteractor = new ActivityInteractorImpl() {
@@ -54,27 +54,27 @@ public abstract class SegmentActivity extends Activity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        this.segmentManager = createDefaultSegmentController(savedInstanceState);
+        this.segment = createDefaultSegmentController(savedInstanceState);
         super.onCreate(savedInstanceState);
         attachSegment();
     }
 
     protected void attachSegment() {
-        if (segmentManager == null) {
+        if (segment == null) {
             return;
         }
-        segmentManager.onCreate();
-        screenView = segmentManager.createView(null);
+        segment.onCreate();
+        screenView = segment.createView(null);
         changeView(screenView.getView(), null);
-        segmentManager.bindView(screenView);
+        segment.bindView(screenView);
     }
 
-    private SegmentManager createDefaultSegmentController(Bundle savedInstanceState) {
-        SegmentInfo segmentInfo = restoreSegment(savedInstanceState);
+    private Segment createDefaultSegmentController(Bundle savedInstanceState) {
+        SI segmentInfo = (SI) restoreSegment(savedInstanceState);
         segmentInfo = segmentInfo == null ? provideDefaultScreenInfo() : segmentInfo;
-        SegmentManager segmentManager = provideController(segmentInfo);
-        segmentManager.attach(this, LayoutInflater.from(this));
-        return segmentManager;
+        Segment segment = provideSegment(segmentInfo);
+        segment.attach(this, LayoutInflater.from(this));
+        return segment;
     }
 
     protected SegmentInfo restoreSegment(Bundle savedInstanceState) {
@@ -95,12 +95,12 @@ public abstract class SegmentActivity extends Activity {
         return segmentInfo;
     }
 
-    protected abstract SegmentInfo provideDefaultScreenInfo();
+    protected abstract SI provideDefaultScreenInfo();
 
-    protected SegmentInfo changeSegment(SegmentInfo segmentInfo) {
-        SegmentManager newController = provideController(segmentInfo);
+    protected SI changeSegment(SI segmentInfo) {
+        Segment newController = provideSegment(segmentInfo);
         newController.attach(this, LayoutInflater.from(this));
-        final SegmentManager oldController = this.segmentManager;
+        final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);
         switch (oldController.currentState) {
             case CREATE:
@@ -155,9 +155,9 @@ public abstract class SegmentActivity extends Activity {
                 }
             }
         });
-        this.segmentManager = newController;
+        this.segment = newController;
         this.screenView = newScreen;
-        return oldController.getSegmentInfo();
+        return (SI) oldController.getSegmentInfo();
     }
 
     protected void changeView(View newView, Runnable onCompleHandler) {
@@ -171,12 +171,12 @@ public abstract class SegmentActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        segmentManager.onStart();
+        segment.onStart();
     }
 
     @Override
     public void onResume() {
-        segmentManager.onResume();
+        segment.onResume();
         super.onResume();
     }
 
@@ -200,14 +200,14 @@ public abstract class SegmentActivity extends Activity {
 
     @Override
     public void onPause() {
-        segmentManager.onPause();
+        segment.onPause();
         super.onPause();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            SegmentInfo segmentInfo = segmentManager.getSegmentInfo();
+            SegmentInfo segmentInfo = segment.getSegmentInfo();
             byte[] marshall = ParcelableUtil.marshall(segmentInfo);
             outState.putByteArray("SEGMENT_INFO", marshall);
         } catch (Exception e) {
@@ -218,13 +218,13 @@ public abstract class SegmentActivity extends Activity {
 
     @Override
     public void onStop() {
-        segmentManager.onStop();
+        segment.onStop();
         super.onStop();
     }
 
     @Override
     public void onBackPressed() {
-        if (segmentManager == null || !(segmentManager.handleBackPressed() || getScreenNavigation().popBackStack())) {
+        if (segment == null || !(segment.handleBackPressed() || getScreenNavigation().popBackStack())) {
             try {
                 super.onBackPressed();
             } catch (Exception e) {
@@ -236,13 +236,13 @@ public abstract class SegmentActivity extends Activity {
 
     @Override
     public void onDestroy() {
-        segmentManager.onDestroy();
-        this.segmentManager.unBindView();
+        segment.onDestroy();
+        this.segment.unBindView();
         this.screenView = null;
         super.onDestroy();
     }
 
-    protected abstract SegmentManager provideController(SegmentInfo segmentInfo);
+    protected abstract Segment provideSegment(SI segmentInfo);
 
     @NonNull
     protected abstract SegmentNavigation getScreenNavigation();

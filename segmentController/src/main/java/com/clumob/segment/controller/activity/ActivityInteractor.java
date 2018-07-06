@@ -22,4 +22,8 @@ public interface ActivityInteractor {
 
     public String getString(int stringId);
 
+    public void publishActivityResult(ActivityResult activityResult);
+
+    public void publisPermissionResult(ActivityPermissionResult permissionResult);
+
 }

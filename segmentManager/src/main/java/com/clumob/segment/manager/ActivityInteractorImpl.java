@@ -16,12 +16,13 @@ abstract class ActivityInteractorImpl implements ActivityInteractor {
 
     private Activity activity;
 
-
-    void publisPermissionResult(ActivityPermissionResult permissionResult) {
+    @Override
+    public void publisPermissionResult(ActivityPermissionResult permissionResult) {
         activityPermissionResultPublisher.onNext(permissionResult);
     }
 
-    void publishActivityResult(ActivityResult activityResult) {
+    @Override
+    public void publishActivityResult(ActivityResult activityResult) {
         activityResultPublisher.onNext(activityResult);
     }
 

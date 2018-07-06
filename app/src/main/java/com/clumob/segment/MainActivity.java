@@ -11,11 +11,11 @@ import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentFactory;
-import com.clumob.segment.manager.SegmentManagerActivity;
+import com.clumob.segment.manager.SegmentAppCompatActivity;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.view.SegmentViewHolder;
 
-public class MainActivity extends SegmentManagerActivity {
+public class MainActivity extends SegmentAppCompatActivity {
 
 
     @Override

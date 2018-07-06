@@ -1,43 +1,41 @@
 package com.clumob.segment.manager;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 
-import com.clumob.log.AppLog;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.activity.ActivityInteractor;
-import com.clumob.segment.controller.util.ParcelableUtil;
 
 /**
  * Created by prashant.rathore on 23/02/18.
  */
 
-public abstract class SegmentManagerActivity extends Activity implements SegmentManager.SegmentCallbacks {
+public abstract class SegmentAppCompatActivity extends AppCompatActivity implements SegmentManager.SegmentCallbacks {
 
     private ActivityInteractor activityInteractor = new ActivityInteractorImpl() {
 
         @Override
         public void requestPermission(String[] permissions, int requestCode) {
-            ActivityCompat.requestPermissions(SegmentManagerActivity.this, permissions, requestCode);
+            ActivityCompat.requestPermissions(SegmentAppCompatActivity.this, permissions, requestCode);
         }
 
         @Override
         public void startActivityForResult(Intent intent, int requestCode) {
-            SegmentManagerActivity.this.startActivityForResult(intent, requestCode);
+            SegmentAppCompatActivity.this.startActivityForResult(intent, requestCode);
         }
 
         @Override
         public void performBackPress() {
-            SegmentManagerActivity.this.onBackPressed();
+            SegmentAppCompatActivity.this.onBackPressed();
         }
 
         @Override
         public String getString(int stringId) {
-            return SegmentManagerActivity.this.getString(stringId);
+            return SegmentAppCompatActivity.this.getString(stringId);
         }
     };
 

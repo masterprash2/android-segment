@@ -51,8 +51,4 @@ public class SegmentController<VM, Presenter extends SegmentPresenter<VM>> {
     public void onDestroy() {
 
     }
-
-    public boolean handleBackPressed() {
-        return false;
-    }
 }

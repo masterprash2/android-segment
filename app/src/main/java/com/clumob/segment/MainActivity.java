@@ -1,6 +1,7 @@
 package com.clumob.segment;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.view.ViewGroup;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
+import com.clumob.segment.controller.Storable;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentFactory;
 import com.clumob.segment.manager.SegmentAppCompatActivity;
+import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
-import com.clumob.segment.view.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolder;
 
 public class MainActivity extends SegmentAppCompatActivity {
 
@@ -29,13 +32,9 @@ public class MainActivity extends SegmentAppCompatActivity {
     }
 
     @Override
-    public SegmentNavigation getSegmentNavigation() {
-        return new SegmentNavigation() {
-            @Override
-            public SegmentInfo navigateToScreen(SegmentInfo segmentInfo) {
-                return changeSegment(segmentInfo);
-            }
-        };
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSegmentManager().getNavigation().navigateToScreen(new SegmentInfo<Storable, Storable>(1, null));
     }
 
     @Override
@@ -44,9 +43,10 @@ public class MainActivity extends SegmentAppCompatActivity {
     }
 
     @Override
-    public SegmentInfo provideDefaultScreenInfo() {
-        return new SegmentInfo(0, null);
-    }
+    public SegmentNavigation createSegmentNavigation(final SegmentManager segmentManager) {
+        return new SegmentNavigation(segmentManager) {
 
+        };
+    }
 
 }

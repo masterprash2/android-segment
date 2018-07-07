@@ -5,23 +5,30 @@ import com.clumob.segment.controller.SegmentInfo;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public abstract class SegmentNavigation<T extends SegmentInfo> {
+public abstract class SegmentNavigation {
 
-    private Deque<T> backStack = new LinkedList<>();
+    private final SegmentManager segmentManager;
+    private Deque<SegmentInfo> backStack = new LinkedList<>();
 
-    public void addToBackStack(T segmentInfo) {
-        T segmentInfoOld = navigateToScreen(segmentInfo);
+    public SegmentNavigation(SegmentManager segmentManager) {
+        this.segmentManager = segmentManager;
+    }
+
+    public void addToBackStack(SegmentInfo segmentInfo) {
+        SegmentInfo segmentInfoOld = navigateToScreen(segmentInfo);
         if (segmentInfoOld != null) {
             backStack.add(segmentInfoOld);
         }
     }
 
-    public abstract T navigateToScreen(T segmentInfo);
+    public SegmentInfo navigateToScreen(SegmentInfo<?, ?> segmentInfo) {
+        return segmentManager.changeSegment(segmentInfo);
+    }
 
     public boolean popBackStack() {
         boolean b = this.backStack.size() > 0;
         if (b) {
-            T segmentInfo = backStack.pollLast();
+            SegmentInfo segmentInfo = backStack.pollLast();
             navigateToScreen(segmentInfo);
         }
         return b;

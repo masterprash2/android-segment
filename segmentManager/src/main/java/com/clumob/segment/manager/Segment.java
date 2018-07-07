@@ -1,6 +1,7 @@
 package com.clumob.segment.manager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -8,7 +9,6 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
-import com.clumob.segment.view.SegmentViewHolder;
 
 
 /**
@@ -17,7 +17,9 @@ import com.clumob.segment.view.SegmentViewHolder;
 
 public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
 
-    enum ScreenState {
+
+
+    public enum SegmentState {
         FRESH,
         CREATE,
         START,
@@ -31,12 +33,13 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     private final SegmentFactory screenFactory;
 
     private SegmentViewHolder<VM, Controller> boundedView = null;
-    private SegmentInfo<Storable,Storable> segmentInfo;
+    private SegmentInfo<Storable, Storable> segmentInfo;
 
     private Context context;
     private LayoutInflater layoutInflater;
 
-    ScreenState currentState = ScreenState.FRESH;
+
+    SegmentState currentState = SegmentState.FRESH;
 
     public Segment(SegmentInfo segmentInfo, Controller controller, SegmentFactory screenFactory) {
         this.screenFactory = screenFactory;
@@ -63,31 +66,31 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
 
 
     public void onCreate() {
-        currentState = ScreenState.CREATE;
+        currentState = SegmentState.CREATE;
         controller.onCreate();
         controller.restoreState(segmentInfo.getRestorableSetmentState());
     }
 
     public void bindView(SegmentViewHolder<VM, Controller> viewHolder) {
         boundedView = viewHolder;
-        boundedView.bind(controller.getViewModel(), controller);
+        boundedView.bind(this, controller.getViewModel(), controller);
 //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 
     public void onStart() {
-        currentState = ScreenState.START;
+        currentState = SegmentState.START;
         controller.willShow();
         boundedView.willShow();
     }
 
     public void onResume() {
-        currentState = ScreenState.RESUME;
+        currentState = SegmentState.RESUME;
         boundedView.resume();
         controller.onResume();
     }
 
     public void onPause() {
-        currentState = ScreenState.PAUSE;
+        currentState = SegmentState.PAUSE;
         controller.onPause();
         boundedView.pause();
         final Storable viewState = boundedView.createStateSnapshot();
@@ -96,7 +99,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onStop() {
-        currentState = ScreenState.STOP;
+        currentState = SegmentState.STOP;
         boundedView.willHide();
         controller.willHide();
     }
@@ -107,7 +110,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onDestroy() {
-        currentState = ScreenState.DESTROY;
+        currentState = SegmentState.DESTROY;
         controller.onDestroy();
     }
 
@@ -116,9 +119,16 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
         this.layoutInflater = null;
     }
 
-    public boolean handleBackPressed() {
-        return controller.handleBackPressed();
+    public void onActivityResult(int code, int resultCode, Intent data) {
+        boundedView.onActivityResult(code,resultCode,data);
     }
 
+    public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
+        boundedView.onRequestPermissionsResult(code, permissions, grantResults);
+    }
+
+    public boolean handleBackPressed() {
+        return boundedView.handleBackPressed();
+    }
 
 }

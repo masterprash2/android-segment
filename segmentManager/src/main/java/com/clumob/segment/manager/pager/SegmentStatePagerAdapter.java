@@ -9,7 +9,7 @@ import com.clumob.list.presenter.source.SourceUpdateEvent;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
-import com.clumob.segment.view.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolder;
 
 import io.reactivex.observers.DisposableObserver;
 

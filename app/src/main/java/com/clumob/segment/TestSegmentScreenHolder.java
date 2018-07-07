@@ -14,6 +14,7 @@ import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
 import com.clumob.segment.controller.SegmentInfo;
@@ -21,7 +22,7 @@ import com.clumob.segment.controller.SegmentPagerItemPresenter;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.controller.TestStore;
-import com.clumob.segment.view.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +115,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
                     protected void onUnBind() {
 
                     }
+
                 };
             }
         };

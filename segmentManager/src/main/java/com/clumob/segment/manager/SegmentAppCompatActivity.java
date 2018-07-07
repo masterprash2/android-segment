@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.activity.ActivityInteractor;
 
 /**
  * Created by prashant.rathore on 23/02/18.
@@ -16,30 +14,34 @@ import com.clumob.segment.controller.activity.ActivityInteractor;
 
 public abstract class SegmentAppCompatActivity extends AppCompatActivity implements SegmentManager.SegmentCallbacks {
 
-    private ActivityInteractor activityInteractor = new ActivityInteractorImpl() {
+//    private ActivityInteractor activityInteractor = new ActivityInteractorImpl() {
+//
+//        @Override
+//        public void requestPermission(String[] permissions, int requestCode) {
+//            ActivityCompat.requestPermissions(SegmentAppCompatActivity.this, permissions, requestCode);
+//        }
+//
+//        @Override
+//        public void startActivityForResult(Intent intent, int requestCode) {
+//            SegmentAppCompatActivity.this.startActivityForResult(intent, requestCode);
+//        }
+//
+//        @Override
+//        public void performBackPress() {
+//            SegmentAppCompatActivity.this.onBackPressed();
+//        }
+//
+//        @Override
+//        public String getString(int stringId) {
+//            return SegmentAppCompatActivity.this.getString(stringId);
+//        }
+//    };
 
-        @Override
-        public void requestPermission(String[] permissions, int requestCode) {
-            ActivityCompat.requestPermissions(SegmentAppCompatActivity.this, permissions, requestCode);
-        }
+    private SegmentManager segmentManager = new SegmentManager(-1, this, this);
 
-        @Override
-        public void startActivityForResult(Intent intent, int requestCode) {
-            SegmentAppCompatActivity.this.startActivityForResult(intent, requestCode);
-        }
-
-        @Override
-        public void performBackPress() {
-            SegmentAppCompatActivity.this.onBackPressed();
-        }
-
-        @Override
-        public String getString(int stringId) {
-            return SegmentAppCompatActivity.this.getString(stringId);
-        }
-    };
-
-    private SegmentManager segmentManager = new SegmentManager(this, this);
+    public SegmentManager getSegmentManager() {
+        return segmentManager;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,12 +105,4 @@ public abstract class SegmentAppCompatActivity extends AppCompatActivity impleme
         super.onDestroy();
     }
 
-    @Override
-    public ActivityInteractor getActivityInteractor() {
-        return activityInteractor;
-    }
-
-    public SegmentInfo changeSegment(SegmentInfo segmentInfo) {
-        return segmentManager.changeSegment(segmentInfo);
-    }
 }

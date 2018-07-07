@@ -1,6 +1,6 @@
 package com.clumob.segment.manager;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,29 +11,48 @@ import android.view.View;
 
 import com.clumob.log.AppLog;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.activity.ActivityInteractor;
-import com.clumob.segment.controller.activity.ActivityPermissionResult;
-import com.clumob.segment.controller.activity.ActivityResult;
 import com.clumob.segment.controller.util.ParcelableUtil;
-import com.clumob.segment.view.SegmentViewHolder;
+import com.clumob.segment.empty.EmptySegment;
 
 /**
  * Created by prashant.rathore on 23/02/18.
  */
 
-public class SegmentManager<SI extends SegmentInfo<?, ?>> {
+public class SegmentManager {
+
+    public static final int SEGMENT_ID_EMPTY = Integer.MIN_VALUE;
+    private final SegmentManager parentSegmentManager;
+    private final SegmentCallbacks callbacks;
+    private final int managerId;
+    private final Handler mHandler = new Handler();
 
     private Segment segment;
     private SegmentViewHolder screenView;
-    private final SegmentCallbacks<SI> callbacks;
 
-    private Handler mHandler = new Handler();
+    private Context context;
+    private SegmentNavigation navigation;
 
-    private Activity activity;
+    public SegmentManager(int managerId, Context context, SegmentCallbacks callbacks) {
+        this(null, managerId, context, callbacks);
+    }
 
-    public SegmentManager(Activity activity, SegmentCallbacks<SI> callbacks) {
-        this.activity = activity;
+    SegmentManager(SegmentManager parentSegmentManager, int managerId, Context context, SegmentCallbacks callbacks) {
+        this.parentSegmentManager = parentSegmentManager;
+        this.managerId = managerId;
+        this.context = context;
         this.callbacks = callbacks;
+        this.navigation = callbacks.createSegmentNavigation(this);
+    }
+
+    public SegmentCallbacks getCallbacks() {
+        return callbacks;
+    }
+
+    public SegmentManager getRootSegmentManager() {
+        if (this.parentSegmentManager == null) {
+            return this;
+        } else
+            return this.parentSegmentManager.getRootSegmentManager();
     }
 
     public void onPreCreate(@Nullable Bundle savedInstanceState) {
@@ -45,9 +64,6 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
     }
 
     protected void attachSegment() {
-        if (segment == null) {
-            return;
-        }
         segment.onCreate();
         screenView = segment.createView(null);
         changeView(screenView.getView(), null);
@@ -55,10 +71,14 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
     }
 
     private Segment createDefaultSegmentController(Bundle savedInstanceState) {
-        SI segmentInfo = (SI) restoreSegment(savedInstanceState);
-        segmentInfo = segmentInfo == null ? callbacks.provideDefaultScreenInfo() : segmentInfo;
-        Segment segment = callbacks.provideSegment(segmentInfo);
-        segment.attach(activity, LayoutInflater.from(activity));
+        Segment segment;
+        SegmentInfo segmentInfo = restoreSegment(savedInstanceState);
+        if (segmentInfo == null) {
+            segment = new EmptySegment(new SegmentInfo(SEGMENT_ID_EMPTY, null));
+        } else {
+            segment = callbacks.provideSegment(segmentInfo);
+        }
+        segment.attach( context, LayoutInflater.from(context));
         return segment;
     }
 
@@ -80,9 +100,9 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
         return segmentInfo;
     }
 
-    public SI changeSegment(SI segmentInfo) {
+    SegmentInfo changeSegment(SegmentInfo segmentInfo) {
         Segment newController = callbacks.provideSegment(segmentInfo);
-        newController.attach(activity, LayoutInflater.from(activity));
+        newController.attach(context, LayoutInflater.from(context));
         final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);
         switch (oldController.currentState) {
@@ -140,7 +160,7 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
         });
         this.segment = newController;
         this.screenView = newScreen;
-        return (SI) oldController.getSegmentInfo();
+        return oldController.getSegmentInfo();
     }
 
     protected void changeView(View newView, Runnable onCompleHandler) {
@@ -160,17 +180,11 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ActivityPermissionResult permissionResult = ActivityPermissionResult.builder()
-                .setPermissions(permissions)
-                .setRequestCode(requestCode)
-                .setGrantResult(grantResults).build();
-
-        callbacks.getActivityInteractor().publisPermissionResult(permissionResult);
+        segment.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ActivityResult activityResult = ActivityResult.builder().setRequestCode(requestCode).setResultCode(resultCode).setData(data).build();
-        callbacks.getActivityInteractor().publishActivityResult(activityResult);
+        segment.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onPause() {
@@ -192,7 +206,7 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
     }
 
     public boolean handleBackPressed() {
-        return segment != null && !segment.handleBackPressed() && !callbacks.getSegmentNavigation().popBackStack();
+        return segment != null && (segment.handleBackPressed() || navigation.popBackStack());
     }
 
     public void onDestroy() {
@@ -201,15 +215,18 @@ public class SegmentManager<SI extends SegmentInfo<?, ?>> {
         this.screenView = null;
     }
 
+    public SegmentNavigation getNavigation() {
+        return navigation;
+    }
+
     public interface SegmentCallbacks<SI extends SegmentInfo> {
+
         public Segment provideSegment(SI segmentInfo);
-
-        public SegmentNavigation getSegmentNavigation();
-
-        public ActivityInteractor getActivityInteractor();
 
         public void setSegmentView(View view);
 
-        public SI provideDefaultScreenInfo();
+        SegmentNavigation createSegmentNavigation(SegmentManager segmentManager);
+
     }
+
 }

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.view.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolder;
 
 /**
  * Created by prashant.rathore on 02/07/18.

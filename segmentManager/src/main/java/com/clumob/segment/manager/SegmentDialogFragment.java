@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import com.clumob.segment.controller.SegmentController;
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> extends Fragment implements SegmentManager.SegmentCallbacks {
+public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM, ?>> extends DialogFragment implements SegmentManager.SegmentCallbacks {
 
     private Segment<?, ?, ?> segment;
     private SegmentViewHolder viewHolder;

@@ -7,6 +7,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.clumob.list.presenter.source.ArraySource;
@@ -15,6 +18,7 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentFactory;
 import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
 import com.clumob.segment.controller.SegmentInfo;
@@ -48,9 +52,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
     @Override
     protected void onBind() {
-
         this.viewPager.setAdapter(createPagerAdapter());
-
     }
 
     private PagerAdapter createPagerAdapter() {
@@ -89,7 +91,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
     }
 
     private SegmentController createPresenter() {
-        return new SegmentController(null,new SegmentPresenter<Object>(null));
+        return new TestSegmentController(null,new SegmentPresenter<Object>(null));
     }
 
     private SegmentFactory createScreenFactory() {
@@ -98,17 +100,25 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
             public SegmentViewHolder<?,?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new SegmentViewHolder(context, layoutInflater, parentView) {
 
+                    private View oldView;
+
+                    FrameLayout frameLayout;
+                    TextView tv;
+                    int color = new Random().nextInt(Integer.MAX_VALUE);
+
                     @Override
                     protected View createView(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-                        TextView tv = new TextView(context);
-                        tv.setBackgroundColor(new Random().nextInt(Integer.MAX_VALUE));
-                        return tv;
+                        return layoutInflater.inflate(R.layout.segment_pager_item,viewGroup,false);
                     }
 
 
                     @Override
                     protected void onBind() {
-
+                        this.tv = getView().findViewById(R.id.subText);
+                        this.frameLayout = getView().findViewById(R.id.frameLayout);
+                        this.frameLayout.setBackgroundColor(color);
+                        SegmentNavigation navigation = getNavigation(1);
+                        navigation.navigateToScreen(new SegmentInfo<Storable, Storable>(1,null));
                     }
 
                     @Override
@@ -116,6 +126,38 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
                     }
 
+                    @Override
+                    public SegmentManager.SegmentCallbacks getChildManagerCallbacks(int navigationId) {
+                        return new SegmentManager.SegmentCallbacks() {
+
+
+                            @Override
+                            public Segment provideSegment(SegmentInfo segmentInfo) {
+                                return new Segment(segmentInfo,new SubSegmentController(),new SubSegmentViewFactory());
+                            }
+
+                            @Override
+                            public void setSegmentView(final View view) {
+                                if(oldView != view) {
+                                    frameLayout.removeView(oldView);
+                                    frameLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            frameLayout.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                                        }
+                                    });
+
+                                }
+                                oldView = view;
+                            }
+
+                            @Override
+                            public SegmentNavigation createSegmentNavigation(SegmentManager segmentManager) {
+                                return new SegmentNavigation(segmentManager) {
+                                };
+                            }
+                        };
+                    }
                 };
             }
         };

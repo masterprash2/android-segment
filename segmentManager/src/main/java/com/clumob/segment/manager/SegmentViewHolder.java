@@ -32,7 +32,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     private final LayoutInflater layoutInflater;
     private final View view;
 
-    private SegmentViewState currentState;
+    private SegmentViewState currentState = SegmentViewState.FRESH;
 
     private LinkedHashMap<Integer, SegmentManager> segmentManagers = new LinkedHashMap<>();
 
@@ -63,30 +63,34 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
 
     void bind(Segment<?, ?, ?> segment, VM viewModel, Controller controller) {
+        currentState = SegmentViewState.CREATE;
         this.viewModel = viewModel;
         this.controller = controller;
-        onBind();
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onPreCreate(null);
             manager.onPostCreate();
         }
+        onBind();
     }
 
     protected abstract void onBind();
 
-    public void willShow() {
+    public final void willShow() {
+        currentState = SegmentViewState.START;
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onStart();
         }
     }
 
-    public void resume() {
+    public final void resume() {
+        currentState = SegmentViewState.RESUME;
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onResume();
         }
     }
 
-    public void pause() {
+    public final void pause() {
+        currentState = SegmentViewState.PAUSE;
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onPause();
         }
@@ -96,13 +100,15 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return null;
     }
 
-    public void willHide() {
+    public final void willHide() {
+        currentState = SegmentViewState.STOP;
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onStop();
         }
     }
 
     public final void unBind() {
+        currentState = SegmentViewState.DESTROY;
         for (SegmentManager manager : segmentManagers.values()) {
             manager.onDestroy();
         }

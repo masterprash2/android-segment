@@ -17,6 +17,7 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     private Segment<?,?,?> primaryItem;
 
+
     @NonNull
     @Override
     final public Object instantiateItem(@NonNull ViewGroup container, int position) {

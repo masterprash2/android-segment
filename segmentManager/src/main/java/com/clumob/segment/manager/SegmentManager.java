@@ -74,12 +74,16 @@ public class SegmentManager {
         Segment segment;
         SegmentInfo segmentInfo = restoreSegment(savedInstanceState);
         if (segmentInfo == null) {
-            segment = new EmptySegment(new SegmentInfo(SEGMENT_ID_EMPTY, null));
+            segment = createEmptySegment();
         } else {
             segment = callbacks.provideSegment(segmentInfo);
         }
         segment.attach( context, LayoutInflater.from(context));
         return segment;
+    }
+
+    private Segment createEmptySegment() {
+        return new EmptySegment(new SegmentInfo(SEGMENT_ID_EMPTY, null));
     }
 
     protected SegmentInfo restoreSegment(Bundle savedInstanceState) {
@@ -101,7 +105,7 @@ public class SegmentManager {
     }
 
     SegmentInfo changeSegment(SegmentInfo segmentInfo) {
-        Segment newController = callbacks.provideSegment(segmentInfo);
+        Segment newController = segmentInfo.getId() == SEGMENT_ID_EMPTY ? createEmptySegment() : callbacks.provideSegment(segmentInfo);
         newController.attach(context, LayoutInflater.from(context));
         final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);

@@ -19,6 +19,7 @@ import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentFactory;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
+import com.clumob.segment.manager.pager.SegmentPagerAdapter;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
 import com.clumob.segment.controller.SegmentInfo;
@@ -39,6 +40,7 @@ import java.util.Random;
 public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmentController> {
 
     private ViewPager viewPager;
+    private SegmentPagerAdapter pagerAdapter;
 
     public TestSegmentScreenHolder(Context context, LayoutInflater layoutInflater, ViewGroup parentView) {
         super(context, layoutInflater, parentView);
@@ -52,13 +54,19 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
     @Override
     protected void onBind() {
-        this.viewPager.setAdapter(createPagerAdapter());
+        this.pagerAdapter = createPagerAdapter();
+        this.viewPager.setAdapter(pagerAdapter);
     }
 
-    private PagerAdapter createPagerAdapter() {
+    private SegmentPagerAdapter createPagerAdapter() {
         PresenterSource<SegmentPagerItemPresenter> presenterSource = createPresenterSource();
         SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
         return pagerAdapter;
+    }
+
+    @Override
+    public boolean handleBackPressed() {
+        return pagerAdapter.handleBackPressed();
     }
 
     private SegmentPagerItemFactory createControllerFactory() {
@@ -118,7 +126,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
                         this.frameLayout = getView().findViewById(R.id.frameLayout);
                         this.frameLayout.setBackgroundColor(color);
                         SegmentNavigation navigation = getNavigation(1);
-                        navigation.navigateToScreen(new SegmentInfo<Storable, Storable>(1,null));
+                        navigation.addToBackStack(new SegmentInfo<Storable, Storable>(1,null));
                     }
 
                     @Override
@@ -139,7 +147,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
                             @Override
                             public void setSegmentView(final View view) {
                                 if(oldView != view) {
-                                    frameLayout.removeView(oldView);
+                                    frameLayout.removeAllViews();
                                     frameLayout.post(new Runnable() {
                                         @Override
                                         public void run() {

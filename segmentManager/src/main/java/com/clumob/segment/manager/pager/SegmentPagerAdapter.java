@@ -66,4 +66,11 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         segment.onStop();
         segment.unBindView();
     }
+
+    public boolean handleBackPressed() {
+        if(primaryItem == null) {
+            return false;
+        }
+        return primaryItem.handleBackPressed();
+    }
 }

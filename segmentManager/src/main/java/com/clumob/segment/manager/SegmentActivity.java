@@ -41,9 +41,8 @@ public abstract class SegmentActivity extends Activity implements SegmentManager
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        segmentManager.onPreCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
-        segmentManager.onPostCreate();
+        segmentManager.onCreate(savedInstanceState);
     }
 
     @Override

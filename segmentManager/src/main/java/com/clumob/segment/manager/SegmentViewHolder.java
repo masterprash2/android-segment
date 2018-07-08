@@ -11,6 +11,8 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.Storable;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
@@ -31,6 +33,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     private VM viewModel;
     private final LayoutInflater layoutInflater;
     private final View view;
+    private List<SegmentLifecycle> segmentLifecycleListeners = new LinkedList<>();
 
     private SegmentViewState currentState = SegmentViewState.FRESH;
 
@@ -62,13 +65,13 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
 
+
     void bind(Segment<?, ?, ?> segment, VM viewModel, Controller controller) {
         currentState = SegmentViewState.CREATE;
         this.viewModel = viewModel;
         this.controller = controller;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onPreCreate(null);
-            manager.onPostCreate();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onCreate(null);
         }
         onBind();
     }
@@ -77,22 +80,22 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     public final void willShow() {
         currentState = SegmentViewState.START;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onStart();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onStart();
         }
     }
 
     public final void resume() {
         currentState = SegmentViewState.RESUME;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onResume();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onResume();
         }
     }
 
     public final void pause() {
         currentState = SegmentViewState.PAUSE;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onPause();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onPause();
         }
     }
 
@@ -102,15 +105,15 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     public final void willHide() {
         currentState = SegmentViewState.STOP;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onStop();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onStop();
         }
     }
 
     public final void unBind() {
         currentState = SegmentViewState.DESTROY;
-        for (SegmentManager manager : segmentManagers.values()) {
-            manager.onDestroy();
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            lifecycle.onDestroy();
         }
         onUnBind();
     }
@@ -142,32 +145,28 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     private SegmentManager createManagerInternal(int managerId, Bundle savedInstance) {
         SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId));
         this.segmentManagers.put(0, manager);
+        this.registerLifecycleListener(manager);
         switch (this.currentState) {
             case FRESH:
                 break;
             case CREATE:
-                manager.onPreCreate(savedInstance);
-                manager.onPostCreate();
+                manager.onCreate(savedInstance);
                 break;
             case START:
-                manager.onPreCreate(savedInstance);
-                manager.onPostCreate();
+                manager.onCreate(savedInstance);
                 manager.onStart();
                 break;
             case RESUME:
-                manager.onPreCreate(savedInstance);
-                manager.onPostCreate();
+                manager.onCreate(savedInstance);
                 manager.onStart();
                 manager.onResume();
                 break;
             case PAUSE:
-                manager.onPreCreate(savedInstance);
-                manager.onPostCreate();
+                manager.onCreate(savedInstance);
                 manager.onStart();
                 break;
             case STOP:
-                manager.onPreCreate(savedInstance);
-                manager.onPostCreate();
+                manager.onCreate(savedInstance);
                 break;
             case DESTROY:
                 break;
@@ -175,9 +174,17 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return manager;
     }
 
+    public void registerLifecycleListener(SegmentLifecycle listener) {
+        this.segmentLifecycleListeners.add(0,listener);
+    }
+
+    public void unRegisterLifecycleListener(SegmentLifecycle lifecycle) {
+        this.segmentLifecycleListeners.remove(lifecycle);
+    }
+
     public boolean handleBackPressed() {
-        for (SegmentManager manager : segmentManagers.values()) {
-            if(manager.handleBackPressed()) {
+        for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
+            if (lifecycle.handleBackPressed()) {
                 return true;
             }
         }

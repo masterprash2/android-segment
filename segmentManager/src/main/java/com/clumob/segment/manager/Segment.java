@@ -10,14 +10,17 @@ import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
 
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
 
 public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
-
-
 
     public enum SegmentState {
         FRESH,
@@ -37,7 +40,6 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
 
     private Context context;
     private LayoutInflater layoutInflater;
-
 
     SegmentState currentState = SegmentState.FRESH;
 
@@ -66,6 +68,15 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
 
 
     public void onCreate() {
+        switch (this.currentState) {
+            case FRESH:
+            case DESTROY:
+                createInternal();
+                break;
+        }
+    }
+
+    private void createInternal() {
         currentState = SegmentState.CREATE;
         controller.onCreate();
         controller.restoreState(segmentInfo.getRestorableSetmentState());
@@ -78,18 +89,59 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onStart() {
+        switch (currentState) {
+            case DESTROY:
+            case FRESH:
+            case CREATE:
+                onCreate();
+                startInternal();
+            case START:
+                break;
+            case RESUME:
+                break;
+            case PAUSE:
+                break;
+            case STOP:
+                break;
+        }
+    }
+
+    private void startInternal() {
         currentState = SegmentState.START;
         controller.willShow();
         boundedView.willShow();
     }
 
     public void onResume() {
+        if(currentState != SegmentState.RESUME) {
+            onStart();
+            resumeInternal();
+        }
+    }
+
+    private void resumeInternal() {
         currentState = SegmentState.RESUME;
         boundedView.resume();
         controller.onResume();
     }
 
     public void onPause() {
+        switch (currentState) {
+            case FRESH:
+            case CREATE:
+                onStart();
+            case RESUME:
+                pauseInternal();
+                break;
+            case START:
+            case PAUSE:
+            case STOP:
+            case DESTROY:
+                break;
+        }
+    }
+
+    private void pauseInternal() {
         currentState = SegmentState.PAUSE;
         controller.onPause();
         boundedView.pause();
@@ -99,17 +151,42 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onStop() {
+        switch (this.currentState) {
+            case DESTROY:
+            case FRESH:
+                onCreate();
+                break;
+            case RESUME:
+                onPause();
+            case PAUSE:
+            case START:
+                stopInternal();
+                break;
+        }
+    }
+
+    private void stopInternal() {
         currentState = SegmentState.STOP;
         boundedView.willHide();
         controller.willHide();
     }
 
     public void unBindView() {
-        boundedView.unBind();
-        boundedView = null;
+        if(boundedView != null) {
+            boundedView.unBind();
+            boundedView = null;
+        }
     }
 
     public void onDestroy() {
+        if(this.currentState != SegmentState.DESTROY) {
+            onStop();
+            unBindView();
+            destroyInternal();
+        }
+    }
+
+    private void destroyInternal() {
         currentState = SegmentState.DESTROY;
         controller.onDestroy();
     }

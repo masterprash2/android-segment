@@ -18,7 +18,7 @@ import com.clumob.segment.empty.EmptySegment;
  * Created by prashant.rathore on 23/02/18.
  */
 
-public class SegmentManager {
+public class SegmentManager implements SegmentLifecycle {
 
     public static final int SEGMENT_ID_EMPTY = Integer.MIN_VALUE;
     private final SegmentManager parentSegmentManager;
@@ -55,16 +55,14 @@ public class SegmentManager {
             return this.parentSegmentManager.getRootSegmentManager();
     }
 
-    public void onPreCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         this.segment = createDefaultSegmentController(savedInstanceState);
-    }
-
-    public void onPostCreate() {
+        segment.onCreate();
         attachSegment();
     }
 
-    protected void attachSegment() {
-        segment.onCreate();
+
+    private void attachSegment() {
         screenView = segment.createView(null);
         changeView(screenView.getView(), null);
         segment.bindView(screenView);
@@ -215,13 +213,13 @@ public class SegmentManager {
 
     public void onDestroy() {
         segment.onDestroy();
-        this.segment.unBindView();
         this.screenView = null;
     }
 
     public SegmentNavigation getNavigation() {
         return navigation;
     }
+
 
     public interface SegmentCallbacks<SI extends SegmentInfo> {
 

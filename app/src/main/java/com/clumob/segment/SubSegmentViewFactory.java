@@ -37,6 +37,7 @@ class SubSegmentViewFactory implements SegmentFactory{
             protected void onUnBind() {
 
             }
+
         };
     }
 }

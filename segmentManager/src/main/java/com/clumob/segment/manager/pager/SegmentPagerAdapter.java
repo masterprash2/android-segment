@@ -7,16 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clumob.segment.manager.Segment;
+import com.clumob.segment.manager.SegmentLifecycle;
 import com.clumob.segment.manager.SegmentViewHolder;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by prashant.rathore on 02/07/18.
  */
 
-public abstract class SegmentPagerAdapter extends PagerAdapter {
+public abstract class SegmentPagerAdapter extends PagerAdapter implements SegmentLifecycle {
 
     private Segment<?,?,?> primaryItem;
-
 
     @NonNull
     @Override
@@ -58,6 +61,18 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         View view = segment.getBoundedView().getView();
         destroyItem(segment);
         container.removeView(view);
+    }
+
+
+    public Segment<?, ?, ?> getPrimaryItem() {
+        return primaryItem;
+    }
+
+    @Override
+    public void onResume() {
+        if(primaryItem != null) {
+            primaryItem.onResume();
+        }
     }
 
     public abstract Segment<?,?,?> instantiateItem(int position);

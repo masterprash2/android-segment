@@ -2,14 +2,11 @@ package com.clumob.segment;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.clumob.list.presenter.source.ArraySource;
@@ -55,6 +52,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
     @Override
     protected void onBind() {
         this.pagerAdapter = createPagerAdapter();
+        registerLifecycleListener(this.pagerAdapter);
         this.viewPager.setAdapter(pagerAdapter);
     }
 
@@ -95,7 +93,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
     @Override
     protected void onUnBind() {
-
+        unRegisterLifecycleListener(this.pagerAdapter);
     }
 
     private SegmentController createPresenter() {

@@ -45,9 +45,8 @@ public abstract class SegmentAppCompatActivity extends AppCompatActivity impleme
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        segmentManager.onPreCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
-        segmentManager.onPostCreate();
+        segmentManager.onCreate(savedInstanceState);
     }
 
     @Override

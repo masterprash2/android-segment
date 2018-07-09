@@ -10,11 +10,6 @@ import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 
 /**
  * Created by prashant.rathore on 02/02/18.
@@ -33,7 +28,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     private final Controller controller;
-    private final SegmentFactory screenFactory;
+    private final SegmentViewHolderFactory screenFactory;
 
     private SegmentViewHolder<VM, Controller> boundedView = null;
     private SegmentInfo<Storable, Storable> segmentInfo;
@@ -43,7 +38,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
 
     SegmentState currentState = SegmentState.FRESH;
 
-    public Segment(SegmentInfo segmentInfo, Controller controller, SegmentFactory screenFactory) {
+    public Segment(SegmentInfo segmentInfo, Controller controller, SegmentViewHolderFactory screenFactory) {
         this.screenFactory = screenFactory;
         this.segmentInfo = segmentInfo;
         this.controller = controller;

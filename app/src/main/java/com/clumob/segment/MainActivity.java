@@ -13,7 +13,7 @@ import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentAppCompatActivity;
-import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.SegmentViewHolder;
@@ -23,7 +23,7 @@ public class MainActivity extends SegmentAppCompatActivity {
 
     @Override
     public Segment provideSegment(SegmentInfo segmentInfo) {
-        return new Segment(segmentInfo, new SegmentController(segmentInfo.getArguments(), new SegmentPresenter(null)), new SegmentFactory() {
+        return new Segment(segmentInfo, new SegmentController(segmentInfo.getArguments(), new SegmentPresenter(null)), new SegmentViewHolderFactory() {
             @Override
             public SegmentViewHolder<?, ?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new TestSegmentScreenHolder(context, layoutInflater, parentView);

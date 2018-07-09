@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentViewHolder;
 
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.Random;
  * Created by prashant.rathore on 08/07/18.
  */
 
-class SubSegmentViewFactory implements SegmentFactory{
+class SubSegmentViewViewHolderFactory implements SegmentViewHolderFactory {
     @Override
     public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
         return new SegmentViewHolder<Object, SegmentController>(context,layoutInflater,parentView) {

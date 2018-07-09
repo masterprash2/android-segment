@@ -5,6 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-public interface SegmentFactory {
+public interface SegmentViewHolderFactory {
     SegmentViewHolder<?,?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView);
 }

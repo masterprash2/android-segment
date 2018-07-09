@@ -14,29 +14,6 @@ import com.clumob.segment.controller.SegmentInfo;
 
 public abstract class SegmentActivity extends Activity implements SegmentManager.SegmentCallbacks {
 
-//    private ActivityInteractor activityInteractor = new ActivityInteractorImpl() {
-//
-//        @Override
-//        public void requestPermission(String[] permissions, int requestCode) {
-//            ActivityCompat.requestPermissions(SegmentAppCompatActivity.this, permissions, requestCode);
-//        }
-//
-//        @Override
-//        public void startActivityForResult(Intent intent, int requestCode) {
-//            SegmentAppCompatActivity.this.startActivityForResult(intent, requestCode);
-//        }
-//
-//        @Override
-//        public void performBackPress() {
-//            SegmentAppCompatActivity.this.onBackPressed();
-//        }
-//
-//        @Override
-//        public String getString(int stringId) {
-//            return SegmentAppCompatActivity.this.getString(stringId);
-//        }
-//    };
-
     private SegmentManager segmentManager = new SegmentManager(-1, this, this);
 
     @Override

@@ -10,7 +10,7 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentViewHolder;
 
 /**
@@ -20,7 +20,7 @@ import com.clumob.segment.manager.SegmentViewHolder;
 public class EmptySegment extends Segment {
 
     public EmptySegment(SegmentInfo segmentInfo) {
-        super(segmentInfo, new SegmentController(null, new SegmentPresenter(null)), new SegmentFactory() {
+        super(segmentInfo, new SegmentController(null, new SegmentPresenter(null)), new SegmentViewHolderFactory() {
             @Override
             public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new SegmentViewHolder<Object, SegmentController>(context, layoutInflater, parentView) {

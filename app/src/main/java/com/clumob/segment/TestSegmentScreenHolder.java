@@ -13,7 +13,7 @@ import com.clumob.list.presenter.source.ArraySource;
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentFactory;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.pager.SegmentPagerAdapter;
@@ -100,8 +100,8 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
         return new TestSegmentController(null,new SegmentPresenter<Object>(null));
     }
 
-    private SegmentFactory createScreenFactory() {
-        return new SegmentFactory() {
+    private SegmentViewHolderFactory createScreenFactory() {
+        return new SegmentViewHolderFactory() {
             @Override
             public SegmentViewHolder<?,?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new SegmentViewHolder(context, layoutInflater, parentView) {
@@ -139,7 +139,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
                             @Override
                             public Segment provideSegment(SegmentInfo segmentInfo) {
-                                return new Segment(segmentInfo,new SubSegmentController(),new SubSegmentViewFactory());
+                                return new Segment(segmentInfo,new SubSegmentController(),new SubSegmentViewViewHolderFactory());
                             }
 
                             @Override

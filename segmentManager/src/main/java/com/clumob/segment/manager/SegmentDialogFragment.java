@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
+import com.clumob.segment.controller.SegmentInfo;
 
 /**
  * Created by prashant.rathore on 14/02/18.
@@ -34,6 +35,7 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
         this.segment = createSegment();
         segment.onCreate();
     }
+
 
     @Nullable
     @Override
@@ -121,6 +123,19 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
         segment.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected abstract Segment<?, ?, ?> createSegment();
+    protected Segment<?, ?, ?> createSegment() {
+        return provideSegment(provideSegmentInfo());
+    }
 
+    protected abstract SegmentInfo provideSegmentInfo();
+
+    @Override
+    final public void setSegmentView(View view) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public SegmentNavigation createSegmentNavigation(SegmentManager segmentManager) {
+        return null;
+    }
 }

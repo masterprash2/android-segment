@@ -1,5 +1,6 @@
 package com.clumob.segment.manager;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import com.clumob.segment.controller.SegmentInfo;
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM, ?>> extends DialogFragment implements SegmentManager.SegmentCallbacks {
+public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM, ?>> extends DialogFragment implements SegmentManager.SegmentCallbacks, Dialog.OnKeyListener {
 
     private Segment<?, ?, ?> segment;
     private SegmentViewHolder viewHolder;
@@ -36,24 +37,12 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
         segment.onCreate();
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         segment.attach(getContext(), inflater);
         viewHolder = segment.createView(container);
         return viewHolder.getView();
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        view.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                return segment.handleBackPressed();
-            }
-        });
     }
 
     @Override
@@ -71,6 +60,7 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
     @Override
     public void onResume() {
         segment.onResume();
+        getDialog().setOnKeyListener(this);
         super.onResume();
     }
 
@@ -93,7 +83,6 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
 
     @Override
     public void onDestroyView() {
-        this.getView().setOnKeyListener(null);
         this.segment.unBindView();
         this.viewHolder = null;
         super.onDestroyView();
@@ -138,4 +127,5 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
     public SegmentNavigation createSegmentNavigation(SegmentManager segmentManager) {
         return null;
     }
+
 }

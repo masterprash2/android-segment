@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 
 /**
  * Created by prashant.rathore on 07/07/18.
@@ -20,7 +19,7 @@ import com.clumob.segment.manager.SegmentViewHolder;
 public class EmptySegment extends Segment {
 
     public EmptySegment(SegmentInfo segmentInfo) {
-        super(segmentInfo, new SegmentController(null, new SegmentPresenter(null)), new SegmentViewHolderFactory() {
+        super(segmentInfo, new SegmentController(null, null), new SegmentViewHolderFactory() {
             @Override
             public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new SegmentViewHolder<Object, SegmentController>(context, layoutInflater, parentView) {
@@ -31,7 +30,6 @@ public class EmptySegment extends Segment {
 
                     @Override
                     protected void onBind() {
-
                     }
 
                     @Override

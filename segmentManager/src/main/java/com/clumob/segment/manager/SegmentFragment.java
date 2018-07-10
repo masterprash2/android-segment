@@ -18,9 +18,9 @@ import com.clumob.segment.controller.SegmentInfo;
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> extends Fragment implements SegmentManager.SegmentCallbacks {
+public abstract class SegmentFragment extends Fragment implements SegmentManager.SegmentCallbacks {
 
-    private Segment<?, ?, ?> segment;
+    private Segment<?, ?> segment;
     private SegmentViewHolder viewHolder;
 
     @Override
@@ -122,7 +122,7 @@ public abstract class SegmentFragment<VM, SP extends SegmentController<VM, ?>> e
         segment.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected Segment<?, ?, ?> createSegment() {
+    protected Segment<?, ?> createSegment() {
         return provideSegment(provideSegmentInfo());
     }
 

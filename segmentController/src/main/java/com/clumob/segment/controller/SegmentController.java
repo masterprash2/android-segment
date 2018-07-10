@@ -6,18 +6,18 @@ import android.os.Parcel;
  * Created by prashant.rathore on 05/07/18.
  */
 
-public class SegmentController<VM, Presenter extends SegmentPresenter<VM>> {
+public class SegmentController<VM> {
 
     protected final Storable args;
-    protected final Presenter presenter;
+    private final VM viewModel;
 
-    public SegmentController(Storable args, Presenter presenter) {
+    public SegmentController(Storable args, VM viewModel) {
         this.args = args;
-        this.presenter = presenter;
+        this.viewModel = viewModel;
     }
 
     public VM getViewModel() {
-        return presenter.getViewModel();
+        return viewModel;
     }
 
     public void onCreate() {

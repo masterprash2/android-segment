@@ -12,19 +12,18 @@ import android.widget.TextView;
 import com.clumob.list.presenter.source.ArraySource;
 import com.clumob.list.presenter.source.PresenterSource;
 import com.clumob.segment.controller.SegmentController;
+import com.clumob.segment.controller.SegmentInfo;
+import com.clumob.segment.controller.SegmentPagerItemPresenter;
+import com.clumob.segment.controller.Storable;
+import com.clumob.segment.controller.TestStore;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
+import com.clumob.segment.manager.SegmentViewHolder;
+import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.pager.SegmentPagerAdapter;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
-import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPagerItemPresenter;
-import com.clumob.segment.controller.SegmentPresenter;
-import com.clumob.segment.controller.Storable;
-import com.clumob.segment.controller.TestStore;
-import com.clumob.segment.manager.SegmentViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ import java.util.Random;
  * Created by prashant.rathore on 20/06/18.
  */
 
-public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmentController> {
+public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegmentController> {
 
     private ViewPager viewPager;
     private SegmentPagerAdapter pagerAdapter;
@@ -70,7 +69,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
     private SegmentPagerItemFactory createControllerFactory() {
         return new SegmentPagerItemFactory() {
             @Override
-            public Segment<?,?,?> create(SegmentInfo segmentInfo) {
+            public Segment<?, ?> create(SegmentInfo segmentInfo) {
                 return new Segment<>(segmentInfo, createPresenter(), createScreenFactory());
             }
         };
@@ -97,13 +96,13 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
     }
 
     private SegmentController createPresenter() {
-        return new TestSegmentController(null,new SegmentPresenter<Object>(null));
+        return new TestSegmentController(null, null);
     }
 
     private SegmentViewHolderFactory createScreenFactory() {
         return new SegmentViewHolderFactory() {
             @Override
-            public SegmentViewHolder<?,?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
+            public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
                 return new SegmentViewHolder(context, layoutInflater, parentView) {
 
                     private View oldView;
@@ -114,7 +113,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
                     @Override
                     protected View createView(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-                        return layoutInflater.inflate(R.layout.segment_pager_item,viewGroup,false);
+                        return layoutInflater.inflate(R.layout.segment_pager_item, viewGroup, false);
                     }
 
 
@@ -124,7 +123,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
                         this.frameLayout = getView().findViewById(R.id.frameLayout);
                         this.frameLayout.setBackgroundColor(color);
                         SegmentNavigation navigation = getNavigation(1);
-                        navigation.addToBackStack(new SegmentInfo<Storable, Storable>(1,null));
+                        navigation.addToBackStack(new SegmentInfo<Storable, Storable>(1, null));
                     }
 
                     @Override
@@ -139,12 +138,12 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object,TestSegmen
 
                             @Override
                             public Segment provideSegment(SegmentInfo segmentInfo) {
-                                return new Segment(segmentInfo,new SubSegmentController(),new SubSegmentViewViewHolderFactory());
+                                return new Segment(segmentInfo, new SubSegmentController(), new SubSegmentViewViewHolderFactory());
                             }
 
                             @Override
                             public void setSegmentView(final View view) {
-                                if(oldView != view) {
+                                if (oldView != view) {
                                     frameLayout.removeAllViews();
                                     frameLayout.post(new Runnable() {
                                         @Override

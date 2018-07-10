@@ -10,21 +10,18 @@ import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentLifecycle;
 import com.clumob.segment.manager.SegmentViewHolder;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by prashant.rathore on 02/07/18.
  */
 
 public abstract class SegmentPagerAdapter extends PagerAdapter implements SegmentLifecycle {
 
-    private Segment<?,?,?> primaryItem;
+    private Segment<?, ?> primaryItem;
 
     @NonNull
     @Override
     final public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        Segment<?,?,?> segment = instantiateItem(position);
+        Segment<?, ?> segment = instantiateItem(position);
         segment.attach(container.getContext(), LayoutInflater.from(container.getContext()));
         SegmentViewHolder view = segment.createView(container);
         container.addView(view.getView());
@@ -48,42 +45,42 @@ public abstract class SegmentPagerAdapter extends PagerAdapter implements Segmen
 
     @Override
     final public int getItemPosition(@NonNull Object object) {
-        return computeItemPosition((Segment<?,?,?>) object);
+        return computeItemPosition((Segment<?, ?>) object);
     }
 
-    public int computeItemPosition(Segment<?,?,?> segment) {
+    public int computeItemPosition(Segment<?, ?> segment) {
         return POSITION_UNCHANGED;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        Segment<?,?,?> segment = (Segment<?,?,?>) object;
+        Segment<?, ?> segment = (Segment<?, ?>) object;
         View view = segment.getBoundedView().getView();
         destroyItem(segment);
         container.removeView(view);
     }
 
 
-    public Segment<?, ?, ?> getPrimaryItem() {
+    public Segment<?, ?> getPrimaryItem() {
         return primaryItem;
     }
 
     @Override
     public void onResume() {
-        if(primaryItem != null) {
+        if (primaryItem != null) {
             primaryItem.onResume();
         }
     }
 
-    public abstract Segment<?,?,?> instantiateItem(int position);
+    public abstract Segment<?, ?> instantiateItem(int position);
 
-    public void destroyItem(Segment<?,?,?> segment) {
+    public void destroyItem(Segment<?, ?> segment) {
         segment.onStop();
         segment.unBindView();
     }
 
     public boolean handleBackPressed() {
-        if(primaryItem == null) {
+        if (primaryItem == null) {
             return false;
         }
         return primaryItem.handleBackPressed();

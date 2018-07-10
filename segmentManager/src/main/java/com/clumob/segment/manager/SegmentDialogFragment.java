@@ -20,9 +20,9 @@ import com.clumob.segment.controller.SegmentInfo;
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM, ?>> extends DialogFragment implements SegmentManager.SegmentCallbacks, Dialog.OnKeyListener {
+public abstract class SegmentDialogFragment extends DialogFragment implements SegmentManager.SegmentCallbacks, Dialog.OnKeyListener {
 
-    private Segment<?, ?, ?> segment;
+    private Segment<?, ?> segment;
     private SegmentViewHolder viewHolder;
 
     @Override
@@ -120,7 +120,7 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
         segment.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected Segment<?, ?, ?> createSegment() {
+    protected Segment<?, ?> createSegment() {
         return provideSegment(provideSegmentInfo());
     }
 

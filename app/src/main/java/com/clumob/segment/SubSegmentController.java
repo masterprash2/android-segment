@@ -3,7 +3,6 @@ package com.clumob.segment;
 import android.util.Log;
 
 import com.clumob.segment.controller.SegmentController;
-import com.clumob.segment.controller.SegmentPresenter;
 
 /**
  * Created by prashant.rathore on 08/07/18.
@@ -12,7 +11,7 @@ import com.clumob.segment.controller.SegmentPresenter;
 class SubSegmentController extends SegmentController {
 
     public SubSegmentController() {
-        super(null, new SegmentPresenter(new Object()));
+        super(null,null);
     }
 
     @Override

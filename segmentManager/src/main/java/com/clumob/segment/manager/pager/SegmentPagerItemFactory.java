@@ -8,5 +8,5 @@ import com.clumob.segment.controller.SegmentInfo;
  */
 
 public interface SegmentPagerItemFactory {
-    public Segment<?,?, ?> create(SegmentInfo segmentInfo);
+    public Segment<?,?> create(SegmentInfo segmentInfo);
 }

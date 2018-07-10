@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPresenter;
 import com.clumob.segment.controller.Storable;
 
 
@@ -15,7 +14,7 @@ import com.clumob.segment.controller.Storable;
  * Created by prashant.rathore on 02/02/18.
  */
 
-public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller extends SegmentController<VM, Presenter>> {
+public class Segment<VM, Controller extends SegmentController<VM>> {
 
     public enum SegmentState {
         FRESH,
@@ -108,7 +107,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onResume() {
-        if(currentState != SegmentState.RESUME) {
+        if (currentState != SegmentState.RESUME) {
             onStart();
             resumeInternal();
         }
@@ -167,14 +166,14 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void unBindView() {
-        if(boundedView != null) {
+        if (boundedView != null) {
             boundedView.unBind();
             boundedView = null;
         }
     }
 
     public void onDestroy() {
-        if(this.currentState != SegmentState.DESTROY) {
+        if (this.currentState != SegmentState.DESTROY) {
             onStop();
             unBindView();
             destroyInternal();
@@ -192,7 +191,7 @@ public class Segment<VM, Presenter extends SegmentPresenter<VM>, Controller exte
     }
 
     public void onActivityResult(int code, int resultCode, Intent data) {
-        boundedView.onActivityResult(code,resultCode,data);
+        boundedView.onActivityResult(code, resultCode, data);
     }
 
     public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {

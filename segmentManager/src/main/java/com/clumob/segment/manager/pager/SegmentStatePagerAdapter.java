@@ -51,9 +51,9 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     }
 
     @Override
-    public Segment<?,?,?> instantiateItem(int index) {
+    public Segment<?,?> instantiateItem(int index) {
         SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(index);
-        Segment<?,?,?> segment = factory.create(item.viewModel);
+        Segment<?,?> segment = factory.create(item.viewModel);
         attachedSegments.add(segment);
         segment.onCreate();
         return segment;
@@ -67,7 +67,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     // ToDO: The lookup algorightm is slow;
     @Override
-    public int computeItemPosition(Segment<?,?,?> segment) {
+    public int computeItemPosition(Segment<?,?> segment) {
         SegmentInfo segmentInfo = segment.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
@@ -87,7 +87,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     }
 
     @Override
-    public void destroyItem(Segment<?,?,?> segment) {
+    public void destroyItem(Segment<?,?> segment) {
         super.destroyItem(segment);
         segment.onDestroy();
         attachedSegments.remove(segment);

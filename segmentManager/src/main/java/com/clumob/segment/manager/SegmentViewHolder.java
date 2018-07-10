@@ -66,7 +66,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
 
 
-    void bind(Segment<?, ?, ?> segment, VM viewModel, Controller controller) {
+    void bind(Segment<?, ?> segment, VM viewModel, Controller controller) {
         currentState = SegmentViewState.CREATE;
         this.viewModel = viewModel;
         this.controller = controller;
@@ -175,7 +175,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     }
 
     public void registerLifecycleListener(SegmentLifecycle listener) {
-        this.segmentLifecycleListeners.add(0,listener);
+        this.segmentLifecycleListeners.add(0, listener);
     }
 
     public void unRegisterLifecycleListener(SegmentLifecycle lifecycle) {

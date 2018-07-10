@@ -2,12 +2,12 @@ package com.clumob.segment.manager;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +62,14 @@ public abstract class SegmentDialogFragment<VM, SP extends SegmentController<VM,
         segment.onResume();
         getDialog().setOnKeyListener(this);
         super.onResume();
+    }
+
+    @Override
+    public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+        if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+            return segment.handleBackPressed();
+        }
+        return false;
     }
 
     @Override

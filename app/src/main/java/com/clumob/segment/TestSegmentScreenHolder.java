@@ -21,9 +21,9 @@ import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
-import com.clumob.segment.manager.pager.SegmentPagerAdapter;
-import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
-import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
+import com.clumob.segment.support.pager.SegmentPagerAdapter;
+import com.clumob.segment.support.pager.SegmentPagerItemFactory;
+import com.clumob.segment.support.pager.SegmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

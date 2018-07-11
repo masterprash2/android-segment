@@ -1,13 +1,11 @@
-package com.clumob.segment.manager;
+package com.clumob.segment.support.appcompact;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +13,16 @@ import android.view.ViewGroup;
 
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
+import com.clumob.segment.manager.Segment;
+import com.clumob.segment.manager.SegmentManager;
+import com.clumob.segment.manager.SegmentNavigation;
+import com.clumob.segment.manager.SegmentViewHolder;
 
 /**
  * Created by prashant.rathore on 14/02/18.
  */
 
-public abstract class SegmentDialogFragment extends DialogFragment implements SegmentManager.SegmentCallbacks, Dialog.OnKeyListener {
+public abstract class SegmentFragment extends Fragment implements SegmentManager.SegmentCallbacks {
 
     private Segment<?, ?> segment;
     private SegmentViewHolder viewHolder;
@@ -37,12 +39,24 @@ public abstract class SegmentDialogFragment extends DialogFragment implements Se
         segment.onCreate();
     }
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         segment.attach(getContext(), inflater);
         viewHolder = segment.createView(container);
         return viewHolder.getView();
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                return segment.handleBackPressed();
+            }
+        });
     }
 
     @Override
@@ -60,16 +74,7 @@ public abstract class SegmentDialogFragment extends DialogFragment implements Se
     @Override
     public void onResume() {
         segment.onResume();
-        getDialog().setOnKeyListener(this);
         super.onResume();
-    }
-
-    @Override
-    public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-        if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
-            return segment.handleBackPressed();
-        }
-        return false;
     }
 
     @Override
@@ -91,6 +96,7 @@ public abstract class SegmentDialogFragment extends DialogFragment implements Se
 
     @Override
     public void onDestroyView() {
+        this.getView().setOnKeyListener(null);
         this.segment.unBindView();
         this.viewHolder = null;
         super.onDestroyView();
@@ -132,8 +138,7 @@ public abstract class SegmentDialogFragment extends DialogFragment implements Se
     }
 
     @Override
-    public SegmentNavigation createSegmentNavigation(SegmentManager segmentManager) {
+    final public SegmentNavigation createSegmentNavigation(SegmentManager segmentManager) {
         return null;
     }
-
 }

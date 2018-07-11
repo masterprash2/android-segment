@@ -1,4 +1,4 @@
-package com.clumob.segment.manager.pager;
+package com.clumob.segment.support.pager;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

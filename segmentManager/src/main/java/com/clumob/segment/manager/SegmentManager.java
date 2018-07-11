@@ -185,7 +185,7 @@ public class SegmentManager implements SegmentLifecycle {
         segment.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         segment.onActivityResult(requestCode, resultCode, data);
     }
 

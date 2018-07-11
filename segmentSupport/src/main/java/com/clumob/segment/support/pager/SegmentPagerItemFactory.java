@@ -1,4 +1,4 @@
-package com.clumob.segment.manager.pager;
+package com.clumob.segment.support.pager;
 
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;

@@ -1,1 +1,1 @@
-include ':app', ':segmentController', ':segmentManager',':androidStubs', ':segmentSupport'
+include ':app', ':segmentController', ':segmentManager',':androidStubs', ':segmentSupport', ':appRvSample'

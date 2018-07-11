@@ -21,9 +21,9 @@ import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
-import com.clumob.segment.support.pager.SegmentPagerAdapter;
-import com.clumob.segment.support.pager.SegmentPagerItemFactory;
-import com.clumob.segment.support.pager.SegmentStatePagerAdapter;
+import com.clumob.segment.support.pager.viewpager.SegmentPagerAdapter;
+import com.clumob.segment.support.pager.SegmentProvider;
+import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +66,10 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
         return pagerAdapter.handleBackPressed();
     }
 
-    private SegmentPagerItemFactory createControllerFactory() {
-        return new SegmentPagerItemFactory() {
+    private SegmentProvider createControllerFactory() {
+        return new SegmentProvider() {
             @Override
-            public Segment<?, ?> create(SegmentInfo segmentInfo) {
+            public Segment<?, ?> provide(SegmentInfo segmentInfo) {
                 return new Segment<>(segmentInfo, createPresenter(), createScreenFactory());
             }
         };

@@ -16,6 +16,7 @@ import com.clumob.segment.controller.Storable;
 
 public class Segment<VM, Controller extends SegmentController<VM>> {
 
+
     public enum SegmentState {
         FRESH,
         CREATE,
@@ -200,6 +201,10 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     public boolean handleBackPressed() {
         return boundedView.handleBackPressed();
+    }
+
+    public boolean isResumed() {
+        return currentState == SegmentState.RESUME;
     }
 
 }

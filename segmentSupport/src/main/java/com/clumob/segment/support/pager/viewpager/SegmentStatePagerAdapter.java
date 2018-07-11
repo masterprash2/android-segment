@@ -1,4 +1,4 @@
-package com.clumob.segment.support.pager;
+package com.clumob.segment.support.pager.viewpager;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +12,7 @@ import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
 import com.clumob.segment.manager.SegmentViewHolder;
+import com.clumob.segment.support.pager.SegmentProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,10 +26,10 @@ import io.reactivex.observers.DisposableObserver;
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     private final ItemControllerSource<? extends ItemController> dataSource;
-    private final SegmentPagerItemFactory factory;
+    private final SegmentProvider factory;
     private Set<Segment> attachedSegments = new HashSet<>();
 
-    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource, SegmentPagerItemFactory factory) {
+    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource, SegmentProvider factory) {
         this.dataSource = dataSource;
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
@@ -53,7 +54,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public Segment<?,?> instantiateItem(int index) {
         SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(index);
-        Segment<?,?> segment = factory.create(item.viewModel);
+        Segment<?,?> segment = factory.provide(item.viewModel);
         attachedSegments.add(segment);
         segment.onCreate();
         return segment;

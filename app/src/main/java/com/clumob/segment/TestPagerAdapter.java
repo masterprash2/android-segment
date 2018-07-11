@@ -1,6 +1,6 @@
 package com.clumob.segment;
 
-import com.clumob.list.presenter.source.PresenterSource;
+import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.segment.manager.pager.SegmentPagerItemFactory;
 import com.clumob.segment.manager.pager.SegmentStatePagerAdapter;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
@@ -10,7 +10,7 @@ import com.clumob.segment.controller.SegmentPagerItemPresenter;
  */
 
 public class TestPagerAdapter extends SegmentStatePagerAdapter {
-    public TestPagerAdapter(PresenterSource<SegmentPagerItemPresenter> dataSource, SegmentPagerItemFactory factory) {
+    public TestPagerAdapter(ItemControllerSource<SegmentPagerItemPresenter> dataSource, SegmentPagerItemFactory factory) {
         super(dataSource, factory);
     }
 }

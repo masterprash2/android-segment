@@ -1,12 +1,13 @@
 package com.clumob.segment.controller;
 
-import com.clumob.list.presenter.source.ViewModelPresenter;
+
+import com.clumob.listitem.controller.source.ViewModelItemController;
 
 /**
  * Created by prashant.rathore on 03/07/18.
  */
 
-public class SegmentPagerItemPresenter extends ViewModelPresenter<SegmentInfo> {
+public class SegmentPagerItemPresenter extends ViewModelItemController<SegmentInfo> {
 
     public SegmentPagerItemPresenter(SegmentInfo viewModel) {
         super(viewModel);

@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.clumob.list.presenter.source.Presenter;
-import com.clumob.list.presenter.source.PresenterSource;
-import com.clumob.list.presenter.source.SourceUpdateEvent;
+import com.clumob.listitem.controller.source.ItemController;
+import com.clumob.listitem.controller.source.ItemControllerSource;
+import com.clumob.listitem.controller.source.SourceUpdateEvent;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
@@ -24,11 +24,11 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
-    private final PresenterSource<? extends Presenter> dataSource;
+    private final ItemControllerSource<? extends ItemController> dataSource;
     private final SegmentPagerItemFactory factory;
     private Set<Segment> attachedSegments = new HashSet<>();
 
-    public SegmentStatePagerAdapter(PresenterSource<? extends Presenter> dataSource, SegmentPagerItemFactory factory) {
+    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource, SegmentPagerItemFactory factory) {
         this.dataSource = dataSource;
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {

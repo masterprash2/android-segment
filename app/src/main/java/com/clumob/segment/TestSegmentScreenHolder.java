@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.clumob.list.presenter.source.ArraySource;
-import com.clumob.list.presenter.source.PresenterSource;
+import com.clumob.listitem.controller.source.ArraySource;
+import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemPresenter;
@@ -56,7 +56,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     }
 
     private SegmentPagerAdapter createPagerAdapter() {
-        PresenterSource<SegmentPagerItemPresenter> presenterSource = createPresenterSource();
+        ItemControllerSource<SegmentPagerItemPresenter> presenterSource = createPresenterSource();
         SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
         return pagerAdapter;
     }
@@ -76,7 +76,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     }
 
 
-    private PresenterSource<SegmentPagerItemPresenter> createPresenterSource() {
+    private ItemControllerSource<SegmentPagerItemPresenter> createPresenterSource() {
         ArraySource<SegmentPagerItemPresenter> source = new ArraySource<>();
         source.switchItems(createSegmentList());
         return source;

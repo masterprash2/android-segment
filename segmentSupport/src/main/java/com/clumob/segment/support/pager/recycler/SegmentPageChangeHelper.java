@@ -1,9 +1,8 @@
 package com.clumob.segment.support.pager.recycler;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.View;
-
-import com.clumob.segment.controller.list.SegmentItemController;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class SegmentPageChangeHelper {
 
-    private final SnapViewFinder<? extends SegmentItemController, ? extends SegmentItemViewHolder> segmentItemViewFinder;
+    private final SnapHelper snapHelper;
     private SegmentItemViewHolder previousFocusedView;
     private int currentPageIndex = -1;
     private final PageChangeListner pageChangeListner;
@@ -22,8 +21,8 @@ public class SegmentPageChangeHelper {
 
     private RecyclerView attachedRecyclerView;
 
-    public SegmentPageChangeHelper(SnapViewFinder<? extends SegmentItemController, ? extends SegmentItemViewHolder> segmentItemViewFinder) {
-        this.segmentItemViewFinder = segmentItemViewFinder;
+    public SegmentPageChangeHelper(SnapHelper snapHelper) {
+        this.snapHelper = snapHelper;
         this.pageChangeListner = createPageChangeListener();
     }
 
@@ -73,7 +72,8 @@ public class SegmentPageChangeHelper {
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                SegmentItemViewHolder snapView = segmentItemViewFinder.findSnapView(recyclerView.getLayoutManager());
+                View view = snapHelper.findSnapView(recyclerView.getLayoutManager());
+                SegmentItemViewHolder snapView = (SegmentItemViewHolder) recyclerView.getChildViewHolder(view);
                 int pageIndex = snapView.getAdapterPosition();
                 if (pageIndex != currentPageIndex) {
                     if (previousFocusedView != null) {

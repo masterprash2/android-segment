@@ -46,7 +46,7 @@ public class SegmentTabsHelper {
         });
         pageChangeHelper.addPageChangeListner(new SegmentPageChangeHelper.PageChangeListner() {
             @Override
-            public void onPageChanged(int position) {
+            public void onPageChanged(final int position) {
                 tabLayout.getTabAt(position).select();
             }
 

@@ -16,6 +16,7 @@ public class SegmentPageChangeHelper {
     private final SnapHelper snapHelper;
     private SegmentItemViewHolder previousFocusedView;
     private int currentPageIndex = -1;
+    private int nextPageIndex;
     private final PageChangeListner pageChangeListner;
     private final List<PageChangeListner> pageChangeListners = new LinkedList<>();
 
@@ -60,12 +61,20 @@ public class SegmentPageChangeHelper {
             SegmentItemViewHolder snapView = previousFocusedView;
             View itemView = snapView.getItemView();
             x = itemView.getLeft();
-            if (snapView.getItemView().getLeft() <= 0) {
-                pageChangeListner.onPageScrolled(adapterPosition, -x * 1f / itemView.getMeasuredWidth());
+
+            if (x <= 0 || nextPageIndex >= 0) {
+                if(nextPageIndex < 0) {
+                    nextPageIndex = adapterPosition;
+                }
+                pageChangeListner.onPageScrolled(nextPageIndex, -x * 1f / itemView.getMeasuredWidth());
             } else {
-                x = x - itemView.getMeasuredWidth();
-                pageChangeListner.onPageScrolled(adapterPosition - 1, -x * 1f / itemView.getMeasuredWidth());
+                if(nextPageIndex < 0) {
+                    nextPageIndex = adapterPosition - 1;
+                }
+                x = itemView.getMeasuredWidth() - x;
+                pageChangeListner.onPageScrolled(nextPageIndex, x * 1f / itemView.getMeasuredWidth());
             }
+            nextPageIndex = -1;
         }
 
         @Override
@@ -99,9 +108,16 @@ public class SegmentPageChangeHelper {
         });
     }
 
-    public void scrollToPosition(int position) {
+    public void scrollToPosition(final int position) {
         if (currentPageIndex != position) {
+            nextPageIndex = position;
             attachedRecyclerView.scrollToPosition(position);
+            attachedRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onScrollStateChanged(attachedRecyclerView, RecyclerView.SCROLL_STATE_IDLE);
+                }
+            });
         }
     }
 

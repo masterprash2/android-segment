@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 
 import com.clumob.listitem.controller.source.ItemControllerSource;
-import com.clumob.recyclerview.adapter.RvAdapter;
 import com.clumob.segment.controller.list.SegmentItemController;
 
 /**
@@ -14,20 +13,16 @@ import com.clumob.segment.controller.list.SegmentItemController;
 
 public class SegmentTabsHelper {
 
-    public static void setup(final RecyclerView recyclerView,
-                             ItemControllerSource<SegmentItemController> itemSource,
-                             final TabLayout tabLayout,
-                             SnapHelper snapHelper) {
+    public static void attach(final RecyclerView recyclerView,
+                              final TabLayout tabLayout,
+                              SnapHelper snapHelper) {
 
         SegmentPageChangeHelper segmentPageChangeHelper = new SegmentPageChangeHelper(snapHelper);
         segmentPageChangeHelper.attachRecyclerView(recyclerView);
-        setup(itemSource,tabLayout,segmentPageChangeHelper);
+        attach(tabLayout, segmentPageChangeHelper);
     }
 
-    public static void setup(ItemControllerSource<SegmentItemController> itemSource, final TabLayout tabLayout, final SegmentPageChangeHelper pageChangeHelper) {
-        for(int i = 0 ; i < itemSource.getItemCount() ; i++) {
-            tabLayout.addTab(tabLayout.newTab().setText("Index "+ i));
-        }
+    public static void attach(final TabLayout tabLayout, final SegmentPageChangeHelper pageChangeHelper) {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -52,7 +47,7 @@ public class SegmentTabsHelper {
 
             @Override
             public void onPageScrolled(int position, float offset) {
-                tabLayout.setScrollPosition(position,offset,true);
+                tabLayout.setScrollPosition(position, offset, true);
             }
         });
     }

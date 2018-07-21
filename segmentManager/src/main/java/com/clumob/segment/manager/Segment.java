@@ -89,14 +89,13 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
             case FRESH:
             case CREATE:
                 onCreate();
+            case STOP:
                 startInternal();
             case START:
                 break;
             case RESUME:
                 break;
             case PAUSE:
-                break;
-            case STOP:
                 break;
         }
     }

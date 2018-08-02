@@ -5,12 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.listitem.controller.source.SourceUpdateEvent;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPagerItemPresenter;
+import com.clumob.segment.controller.SegmentPagerItemController;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.support.pager.SegmentProvider;
 
@@ -25,11 +24,11 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
-    private final ItemControllerSource<? extends ItemController> dataSource;
+    private final ItemControllerSource<? extends SegmentPagerItemController> dataSource;
     private final SegmentProvider factory;
     private Set<Segment> attachedSegments = new HashSet<>();
 
-    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource, SegmentProvider factory) {
+    public SegmentStatePagerAdapter(ItemControllerSource<? extends SegmentPagerItemController> dataSource, SegmentProvider factory) {
         this.dataSource = dataSource;
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
@@ -53,7 +52,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public Segment<?,?> instantiateItem(int index) {
-        SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(index);
+        SegmentPagerItemController item = dataSource.getItem(index);
         Segment<?,?> segment = factory.provide(item.viewModel);
         attachedSegments.add(segment);
         segment.onCreate();
@@ -72,7 +71,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         SegmentInfo segmentInfo = segment.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
-            SegmentPagerItemPresenter item = (SegmentPagerItemPresenter) dataSource.getItem(i);
+            SegmentPagerItemController item = dataSource.getItem(i);
             if (item.viewModel.getId() == segmentInfo.getId()) {
                 return i;
             }
@@ -120,6 +119,12 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     public void onSaveInstanceState(Bundle outBundle) {
 //        for(Segment segment : attachedSegments) {
 //        }
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return dataSource.getItem(position).getPageTitle();
     }
 
     @Override

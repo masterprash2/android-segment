@@ -2,6 +2,7 @@ package com.clumob.segment;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ class SubSegmentViewViewHolderFactory implements SegmentViewHolderFactory {
     public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
         return new SegmentViewHolder<Object, SegmentController>(context,layoutInflater,parentView) {
 
+
+
             @Override
             protected View createView(LayoutInflater layoutInflater, ViewGroup viewGroup) {
                 return layoutInflater.inflate(R.layout.segment_sub_item,viewGroup,false);
@@ -31,6 +34,9 @@ class SubSegmentViewViewHolderFactory implements SegmentViewHolderFactory {
             protected void onBind() {
                 TextView viewById = getView().findViewById(R.id.subText);
                 viewById.setText(String.valueOf(new Random().nextInt()));
+
+
+
             }
 
             @Override

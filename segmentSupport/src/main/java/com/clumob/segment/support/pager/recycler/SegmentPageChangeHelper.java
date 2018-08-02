@@ -82,6 +82,9 @@ public class SegmentPageChangeHelper {
             super.onScrollStateChanged(recyclerView, newState);
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 View view = snapHelper.findSnapView(recyclerView.getLayoutManager());
+                if(view == null) {
+                    return;
+                }
                 SegmentItemViewHolder snapView = (SegmentItemViewHolder) recyclerView.getChildViewHolder(view);
                 int pageIndex = snapView.getAdapterPosition();
                 if (pageIndex != currentPageIndex) {
@@ -96,6 +99,14 @@ public class SegmentPageChangeHelper {
             }
         }
     };
+
+    public SegmentItemViewHolder getCurrentSegmentItemViewHolder() {
+        return previousFocusedView;
+    }
+
+    public boolean handleBackPressed() {
+        return this.previousFocusedView.handleBackPressed();
+    }
 
     public void attachRecyclerView(final RecyclerView recyclerView) {
         this.attachedRecyclerView = recyclerView;

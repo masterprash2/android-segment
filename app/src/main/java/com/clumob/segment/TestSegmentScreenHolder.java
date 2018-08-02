@@ -13,7 +13,7 @@ import com.clumob.listitem.controller.source.ArraySource;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPagerItemPresenter;
+import com.clumob.segment.controller.SegmentPagerItemController;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.controller.TestStore;
 import com.clumob.segment.manager.Segment;
@@ -56,7 +56,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     }
 
     private SegmentPagerAdapter createPagerAdapter() {
-        ItemControllerSource<SegmentPagerItemPresenter> presenterSource = createPresenterSource();
+        ItemControllerSource<SegmentPagerItemController> presenterSource = createPresenterSource();
         SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
         return pagerAdapter;
     }
@@ -76,16 +76,16 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     }
 
 
-    private ItemControllerSource<SegmentPagerItemPresenter> createPresenterSource() {
-        ArraySource<SegmentPagerItemPresenter> source = new ArraySource<>();
+    private ItemControllerSource<SegmentPagerItemController> createPresenterSource() {
+        ArraySource<SegmentPagerItemController> source = new ArraySource<>();
         source.switchItems(createSegmentList());
         return source;
     }
 
-    private List<SegmentPagerItemPresenter> createSegmentList() {
-        ArrayList<SegmentPagerItemPresenter> segmentInfos = new ArrayList<>();
+    private List<SegmentPagerItemController> createSegmentList() {
+        ArrayList<SegmentPagerItemController> segmentInfos = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            segmentInfos.add(new SegmentPagerItemPresenter(new SegmentInfo<Storable, TestStore>(i, null)));
+            segmentInfos.add(new SegmentPagerItemController(new SegmentInfo<Storable, TestStore>(i, null)));
         }
         return segmentInfos;
     }

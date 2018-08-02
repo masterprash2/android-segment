@@ -17,19 +17,19 @@ public abstract class SegmentActivity extends Activity implements SegmentManager
     private SegmentManager segmentManager = new SegmentManager(-1, this, this);
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         segmentManager.onCreate(savedInstanceState);
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         segmentManager.onStart();
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         segmentManager.onResume();
         super.onResume();
     }
@@ -47,19 +47,19 @@ public abstract class SegmentActivity extends Activity implements SegmentManager
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         segmentManager.onPause();
         super.onPause();
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         segmentManager.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         segmentManager.onStop();
         super.onStop();
     }
@@ -72,7 +72,7 @@ public abstract class SegmentActivity extends Activity implements SegmentManager
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         segmentManager.onDestroy();
         super.onDestroy();
     }

@@ -73,4 +73,8 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
             segment.onPause();
         }
     }
+
+    public boolean handleBackPressed() {
+        return segmentViewHolder.handleBackPressed();
+    }
 }

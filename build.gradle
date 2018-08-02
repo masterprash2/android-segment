@@ -25,3 +25,34 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    libVersion = "0.36.0";
+}
+
+task makeaar(type: Copy) {
+    def versionString = project.libVersion
+    from fileTree(".").files
+    into 'build/libs-segment/'+versionString
+    include "segment*-debug.aar"
+    exclude 'build', 'external-libs', 'external-libs-compileonly', 'app'
+    includeEmptyDirs = false
+    rename { String fileName ->
+        fileName.replace('-debug', '@segment-v'+versionString)
+    }
+}
+
+
+
+task buildsdk(type: Copy, dependsOn: makeaar) {
+    def versionString = project.libVersion
+    from fileTree(".").files
+    into 'build/libs-segment/'+versionString
+    include 'segment*.jar'
+    exclude 'build', 'external-libs', 'external-libs-compileonly', 'app'
+    includeEmptyDirs = false
+    rename { String fileName ->
+        fileName.replace('.jar', '@segment-v'+versionString+'.jar')
+    }
+}
+

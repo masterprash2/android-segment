@@ -9,7 +9,7 @@ import com.clumob.segment.controller.SegmentInfo;
 
 public abstract class SegmentItemController implements ItemController {
 
-    private SegmentInfo segmentInfo;
+    private final SegmentInfo segmentInfo;
 
     public SegmentItemController(SegmentInfo segmentInfo) {
         this.segmentInfo = segmentInfo;
@@ -38,4 +38,5 @@ public abstract class SegmentItemController implements ItemController {
     public final SegmentInfo getSegmentInfo() {
         return segmentInfo;
     }
+
 }

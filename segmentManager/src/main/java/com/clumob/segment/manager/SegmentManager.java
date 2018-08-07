@@ -76,7 +76,7 @@ public class SegmentManager implements SegmentLifecycle {
         if (segmentInfo == null) {
             segment = createEmptySegment();
         } else {
-            segment = callbacks.provideSegment(segmentInfo);
+            segment = createRestoreSegment(segmentInfo);
         }
         segment.attach( context, layoutInflater);
         return segment;
@@ -104,8 +104,12 @@ public class SegmentManager implements SegmentLifecycle {
         return segmentInfo;
     }
 
+    private Segment createRestoreSegment(SegmentInfo segmentInfo) {
+        return segmentInfo.getId() == SEGMENT_ID_EMPTY ? createEmptySegment() : callbacks.provideSegment(segmentInfo);
+    }
+
     SegmentInfo changeSegment(SegmentInfo segmentInfo) {
-        Segment newController = segmentInfo.getId() == SEGMENT_ID_EMPTY ? createEmptySegment() : callbacks.provideSegment(segmentInfo);
+        Segment newController = createRestoreSegment(segmentInfo);
         newController.attach(context, layoutInflater);
         final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);

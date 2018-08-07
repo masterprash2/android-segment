@@ -1,5 +1,6 @@
 package com.clumob.segment.support.pager.viewpager;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -84,5 +85,16 @@ public abstract class SegmentPagerAdapter extends PagerAdapter implements Segmen
             return false;
         }
         return primaryItem.handleBackPressed();
+    }
+
+    public void onActivityResult(int code, int resultCode, Intent data) {
+        if(primaryItem != null) {
+            primaryItem.onActivityResult(code,resultCode,data);
+        }
+    }
+
+    public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
+        if(primaryItem != null)
+            primaryItem.onRequestPermissionsResult(code,permissions,grantResults);
     }
 }

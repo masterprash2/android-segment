@@ -25,6 +25,7 @@ public class SegmentManager implements SegmentLifecycle {
     private final SegmentCallbacks callbacks;
     private final int managerId;
     private final Handler mHandler = new Handler();
+    private final LayoutInflater layoutInflater;
 
     private Segment segment;
     private SegmentViewHolder screenView;
@@ -32,16 +33,17 @@ public class SegmentManager implements SegmentLifecycle {
     private Context context;
     private SegmentNavigation navigation;
 
-    public SegmentManager(int managerId, Context context, SegmentCallbacks callbacks) {
-        this(null, managerId, context, callbacks);
+    public SegmentManager(int managerId, Context context, SegmentCallbacks callbacks, LayoutInflater layoutInflater) {
+        this(null, managerId, context, callbacks,layoutInflater);
     }
 
-    SegmentManager(SegmentManager parentSegmentManager, int managerId, Context context, SegmentCallbacks callbacks) {
+    SegmentManager(SegmentManager parentSegmentManager, int managerId, Context context, SegmentCallbacks callbacks, LayoutInflater layoutInflater) {
         this.parentSegmentManager = parentSegmentManager;
         this.managerId = managerId;
         this.context = context;
         this.callbacks = callbacks;
         this.navigation = callbacks.createSegmentNavigation(this);
+        this.layoutInflater = layoutInflater;
     }
 
     public SegmentCallbacks getCallbacks() {
@@ -76,7 +78,7 @@ public class SegmentManager implements SegmentLifecycle {
         } else {
             segment = callbacks.provideSegment(segmentInfo);
         }
-        segment.attach( context, LayoutInflater.from(context));
+        segment.attach( context, layoutInflater);
         return segment;
     }
 
@@ -104,7 +106,7 @@ public class SegmentManager implements SegmentLifecycle {
 
     SegmentInfo changeSegment(SegmentInfo segmentInfo) {
         Segment newController = segmentInfo.getId() == SEGMENT_ID_EMPTY ? createEmptySegment() : callbacks.provideSegment(segmentInfo);
-        newController.attach(context, LayoutInflater.from(context));
+        newController.attach(context, layoutInflater);
         final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);
         switch (oldController.currentState) {

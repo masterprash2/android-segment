@@ -122,11 +122,15 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
 
     public void onActivityResult(int code, int resultCode, Intent data) {
-
+        for(SegmentManager segmentManager : segmentManagers.values()) {
+            segmentManager.onActivityResult(code,resultCode,data);
+        }
     }
 
     public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
-
+        for(SegmentManager segmentManager : segmentManagers.values()) {
+            segmentManager.onRequestPermissionsResult(code,permissions,grantResults);
+        }
     }
 
     final public SegmentNavigation getNavigation(int navigationId) {
@@ -141,9 +145,13 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return null;
     }
 
+    public LayoutInflater getLayoutInflater() {
+        return layoutInflater;
+    }
+
 
     private SegmentManager createManagerInternal(int managerId, Bundle savedInstance) {
-        SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId));
+        SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId),getLayoutInflater());
         this.segmentManagers.put(0, manager);
         this.registerLifecycleListener(manager);
         switch (this.currentState) {

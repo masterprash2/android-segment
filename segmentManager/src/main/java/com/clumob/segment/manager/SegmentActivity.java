@@ -1,6 +1,7 @@
 package com.clumob.segment.manager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,10 +15,12 @@ import com.clumob.segment.controller.SegmentInfo;
 
 public abstract class SegmentActivity extends Activity implements SegmentManager.SegmentCallbacks {
 
-    private SegmentManager segmentManager = new SegmentManager(-1, this, this);
+    private SegmentManager segmentManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (segmentManager == null)
+            segmentManager = new SegmentManager(-1, this, this, getLayoutInflater());
         super.onCreate(savedInstanceState);
         segmentManager.onCreate(savedInstanceState);
     }

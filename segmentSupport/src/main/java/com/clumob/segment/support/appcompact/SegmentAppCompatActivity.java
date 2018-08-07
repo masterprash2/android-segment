@@ -1,5 +1,6 @@
 package com.clumob.segment.support.appcompact;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +16,8 @@ import com.clumob.segment.manager.SegmentManager;
 
 public abstract class SegmentAppCompatActivity extends AppCompatActivity implements SegmentManager.SegmentCallbacks {
 
-    private SegmentManager segmentManager = new SegmentManager(-1, this, this);
+    private SegmentManager segmentManager;
+    private Context context;
 
     public SegmentManager getSegmentManager() {
         return segmentManager;
@@ -23,6 +25,8 @@ public abstract class SegmentAppCompatActivity extends AppCompatActivity impleme
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (segmentManager == null)
+            segmentManager = new SegmentManager(-1, this, this, getLayoutInflater());
         super.onCreate(savedInstanceState);
         segmentManager.onCreate(savedInstanceState);
     }
@@ -82,4 +86,7 @@ public abstract class SegmentAppCompatActivity extends AppCompatActivity impleme
         super.onDestroy();
     }
 
+    public Context getContext() {
+        return context;
+    }
 }

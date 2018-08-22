@@ -102,8 +102,8 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     private void startInternal() {
         currentState = SegmentState.START;
-        controller.willShow();
-        boundedView.willShow();
+        controller.onStart();
+        boundedView.onStart();
     }
 
     public void onResume() {
@@ -161,8 +161,8 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     private void stopInternal() {
         currentState = SegmentState.STOP;
-        boundedView.willHide();
-        controller.willHide();
+        boundedView.onStop();
+        controller.onStop();
     }
 
     public void unBindView() {

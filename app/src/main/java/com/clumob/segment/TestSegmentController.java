@@ -22,9 +22,9 @@ public class TestSegmentController extends SegmentController<Object> {
     }
 
     @Override
-    public void willShow() {
-        Log.d("SEGMENT", "OnWillShow-" + this.toString().split("@")[1]);
-        super.willShow();
+    public void onStart() {
+        Log.d("SEGMENT", "OnStart-" + this.toString().split("@")[1]);
+        super.onStart();
     }
 
     @Override
@@ -40,9 +40,9 @@ public class TestSegmentController extends SegmentController<Object> {
     }
 
     @Override
-    public void willHide() {
-        Log.d("SEGMENT", "OnWillHide-" + this.toString().split("@")[1]);
-        super.willHide();
+    public void onStop() {
+        Log.d("SEGMENT", "OnStop-" + this.toString().split("@")[1]);
+        super.onStop();
     }
 
     @Override

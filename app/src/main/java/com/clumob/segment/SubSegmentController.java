@@ -21,9 +21,9 @@ class SubSegmentController extends SegmentController {
     }
 
     @Override
-    public void willShow() {
-        Log.d("SEGMENTSUB", "OnWillShow-" + this.toString().split("@")[1]);
-        super.willShow();
+    public void onStart() {
+        Log.d("SEGMENTSUB", "OnStart-" + this.toString().split("@")[1]);
+        super.onStart();
     }
 
     @Override
@@ -39,9 +39,9 @@ class SubSegmentController extends SegmentController {
     }
 
     @Override
-    public void willHide() {
-        Log.d("SEGMENTSUB", "OnWillHide-" + this.toString().split("@")[1]);
-        super.willHide();
+    public void onStop() {
+        Log.d("SEGMENTSUB", "OnStop-" + this.toString().split("@")[1]);
+        super.onStop();
     }
 
     @Override

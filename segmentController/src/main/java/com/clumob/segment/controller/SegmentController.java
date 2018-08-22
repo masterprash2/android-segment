@@ -28,7 +28,7 @@ public class SegmentController<VM> {
 
     }
 
-    public void willShow() {
+    public void onStart() {
 
     }
 
@@ -44,7 +44,7 @@ public class SegmentController<VM> {
         return null;
     }
 
-    public void willHide() {
+    public void onStop() {
 
     }
 

@@ -78,7 +78,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     protected abstract void onBind();
 
-    public final void willShow() {
+    public final void onStart() {
         currentState = SegmentViewState.START;
         for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
             lifecycle.onStart();
@@ -103,7 +103,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return null;
     }
 
-    public final void willHide() {
+    public final void onStop() {
         currentState = SegmentViewState.STOP;
         for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
             lifecycle.onStop();

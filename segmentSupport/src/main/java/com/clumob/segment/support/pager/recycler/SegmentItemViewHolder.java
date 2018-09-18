@@ -18,9 +18,9 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     private Segment<VM, SC> segment;
     private SegmentInfo<?, ?> segmentInfo;
 
-    private final SegmentProvider<VM,SC> segmentProvider;
+    private final SegmentProvider<VM, SC> segmentProvider;
 
-    public SegmentItemViewHolder(SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM,SC> segmentProvider) {
+    public SegmentItemViewHolder(SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM, SC> segmentProvider) {
         super(viewHolder.getView());
         this.segmentViewHolder = viewHolder;
         this.segmentProvider = segmentProvider;

@@ -4,9 +4,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 
-import com.clumob.listitem.controller.source.ItemControllerSource;
-import com.clumob.segment.controller.list.SegmentItemController;
-
 /**
  * Created by prashant.rathore on 13/07/18.
  */

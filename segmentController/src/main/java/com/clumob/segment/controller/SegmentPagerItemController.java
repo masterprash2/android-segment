@@ -1,6 +1,7 @@
 package com.clumob.segment.controller;
 
 
+import com.clumob.listitem.controller.source.ItemUpdatePublisher;
 import com.clumob.listitem.controller.source.ViewModelItemController;
 
 /**
@@ -14,8 +15,8 @@ public class SegmentPagerItemController extends ViewModelItemController<SegmentI
     }
 
     @Override
-    final public void onCreate() {
-        super.onCreate();
+    final public void onCreate(ItemUpdatePublisher publisher) {
+        super.onCreate(publisher);
     }
 
     @Override

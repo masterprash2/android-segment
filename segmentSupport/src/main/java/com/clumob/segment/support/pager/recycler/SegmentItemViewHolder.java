@@ -1,5 +1,8 @@
 package com.clumob.segment.support.pager.recycler;
 
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.clumob.recyclerview.adapter.RvViewHolder;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
@@ -20,8 +23,8 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
 
     private final SegmentProvider<VM, SC> segmentProvider;
 
-    public SegmentItemViewHolder(SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM, SC> segmentProvider) {
-        super(viewHolder.getView());
+    public SegmentItemViewHolder(View view, SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM, SC> segmentProvider) {
+        super(view);
         this.segmentViewHolder = viewHolder;
         this.segmentProvider = segmentProvider;
     }
@@ -52,6 +55,18 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
         }
         segmentInfo = null;
         segment = null;
+    }
+
+    @Override
+    protected void onScreenIsInFocus() {
+        super.onScreenIsInFocus();
+        resume();
+    }
+
+    @Override
+    protected void onScreenIsOutOfFocus() {
+        pause();
+        super.onScreenIsOutOfFocus();
     }
 
     public void resume() {

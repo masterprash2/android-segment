@@ -73,7 +73,9 @@ public abstract class SegmentFragment extends Fragment implements SegmentManager
 
     @Override
     public void onResume() {
-        segment.onResume();
+        if(getUserVisibleHint()) {
+            segment.onResume();
+        }
         super.onResume();
     }
 
@@ -81,6 +83,20 @@ public abstract class SegmentFragment extends Fragment implements SegmentManager
     public void onPause() {
         segment.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(getView() == null) {
+            return;
+        }
+        if(getUserVisibleHint()) {
+            segment.onResume();
+        }
+        else {
+            segment.onPause();
+        }
     }
 
     @Override

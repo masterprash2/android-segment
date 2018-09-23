@@ -5,7 +5,7 @@ import com.clumob.segment.controller.SegmentInfo;
 import java.util.Deque;
 import java.util.LinkedList;
 
-public abstract class SegmentNavigation {
+public class SegmentNavigation {
 
     private final SegmentManager segmentManager;
     private Deque<SegmentInfo> backStack = new LinkedList<>();
@@ -36,6 +36,10 @@ public abstract class SegmentNavigation {
 
     public void clearStack() {
         backStack.clear();
+    }
+
+    public int getBackStackSize() {
+        return backStack.size();
     }
 
 

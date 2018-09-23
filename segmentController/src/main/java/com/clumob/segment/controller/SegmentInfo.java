@@ -4,6 +4,9 @@ import android.os.Parcel;
 
 import com.clumob.segment.controller.util.ParcelableUtil;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created by prashant.rathore on 02/02/18.
  */
@@ -46,14 +49,16 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
 
     }
 
-    private <T> T readParcel(Parcel in) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    private <T> T readParcel(Parcel in) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         T parcelable = null;
         int readByteArrayLength = in.readInt();
         if (readByteArrayLength > 0) {
             final String className = in.readString();
             byte[] dataArray = new byte[readByteArrayLength];
             in.readByteArray(dataArray);
-            Creator<T> creator = (Creator) Class.forName(className).newInstance();
+            Constructor<?> constructor = Class.forName(className).getDeclaredConstructor();
+            constructor.setAccessible(true);
+            Creator<T> creator = (Creator)constructor.newInstance();
             parcelable = ParcelableUtil.unmarshall(dataArray, creator);
         }
         return parcelable;
@@ -96,7 +101,7 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
     }
 
     private <T extends Storable> void writeToParcel(T storable, Parcel parcel) {
-        if (storable == null) {
+        if (storable != null) {
             try {
                 final Class aClass = storable.creatorClass();
                 final String aClassName = aClass.getName();

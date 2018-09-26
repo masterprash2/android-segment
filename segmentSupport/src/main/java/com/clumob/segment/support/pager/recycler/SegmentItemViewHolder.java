@@ -20,7 +20,7 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     private final SegmentViewHolder<VM, SC> segmentViewHolder;
     private Segment<VM, SC> segment;
     private SegmentInfo<?, ?> segmentInfo;
-
+    private boolean isAttached;
     private final SegmentProvider<VM, SC> segmentProvider;
 
     public SegmentItemViewHolder(View view, SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM, SC> segmentProvider) {
@@ -34,12 +34,18 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
         destroySegment();
         segment = segmentProvider.provide(getController().getSegmentInfo());
         segment.bindView(segmentViewHolder);
-        segment.onStart();
         onBindSegment();
     }
 
-    protected abstract void onBindSegment();
+    @Override
+    protected void onAttached() {
+        this.isAttached = true;
+        super.onAttached();
+        segment.onStart();
+        resume();
+    }
 
+    protected abstract void onBindSegment();
 
     @Override
     final protected void unBindView() {
@@ -48,6 +54,14 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     }
 
     protected abstract void onUnbindSegment();
+
+    @Override
+    public void onDetached() {
+        this.isAttached = false;
+        pause();
+        segment.onStop();
+        super.onDetached();
+    }
 
     private void destroySegment() {
         if (segment != null) {
@@ -70,7 +84,7 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     }
 
     public void resume() {
-        if (!isResumed()) {
+        if (!isResumed() && isAttached) {
             segment.onResume();
         }
     }

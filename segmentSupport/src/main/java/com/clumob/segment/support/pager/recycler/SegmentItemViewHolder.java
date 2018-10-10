@@ -31,9 +31,12 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
 
     @Override
     final protected void bindView() {
-        destroySegment();
-        segment = segmentProvider.provide(getController().getSegmentInfo());
-        segment.bindView(segmentViewHolder);
+        if(segment == null || segmentInfo != getController().getSegmentInfo()) {
+            destroySegment();
+            this.segmentInfo = getController().getSegmentInfo();
+            segment = segmentProvider.provide(segmentInfo);
+            segment.bindView(segmentViewHolder);
+        }
         onBindSegment();
     }
 

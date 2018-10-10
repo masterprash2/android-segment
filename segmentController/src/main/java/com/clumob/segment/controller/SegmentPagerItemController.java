@@ -20,13 +20,13 @@ public class SegmentPagerItemController extends ViewModelItemController<SegmentI
     }
 
     @Override
-    final public void onAttach() {
-        super.onAttach();
+    final public void onAttach(Object source) {
+        super.onAttach(source);
     }
 
     @Override
-    final public void onDetach() {
-        super.onDetach();
+    final public void onDetach(Object source) {
+        super.onDetach(source);
     }
 
     @Override

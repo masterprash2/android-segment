@@ -23,12 +23,12 @@ public abstract class SegmentItemControllerImpl implements SegmentItemController
     }
 
     @Override
-    final public void onAttach() {
+    final public void onAttach(Object source) {
 
     }
 
     @Override
-    final public void onDetach() {
+    final public void onDetach(Object source) {
 
     }
 

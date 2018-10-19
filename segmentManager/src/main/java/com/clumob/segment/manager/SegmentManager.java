@@ -2,6 +2,7 @@ package com.clumob.segment.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -68,6 +69,7 @@ public class SegmentManager implements SegmentLifecycle {
         screenView = segment.createView(null);
         changeView(screenView.getView(), null);
         segment.bindView(screenView);
+        segment.attachedToParent();
     }
 
     private Segment createDefaultSegmentController(Bundle savedInstanceState) {
@@ -109,7 +111,7 @@ public class SegmentManager implements SegmentLifecycle {
     }
 
     SegmentInfo changeSegment(SegmentInfo segmentInfo) {
-        Segment newController = createRestoreSegment(segmentInfo);
+        final Segment newController = createRestoreSegment(segmentInfo);
         newController.attach(context, layoutInflater);
         final Segment oldController = this.segment;
         final SegmentViewHolder newScreen = newController.createView(null);
@@ -143,6 +145,7 @@ public class SegmentManager implements SegmentLifecycle {
                 return segmentInfo;
 
         }
+        oldController.detachedFromParent();
         changeView(newScreen.getView(), new Runnable() {
             public void run() {
                 switch (oldController.currentState) {
@@ -164,6 +167,7 @@ public class SegmentManager implements SegmentLifecycle {
                     case DESTROY:
                         return;
                 }
+                newController.attachedToParent();
             }
         });
         this.segment = newController;
@@ -179,12 +183,17 @@ public class SegmentManager implements SegmentLifecycle {
     }
 
 
+
     public void onStart() {
         segment.onStart();
     }
 
     public void onResume() {
         segment.onResume();
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        segment.onConfigurationChanged(newConfig);
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

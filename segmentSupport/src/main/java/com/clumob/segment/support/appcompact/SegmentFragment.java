@@ -2,6 +2,7 @@ package com.clumob.segment.support.appcompact;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -83,6 +84,12 @@ public abstract class SegmentFragment extends Fragment implements SegmentManager
     public void onPause() {
         segment.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        segment.onConfigurationChanged(newConfig);
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

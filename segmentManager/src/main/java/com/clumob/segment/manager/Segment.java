@@ -2,6 +2,7 @@ package com.clumob.segment.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,6 +16,8 @@ import com.clumob.segment.controller.Storable;
  */
 
 public class Segment<VM, Controller extends SegmentController<VM>> {
+
+
 
 
     public enum SegmentState {
@@ -71,6 +74,11 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         }
     }
 
+    public void attachedToParent() {
+        if(boundedView != null)
+            boundedView.attachedToParent();
+    }
+
     private void createInternal() {
         currentState = SegmentState.CREATE;
         controller.onCreate();
@@ -81,6 +89,10 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         boundedView = viewHolder;
         boundedView.bind(this, controller.getViewModel(), controller);
 //        boundedView.restoreState(segmentInfo.getSavedViewState());
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        boundedView.onConfigurationChanged(newConfig);
     }
 
     public void onStart() {
@@ -157,6 +169,12 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
                 stopInternal();
                 break;
         }
+    }
+
+
+    public void detachedFromParent() {
+        if(boundedView != null)
+            boundedView.detachedFromParent();
     }
 
     private void stopInternal() {

@@ -1,5 +1,6 @@
 package com.clumob.segment.support.pager.viewpager;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -119,6 +120,13 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     public void onSaveInstanceState(Bundle outBundle) {
 //        for(Segment segment : attachedSegments) {
 //        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration configuration) {
+        for(Segment segment : attachedSegments) {
+            segment.onConfigurationChanged(configuration);
+        }
     }
 
     @Nullable

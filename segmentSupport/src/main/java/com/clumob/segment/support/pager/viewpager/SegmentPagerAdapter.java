@@ -1,6 +1,7 @@
 package com.clumob.segment.support.pager.viewpager;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -92,6 +93,13 @@ public abstract class SegmentPagerAdapter extends PagerAdapter implements Segmen
             primaryItem.onActivityResult(code,resultCode,data);
         }
     }
+
+    public void onConfigurationChanged(Configuration configuration) {
+        if(primaryItem != null) {
+            primaryItem.onConfigurationChanged(configuration);
+        }
+    }
+
 
     public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
         if(primaryItem != null)

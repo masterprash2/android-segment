@@ -2,7 +2,9 @@ package com.clumob.segment.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,13 @@ import java.util.List;
 
 public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
 
+    private boolean attached;
+
+    protected void onConfigurationChanged(Configuration newConfig) {
+        for(SegmentManager segmentManager: segmentManagers.values()) {
+            segmentManager.onConfigurationChanged(newConfig);
+        }
+    }
 
     public enum SegmentViewState {
         FRESH,
@@ -180,6 +189,34 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
                 break;
         }
         return manager;
+    }
+
+    final protected void attachedToParent() {
+        if(!this.attached) {
+            this.attached = true;
+            onAttached();
+        }
+        else {
+            Log.d("SegVH","Already Attached " + toString());
+        }
+    }
+
+    protected void onAttached() {
+
+    }
+
+    final protected void detachedFromParent() {
+        if(this.attached) {
+            this.attached = false;
+            onDetached();
+        }
+        else {
+            Log.d("SegVH","Already Detached " + toString());
+        }
+    }
+
+    protected void onDetached() {
+
     }
 
     public void registerLifecycleListener(SegmentLifecycle listener) {

@@ -19,8 +19,6 @@ import java.util.List;
 
 public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
 
-    private boolean attached;
-
     protected void onConfigurationChanged(Configuration newConfig) {
         for(SegmentManager segmentManager: segmentManagers.values()) {
             segmentManager.onConfigurationChanged(newConfig);
@@ -191,28 +189,8 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return manager;
     }
 
-    final protected void attachedToParent() {
-        if(!this.attached) {
-            this.attached = true;
-            onAttached();
-        }
-        else {
-            Log.d("SegVH","Already Attached " + toString());
-        }
-    }
-
     protected void onAttached() {
 
-    }
-
-    final protected void detachedFromParent() {
-        if(this.attached) {
-            this.attached = false;
-            onDetached();
-        }
-        else {
-            Log.d("SegVH","Already Detached " + toString());
-        }
     }
 
     protected void onDetached() {

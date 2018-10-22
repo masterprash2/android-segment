@@ -24,7 +24,6 @@ public class SegmentManager implements SegmentLifecycle {
     public static final int SEGMENT_ID_EMPTY = Integer.MIN_VALUE;
     private final SegmentManager parentSegmentManager;
     private final SegmentCallbacks callbacks;
-    private final int managerId;
     private final Handler mHandler = new Handler();
     private final LayoutInflater layoutInflater;
 
@@ -40,7 +39,6 @@ public class SegmentManager implements SegmentLifecycle {
 
     SegmentManager(SegmentManager parentSegmentManager, int managerId, Context context, SegmentCallbacks callbacks, LayoutInflater layoutInflater) {
         this.parentSegmentManager = parentSegmentManager;
-        this.managerId = managerId;
         this.context = context;
         this.callbacks = callbacks;
         this.navigation = callbacks.createSegmentNavigation(this);
@@ -69,7 +67,6 @@ public class SegmentManager implements SegmentLifecycle {
         screenView = segment.createView(null);
         changeView(screenView.getView(), null);
         segment.bindView(screenView);
-        segment.attachedToParent();
     }
 
     private Segment createDefaultSegmentController(Bundle savedInstanceState) {
@@ -145,7 +142,6 @@ public class SegmentManager implements SegmentLifecycle {
                 return segmentInfo;
 
         }
-        oldController.detachedFromParent();
         changeView(newScreen.getView(), new Runnable() {
             public void run() {
                 switch (oldController.currentState) {
@@ -167,7 +163,6 @@ public class SegmentManager implements SegmentLifecycle {
                     case DESTROY:
                         return;
                 }
-                newController.attachedToParent();
             }
         });
         this.segment = newController;

@@ -74,11 +74,6 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         }
     }
 
-    public void attachedToParent() {
-        if(boundedView != null)
-            boundedView.attachedToParent();
-    }
-
     private void createInternal() {
         currentState = SegmentState.CREATE;
         controller.onCreate();
@@ -171,11 +166,6 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         }
     }
 
-
-    public void detachedFromParent() {
-        if(boundedView != null)
-            boundedView.detachedFromParent();
-    }
 
     private void stopInternal() {
         currentState = SegmentState.STOP;

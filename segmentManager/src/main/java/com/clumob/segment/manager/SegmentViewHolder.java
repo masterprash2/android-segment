@@ -43,6 +43,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     private List<SegmentLifecycle> segmentLifecycleListeners = new LinkedList<>();
 
     private SegmentViewState currentState = SegmentViewState.FRESH;
+    private boolean attachedToWindow = false;
 
     private LinkedHashMap<Integer, SegmentManager> segmentManagers = new LinkedHashMap<>();
 
@@ -52,6 +53,31 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         this.context = context;
         this.layoutInflater = layoutInflater;
         this.view = createView(layoutInflater, parentView);
+        this.view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View view) {
+                attachedToWindow = true;
+                onAttachedToWindow();
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View view) {
+                attachedToWindow = false;
+                onDetachedFromWindow();
+            }
+        });
+    }
+
+    public boolean isAttachedToWindow() {
+        return attachedToWindow;
+    }
+
+    protected void onAttachedToWindow() {
+
+    }
+
+    protected void onDetachedFromWindow() {
+
     }
 
     public Context getContext() {
@@ -187,14 +213,6 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
                 break;
         }
         return manager;
-    }
-
-    protected void onAttached() {
-
-    }
-
-    protected void onDetached() {
-
     }
 
     public void registerLifecycleListener(SegmentLifecycle listener) {

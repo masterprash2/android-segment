@@ -44,7 +44,6 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     protected void onAttached() {
         this.isAttached = true;
         super.onAttached();
-        segment.attachedToParent();
         segment.onStart();
         resume();
 
@@ -54,7 +53,6 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
 
     @Override
     final protected void unBindView() {
-        segment.detachedFromParent();
         onUnbindSegment();
         destroySegment();
     }
@@ -66,7 +64,6 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
         this.isAttached = false;
         pause();
         segment.onStop();
-        segment.detachedFromParent();
         super.onDetached();
     }
 

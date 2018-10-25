@@ -1,7 +1,6 @@
 package com.clumob.segment.support.pager.recycler;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.clumob.recyclerview.adapter.RvViewHolder;
 import com.clumob.segment.controller.SegmentController;
@@ -9,7 +8,6 @@ import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.list.SegmentItemController;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentViewHolder;
-import com.clumob.segment.support.pager.SegmentProvider;
 
 /**
  * Created by prashant.rathore on 11/07/18.
@@ -21,24 +19,24 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
     private Segment<VM, SC> segment;
     private SegmentInfo<?, ?> segmentInfo;
     private boolean isAttached;
-    private final SegmentProvider<VM, SC> segmentProvider;
 
-    public SegmentItemViewHolder(View view, SegmentViewHolder<VM, SC> viewHolder, SegmentProvider<VM, SC> segmentProvider) {
+    public SegmentItemViewHolder(View view, SegmentViewHolder<VM, SC> viewHolder) {
         super(view);
         this.segmentViewHolder = viewHolder;
-        this.segmentProvider = segmentProvider;
     }
 
     @Override
     final protected void bindView() {
-        if(segment == null || segmentInfo != getController().getSegmentInfo()) {
+        if (segment == null || segmentInfo != getController().getSegmentInfo()) {
             destroySegment();
             this.segmentInfo = getController().getSegmentInfo();
-            segment = segmentProvider.provide(segmentInfo);
+            segment = createSegment(segmentInfo);
             segment.bindView(segmentViewHolder);
         }
         onBindSegment();
     }
+
+    protected abstract Segment createSegment(SegmentInfo<?, ?> segmentInfo);
 
     @Override
     protected void onAttached() {

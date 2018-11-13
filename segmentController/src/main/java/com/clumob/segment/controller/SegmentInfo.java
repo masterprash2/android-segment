@@ -58,7 +58,7 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
             in.readByteArray(dataArray);
             Constructor<?> constructor = Class.forName(className).getDeclaredConstructor();
             constructor.setAccessible(true);
-            Creator<T> creator = (Creator)constructor.newInstance();
+            Creator<T> creator = (Creator) constructor.newInstance();
             parcelable = ParcelableUtil.unmarshall(dataArray, creator);
         }
         return parcelable;
@@ -102,19 +102,19 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
 
     private <T extends Storable> void writeToParcel(T storable, Parcel parcel) {
         if (storable != null) {
-            try {
-                final Class aClass = storable.creatorClass();
-                final String aClassName = aClass.getName();
-                byte[] marshall = ParcelableUtil.marshall(storable);
-                final int length = marshall.length;
-                if (length > 0) {
-                    parcel.writeInt(length);
-                    parcel.writeString(aClassName);
-                    parcel.writeByteArray(marshall);
-                    return;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            Creator<?> creator = storable.creator();
+            if(creator == null) {
+                throw new NullPointerException("Creator object cannot be null for " + getClass().getName());
+            }
+            final Class aClass = creator.getClass();
+            final String aClassName = aClass.getName();
+            byte[] marshall = ParcelableUtil.marshall(storable);
+            final int length = marshall.length;
+            if (length > 0) {
+                parcel.writeInt(length);
+                parcel.writeString(aClassName);
+                parcel.writeByteArray(marshall);
+                return;
             }
         }
         parcel.writeInt(-1);
@@ -122,8 +122,8 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
     }
 
     @Override
-    public Class creatorClass() {
-        return CREATOR.getClass();
+    public Creator<? extends SegmentInfo> creator() {
+        return CREATOR;
     }
 
 }

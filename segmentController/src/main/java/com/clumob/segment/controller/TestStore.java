@@ -11,8 +11,8 @@ public abstract class TestStore implements Storable {
     public abstract int getColor();
 
     @Override
-    public Class creatorClass() {
-        return AutoValue_TestStore.CREATOR.getClass();
+    public Creator<?> creator() {
+        return AutoValue_TestStore.CREATOR;
     }
 
     public static TestStore create(int color) {

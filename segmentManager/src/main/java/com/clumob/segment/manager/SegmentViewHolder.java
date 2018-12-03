@@ -185,7 +185,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     private SegmentManager createManagerInternal(int managerId, Bundle savedInstance) {
         SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId),getLayoutInflater());
-        this.segmentManagers.put(0, manager);
+        this.segmentManagers.put(managerId, manager);
         this.registerLifecycleListener(manager);
         switch (this.currentState) {
             case FRESH:

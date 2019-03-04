@@ -40,10 +40,6 @@ public class SegmentController<VM> {
 
     }
 
-    public Storable createStateSnapshot(Storable viewState) {
-        return null;
-    }
-
     public void onStop() {
 
     }

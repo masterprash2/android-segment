@@ -19,6 +19,8 @@ import java.util.List;
 
 public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
 
+    private Bundle savedInstance;
+
     protected void onConfigurationChanged(Configuration newConfig) {
         for(SegmentManager segmentManager: segmentManagers.values()) {
             segmentManager.onConfigurationChanged(newConfig);
@@ -186,7 +188,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     private SegmentManager createManagerInternal(int managerId, Bundle savedInstance) {
         SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId),getLayoutInflater());
         this.segmentManagers.put(managerId, manager);
-        this.registerLifecycleListener(manager);
+        this.savedInstance = savedInstance;
         switch (this.currentState) {
             case FRESH:
                 break;
@@ -212,15 +214,35 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
             case DESTROY:
                 break;
         }
+        this.registerLifecycleListener(manager);
         return manager;
     }
 
     public void registerLifecycleListener(SegmentLifecycle listener) {
         this.segmentLifecycleListeners.add(0, listener);
+        switch (this.currentState) {
+            case FRESH:
+                break;
+            case STOP:
+            case CREATE:
+                listener.onCreate(savedInstance);
+                break;
+            case PAUSE:
+            case START:
+                listener.onStart();
+                break;
+            case RESUME:
+                listener.onResume();
+                break;
+            case DESTROY:
+                listener.onDestroy();
+                break;
+        }
     }
 
     public void unRegisterLifecycleListener(SegmentLifecycle lifecycle) {
         this.segmentLifecycleListeners.remove(lifecycle);
+        lifecycle.onDestroy();
     }
 
     public boolean handleBackPressed() {

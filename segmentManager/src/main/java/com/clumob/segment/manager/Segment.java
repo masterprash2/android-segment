@@ -147,8 +147,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         controller.onPause();
         boundedView.pause();
         final Storable viewState = boundedView.createStateSnapshot();
-        final Storable stateSnapshot = controller.createStateSnapshot(viewState);
-        segmentInfo.setRestorableSegmentState(stateSnapshot);
+        segmentInfo.setRestorableSegmentState(viewState);
     }
 
     public void onStop() {

@@ -2,6 +2,7 @@ package com.clumob.segment.support.appcompact;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +42,13 @@ public abstract class SegmentAppCompatActivity extends AppCompatActivity impleme
     protected void onResume() {
         segmentManager.onResume();
         super.onResume();
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        segmentManager.onConfigurationChanged(newConfig);
     }
 
     @Override

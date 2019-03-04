@@ -7,7 +7,7 @@ import com.clumob.listitem.controller.source.ViewModelItemController;
 /**
  * Created by prashant.rathore on 03/07/18.
  */
-
+@Deprecated
 public class SegmentPagerItemController extends ViewModelItemController<SegmentInfo> {
 
     public SegmentPagerItemController(SegmentInfo viewModel) {

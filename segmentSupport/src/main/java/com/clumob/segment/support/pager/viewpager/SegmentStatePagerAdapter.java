@@ -2,22 +2,28 @@ package com.clumob.segment.support.pager.viewpager;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.listitem.controller.source.SourceUpdateEvent;
-import com.clumob.segment.manager.Segment;
 import com.clumob.segment.controller.SegmentInfo;
-import com.clumob.segment.controller.SegmentPagerItemController;
+import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentViewHolder;
-import com.clumob.segment.support.pager.SegmentProvider;
+import com.clumob.segment.support.pager.SegmentItemProvider;
 
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import io.reactivex.observers.DisposableObserver;
+
+import static com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter.ItemSegmentPair.pair;
 
 /**
  * Created by prashant.rathore on 02/07/18.
@@ -25,12 +31,15 @@ import io.reactivex.observers.DisposableObserver;
 
 public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
-    private final ItemControllerSource<? extends SegmentPagerItemController> dataSource;
-    private final SegmentProvider factory;
-    private Set<Segment> attachedSegments = new HashSet<>();
+    private final ItemControllerSource<? extends ItemController> dataSource;
+    private final SegmentItemProvider factory;
+    private Set<ItemSegmentPair> attachedSegments = new HashSet<>();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public SegmentStatePagerAdapter(ItemControllerSource<? extends SegmentPagerItemController> dataSource, SegmentProvider factory) {
+    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource,
+                                    SegmentItemProvider factory) {
         this.dataSource = dataSource;
+        this.dataSource.setViewInteractor(createViewInteractor());
         this.factory = factory;
         this.dataSource.observeAdapterUpdates().subscribe(new DisposableObserver<SourceUpdateEvent>() {
             @Override
@@ -51,13 +60,57 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         });
     }
 
+    private ItemControllerSource.ViewInteractor createViewInteractor() {
+        return new ItemControllerSource.ViewInteractor() {
+            Deque<Runnable> deque = new LinkedList();
+            private boolean processingInProgress;
+
+            public void processWhenSafe(Runnable runnable) {
+                this.deque.add(runnable);
+                if (!this.processingInProgress) {
+                    this.processingInProgress = true;
+                    this.processWhenQueueIdle();
+                }
+
+            }
+
+            private void processWhenQueueIdle() {
+                mHandler.post(new Runnable() {
+                    public void run() {
+                        if (isComputingLayout()) {
+                            mHandler.post(this);
+                        } else if (deque.peekFirst() != null) {
+                            Runnable runnable = (Runnable) deque.pollFirst();
+                            runnable.run();
+                            mHandler.post(this);
+                        } else {
+                            processingInProgress = false;
+                        }
+
+                    }
+                });
+            }
+
+            public void cancelOldProcess(Runnable runnable) {
+                mHandler.removeCallbacks(runnable);
+            }
+        };
+    }
+
+    private boolean isComputingLayout() {
+        return false;
+    }
+
     @Override
-    public Segment<?,?> instantiateItem(int index) {
-        SegmentPagerItemController item = dataSource.getItem(index);
-        Segment<?,?> segment = factory.provide(item.viewModel);
-        attachedSegments.add(segment);
+    public Object instantiateItem(int index) {
+        ItemController item = dataSource.getItem(index);
+        Segment<?, ?> segment = factory.provide(item);
+        ItemSegmentPair pair = pair(segment, item);
+        attachedSegments.add(pair);
         segment.onCreate();
-        return segment;
+        dataSource.onItemAttached(index);
+        pair.itemController.onAttach(pair.segment);
+        return pair;
     }
 
     @Override
@@ -65,54 +118,63 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         return dataSource.getItemCount();
     }
 
+    public Set<ItemSegmentPair> getAttachedSegments() {
+        return attachedSegments;
+    }
+
+    @Override
+    protected Segment<?, ?> retrieveSegmentFromObject(Object object) {
+        return ((ItemSegmentPair)object).segment;
+    }
 
     // ToDO: The lookup algorightm is slow;
     @Override
-    public int computeItemPosition(Segment<?,?> segment) {
+    public int computeItemPosition(Object inputItem) {
+        Segment<?, ?> segment = retrieveSegmentFromObject(inputItem);
         SegmentInfo segmentInfo = segment.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
-            SegmentPagerItemController item = dataSource.getItem(i);
-            if (item.viewModel.getId() == segmentInfo.getId()) {
+            ItemController item = dataSource.getItem(i);
+            if (item.getId() == segmentInfo.getId()) {
                 return i;
             }
         }
         return POSITION_NONE;
     }
 
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        Segment segment = (Segment) object;
-        SegmentViewHolder boundedView = segment.getBoundedView();
-        return boundedView != null && boundedView.getView() == view;
-    }
+
 
     @Override
-    public void destroyItem(Segment<?,?> segment) {
-        super.destroyItem(segment);
-        segment.onDestroy();
-        attachedSegments.remove(segment);
+    public void destroyItem(Object object) {
+        super.destroyItem(object);
+        ItemSegmentPair pair = (ItemSegmentPair) object;
+        pair.itemController.onDetach(pair.segment);
+        pair.segment.onDestroy();
+        attachedSegments.remove(pair);
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstance) {
-        for(Segment segment : attachedSegments) {
-            segment.onCreate();
+        super.onCreate(savedInstance);
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onCreate();
         }
     }
 
     @Override
     public void onStart() {
-        for(Segment segment : attachedSegments) {
-            segment.onStart();
+        super.onStart();
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onStart();
         }
     }
 
     @Override
     public void onPause() {
-        for(Segment segment : attachedSegments) {
-            segment.onPause();
+        super.onPause();
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onPause();
         }
     }
 
@@ -124,28 +186,40 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public void onConfigurationChanged(Configuration configuration) {
-        for(Segment segment : attachedSegments) {
-            segment.onConfigurationChanged(configuration);
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onConfigurationChanged(configuration);
         }
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return dataSource.getItem(position).getPageTitle();
     }
 
     @Override
     public void onStop() {
-        for(Segment segment : attachedSegments) {
-            segment.onStop();
+        super.onStop();
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onStop();
         }
     }
 
     @Override
     public void onDestroy() {
-        for(Segment segment : attachedSegments) {
-            segment.onDestroy();
+        super.onDestroy();
+        for (ItemSegmentPair segment : attachedSegments) {
+            segment.segment.onDestroy();
+        }
+    }
+
+
+    static class ItemSegmentPair {
+
+        final Segment<?,?> segment;
+        final ItemController itemController;
+
+        public ItemSegmentPair(Segment<?, ?> segment, ItemController itemController) {
+            this.segment = segment;
+            this.itemController = itemController;
+        }
+
+        static ItemSegmentPair pair(Segment<?,?> segment, ItemController itemController) {
+            return new ItemSegmentPair(segment,itemController);
         }
     }
 }

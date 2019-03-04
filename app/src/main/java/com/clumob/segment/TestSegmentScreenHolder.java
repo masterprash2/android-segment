@@ -10,17 +10,20 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.clumob.listitem.controller.source.ArraySource;
+import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemController;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.controller.TestStore;
+import com.clumob.segment.controller.list.SegmentItemController;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
+import com.clumob.segment.support.pager.SegmentItemProvider;
 import com.clumob.segment.support.pager.viewpager.SegmentPagerAdapter;
 import com.clumob.segment.support.pager.SegmentProvider;
 import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
@@ -66,11 +69,12 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
         return pagerAdapter.handleBackPressed();
     }
 
-    private SegmentProvider createControllerFactory() {
-        return new SegmentProvider() {
+    private SegmentItemProvider createControllerFactory() {
+        return new SegmentItemProvider() {
             @Override
-            public Segment<?, ?> provide(SegmentInfo segmentInfo) {
-                return new Segment<>(segmentInfo, createPresenter(), createScreenFactory());
+            public Segment<?, ?> provide(ItemController itemController) {
+                SegmentPagerItemController pagerItemController = (SegmentPagerItemController) itemController;
+                return new Segment<>(pagerItemController.viewModel, createPresenter(), createScreenFactory());
             }
         };
     }

@@ -4,7 +4,8 @@ package com.clumob.log;
  * Created by saurabh.garg on 3/26/18.
  */
 
-public abstract class AppLog {
+public class AppLog {
+
 
     public static void init(boolean isDebugMode) {
 
@@ -45,4 +46,5 @@ public abstract class AppLog {
     public static void always(String bbapp, String message) {
 
     }
+
 }

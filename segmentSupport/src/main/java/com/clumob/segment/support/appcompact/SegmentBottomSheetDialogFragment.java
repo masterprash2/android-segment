@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.clumob.log.AppLog;
 import com.clumob.segment.controller.SegmentInfo;
+import com.clumob.segment.controller.util.ParcelableUtil;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
@@ -37,8 +39,13 @@ public abstract class SegmentBottomSheetDialogFragment extends BottomSheetDialog
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.segment = createSegment();
+        preSegmentCreate(savedInstanceState);
+        this.segment = createSegment(savedInstanceState);
         segment.onCreate();
+    }
+
+    protected void preSegmentCreate(Bundle savedInstanceState) {
+
     }
 
     @Nullable
@@ -90,6 +97,13 @@ public abstract class SegmentBottomSheetDialogFragment extends BottomSheetDialog
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        try {
+            SegmentInfo segmentInfo = segment.getSegmentInfo();
+            byte[] marshall = ParcelableUtil.marshall(segmentInfo);
+            outState.putByteArray("SEGMENT_INFO", marshall);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -130,8 +144,27 @@ public abstract class SegmentBottomSheetDialogFragment extends BottomSheetDialog
         segment.onActivityResult(requestCode, resultCode, data);
     }
 
-    protected Segment<?, ?> createSegment() {
-        return provideSegment(provideSegmentInfo());
+    protected SegmentInfo restoreSegmentInfo(Bundle savedInstanceState) {
+        byte[] segmentInfoBytes = null;
+        if (savedInstanceState == null) {
+//            segmentInfoBytes = getIntent().getByteArrayExtra("SEGMENT_INFO");
+        } else {
+            segmentInfoBytes = savedInstanceState.getByteArray("SEGMENT_INFO");
+        }
+        SegmentInfo segmentInfo = null;
+        try {
+            if (segmentInfoBytes != null) {
+                segmentInfo = ParcelableUtil.unmarshall(segmentInfoBytes, SegmentInfo.CREATOR);
+            }
+        } catch (Exception e) {
+            AppLog.printStack(e);
+        }
+        return segmentInfo;
+    }
+
+    protected Segment<?, ?> createSegment(Bundle savedInstanceState) {
+        SegmentInfo segmentInfo = restoreSegmentInfo(savedInstanceState);
+        return provideSegment(segmentInfo == null ? provideSegmentInfo() : segmentInfo);
     }
 
     protected abstract SegmentInfo provideSegmentInfo();

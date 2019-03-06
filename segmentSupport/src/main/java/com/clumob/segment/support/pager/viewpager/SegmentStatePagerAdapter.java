@@ -4,16 +4,13 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.listitem.controller.source.SourceUpdateEvent;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.support.pager.SegmentItemProvider;
 
 import java.util.Deque;
@@ -29,14 +26,14 @@ import static com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapte
  * Created by prashant.rathore on 02/07/18.
  */
 
-public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
+public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentPagerAdapter {
 
-    private final ItemControllerSource<? extends ItemController> dataSource;
+    private final ItemControllerSource<T> dataSource;
     private final SegmentItemProvider factory;
-    private Set<ItemSegmentPair> attachedSegments = new HashSet<>();
+    private Set<ItemSegmentPair<T>> attachedSegments = new HashSet<>();
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public SegmentStatePagerAdapter(ItemControllerSource<? extends ItemController> dataSource,
+    public SegmentStatePagerAdapter(ItemControllerSource<T> dataSource,
                                     SegmentItemProvider factory) {
         this.dataSource = dataSource;
         this.dataSource.setViewInteractor(createViewInteractor());
@@ -103,7 +100,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public Object instantiateItem(int index) {
-        ItemController item = dataSource.getItem(index);
+        T item = getItem(index);
         Segment<?, ?> segment = factory.provide(item);
         ItemSegmentPair pair = pair(segment, item);
         attachedSegments.add(pair);
@@ -118,13 +115,13 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         return dataSource.getItemCount();
     }
 
-    public Set<ItemSegmentPair> getAttachedSegments() {
+    public Set<ItemSegmentPair<T>> getAttachedSegments() {
         return attachedSegments;
     }
 
     @Override
     protected Segment<?, ?> retrieveSegmentFromObject(Object object) {
-        return ((ItemSegmentPair)object).segment;
+        return ((ItemSegmentPair) object).segment;
     }
 
     // ToDO: The lookup algorightm is slow;
@@ -134,14 +131,13 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
         SegmentInfo segmentInfo = segment.getSegmentInfo();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
-            ItemController item = dataSource.getItem(i);
+            T item = getItem(i);
             if (item.getId() == segmentInfo.getId()) {
                 return i;
             }
         }
         return POSITION_NONE;
     }
-
 
 
     @Override
@@ -157,7 +153,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public void onCreate(@Nullable Bundle savedInstance) {
         super.onCreate(savedInstance);
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onCreate();
         }
     }
@@ -165,7 +161,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public void onStart() {
         super.onStart();
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onStart();
         }
     }
@@ -173,7 +169,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public void onPause() {
         super.onPause();
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onPause();
         }
     }
@@ -186,7 +182,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
 
     @Override
     public void onConfigurationChanged(Configuration configuration) {
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onConfigurationChanged(configuration);
         }
     }
@@ -194,7 +190,7 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public void onStop() {
         super.onStop();
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onStop();
         }
     }
@@ -202,24 +198,31 @@ public class SegmentStatePagerAdapter extends SegmentPagerAdapter {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        for (ItemSegmentPair segment : attachedSegments) {
+        for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onDestroy();
         }
     }
 
+    public T getItem(int position) {
+        return dataSource.getItem(position);
+    }
 
-    static class ItemSegmentPair {
+    public ItemControllerSource<T> getDataSource() {
+        return dataSource;
+    }
 
-        final Segment<?,?> segment;
-        final ItemController itemController;
+    static class ItemSegmentPair<T extends ItemController> {
 
-        public ItemSegmentPair(Segment<?, ?> segment, ItemController itemController) {
+        final Segment<?, ?> segment;
+        final T itemController;
+
+        public ItemSegmentPair(Segment<?, ?> segment, T itemController) {
             this.segment = segment;
             this.itemController = itemController;
         }
 
-        static ItemSegmentPair pair(Segment<?,?> segment, ItemController itemController) {
-            return new ItemSegmentPair(segment,itemController);
+        static <T extends ItemController> ItemSegmentPair<T> pair(Segment<?, ?> segment, T itemController) {
+            return new ItemSegmentPair<T>(segment, itemController);
         }
     }
 }

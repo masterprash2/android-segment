@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     private final static String KEY_SAVE_STATE = "saveViewState";
 
-    public SegmentViewHolder(Context context, LayoutInflater layoutInflater, ViewGroup parentView) {
+    public SegmentViewHolder(@NonNull Context context, @NonNull LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
         this.context = context;
         this.layoutInflater = layoutInflater;
         this.view = createView(layoutInflater, parentView);
@@ -98,7 +100,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return controller;
     }
 
-    protected abstract View createView(LayoutInflater layoutInflater, ViewGroup viewGroup);
+    protected abstract View createView(@NonNull LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup);
 
 
     void bind(Segment<?, ?> segment, VM viewModel, Controller controller) {

@@ -127,12 +127,11 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
     // ToDO: The lookup algorightm is slow;
     @Override
     public int computeItemPosition(Object inputItem) {
-        Segment<?, ?> segment = retrieveSegmentFromObject(inputItem);
-        SegmentInfo segmentInfo = segment.getSegmentInfo();
+        final long id = ((ItemSegmentPair) inputItem).itemController.getId();
         int itemCount = dataSource.getItemCount();
         for (int i = 0; i < itemCount; i++) {
             T item = getItem(i);
-            if (item.getId() == segmentInfo.getId()) {
+            if (item.getId() == id) {
                 return i;
             }
         }

@@ -1,5 +1,7 @@
 package com.clumob.segment.manager;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LifecycleRegistry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -22,6 +24,15 @@ import java.util.List;
 public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
 
     private Bundle savedInstance;
+    private LifecycleOwner lifecycleOwner;
+
+    void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+    }
+
+    public LifecycleOwner getLifecycleOwner() {
+        return lifecycleOwner;
+    }
 
     protected void onConfigurationChanged(Configuration newConfig) {
         for(SegmentManager segmentManager: segmentManagers.values()) {

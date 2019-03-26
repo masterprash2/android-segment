@@ -117,6 +117,9 @@ public abstract class SegmentPagerAdapter extends PagerAdapter implements Segmen
         Segment<?, ?> segment = retrieveSegmentFromObject(object);
         segment.onStop();
         segment.unBindView();
+        if(this.primaryItem == segment) {
+            this.primaryItem = null;
+        }
     }
 
     public boolean handleBackPressed() {

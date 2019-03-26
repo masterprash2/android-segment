@@ -1,8 +1,14 @@
 package com.clumob.segment.manager;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LifecycleRegistry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,15 +17,25 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.Storable;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
 
-public class Segment<VM, Controller extends SegmentController<VM>> {
+public class Segment<VM, Controller extends SegmentController<VM>> implements LifecycleOwner {
 
 
+    LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return mLifecycleRegistry;
+    }
 
     public enum SegmentState {
         FRESH,
@@ -58,13 +74,14 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
     }
 
     public SegmentViewHolder createView(ViewGroup parentView) {
-        return screenFactory.create(context, layoutInflater, parentView);
+        SegmentViewHolder<?, ?> segmentViewHolder = screenFactory.create(context, layoutInflater, parentView);
+        segmentViewHolder.setLifecycleOwner(this);
+        return segmentViewHolder;
     }
 
     public SegmentViewHolder getBoundedView() {
         return boundedView;
     }
-
 
     public void onCreate() {
         switch (this.currentState) {
@@ -79,6 +96,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         currentState = SegmentState.CREATE;
         controller.onCreate();
         controller.restoreState(segmentInfo.getRestorableSetmentState());
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
     }
 
     public void bindView(SegmentViewHolder<VM, Controller> viewHolder) {
@@ -112,6 +130,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         currentState = SegmentState.START;
         controller.onStart();
         boundedView.onStart();
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
     }
 
     public void onResume() {
@@ -125,6 +144,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
         currentState = SegmentState.RESUME;
         boundedView.resume();
         controller.onResume();
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
     }
 
     public void onPause() {
@@ -145,10 +165,12 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     private void pauseInternal() {
         currentState = SegmentState.PAUSE;
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
         controller.onPause();
         boundedView.pause();
         final Storable viewState = boundedView.createStateSnapshot();
         segmentInfo.setRestorableSegmentState(viewState);
+
     }
 
     public void onStop() {
@@ -169,8 +191,10 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     private void stopInternal() {
         currentState = SegmentState.STOP;
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
         boundedView.onStop();
         controller.onStop();
+
     }
 
     public void unBindView() {
@@ -190,6 +214,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> {
 
     private void destroyInternal() {
         currentState = SegmentState.DESTROY;
+        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
         controller.onDestroy();
     }
 

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey"
+    tools:context=".ScrollingActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <!--<android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/main.collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:background="@color/dark_grey"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>-->
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/color_white"
+            app:layout_anchor="@id/main.collapsing"
+            app:theme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_scrolling" />
+
+    <!--<android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_refer2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_circle"
+        android:padding="@dimen/margin_small"
+        app:finalToolbarHeight="?attr/actionBarSize"
+        app:finalWidth="20dp"
+        app:finalX="340dp"
+        app:finalY="16dp"
+        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:srcCompat="@drawable/ic_games"
+        app:tint="@color/dark_grey" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_holiday2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_circle"
+        android:padding="@dimen/margin_small"
+        app:finalToolbarHeight="?attr/actionBarSize"
+        app:finalWidth="20dp"
+        app:finalX="340dp"
+        app:finalY="16dp"
+        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:srcCompat="@drawable/ic_location"
+        app:tint="@color/dark_grey" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_card_giftcard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_circle"
+        android:padding="@dimen/margin_small"
+        app:finalToolbarHeight="?attr/actionBarSize"
+        app:finalWidth="20dp"
+        app:finalX="340dp"
+        app:finalY="16dp"
+        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:srcCompat="@drawable/ic_card_giftcard"
+        app:tint="@color/dark_grey" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_holiday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="270dp"
+        android:layout_marginStart="270dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_circle"
+        android:padding="@dimen/margin_small"
+        app:finalToolbarHeight="?attr/actionBarSize"
+        app:finalWidth="20dp"
+        app:finalX="340dp"
+        app:finalY="16dp"
+        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:srcCompat="@drawable/ic_beach"
+        app:tint="@color/dark_grey" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_document"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="340dp"
+        android:layout_marginStart="340dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_circle"
+        android:padding="@dimen/margin_small"
+        app:finalToolbarHeight="?attr/actionBarSize"
+        app:finalWidth="20dp"
+        app:finalX="340dp"
+        app:finalY="16dp"
+        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:srcCompat="@drawable/ic_insert_drive_file"
+        app:tint="@color/dark_grey" />-->
+
+
+</android.support.design.widget.CoordinatorLayout>

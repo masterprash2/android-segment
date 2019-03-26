@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomCollapseBehaviour">
+        <attr name="finalX" format="dimension"/>
+        <attr name="finalY" format="dimension"/>
+        <attr name="finalWidth" format="dimension"/>
+        <attr name="finalToolbarHeight" format="dimension"/>
+        <attr name="factor" format="float" />
+    </declare-styleable>
+</resources>

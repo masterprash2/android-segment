@@ -2,13 +2,13 @@ package in.til.yogeshkumar.timesanimation;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import com.google.android.material.tabs.TabLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +31,6 @@ import java.util.List;
 
 import in.til.yogeshkumar.timesanimation.Utils.ResourceUtils;
 import in.til.yogeshkumar.timesanimation.Utils.StartSnapHelper;
-import in.til.yogeshkumar.timesanimation.adapter.segment.SampleSegmentProvide;
 import in.til.yogeshkumar.timesanimation.adapter.segment.SampleSegmentView;
 import io.reactivex.subjects.BehaviorSubject;
 
@@ -76,7 +75,7 @@ public class ScrollingActivity extends AppCompatActivity {
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
-                recyclerView.setAdapter(new RvAdapter(createViewHolderProvider(), itemControllerSource, BehaviorSubject.<Boolean>create()));
+                recyclerView.setAdapter(new RvAdapter(createViewHolderProvider(), itemControllerSource, ScrollingActivity.this));
                 for(int i = 0 ; i < itemControllerSource.getItemCount() ; i++) {
                     tabLayout.addTab(tabLayout.newTab().setText("Index " + i));
                 }
@@ -121,7 +120,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private RecyclerView.Adapter<RvViewHolder> createRvAdapter() {
-        return new RvAdapter(createViewHolderProvider(), createItemControllerSource(), BehaviorSubject.<Boolean>create());
+        return new RvAdapter(createViewHolderProvider(), createItemControllerSource(), this);
     }
 
     private ItemControllerSource createItemControllerSource() {

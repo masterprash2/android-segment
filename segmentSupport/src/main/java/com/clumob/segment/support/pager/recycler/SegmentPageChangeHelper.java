@@ -1,7 +1,7 @@
 package com.clumob.segment.support.pager.recycler;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import android.view.View;
 
 import java.util.LinkedList;

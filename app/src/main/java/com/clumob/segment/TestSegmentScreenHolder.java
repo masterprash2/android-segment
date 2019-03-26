@@ -1,8 +1,8 @@
 package com.clumob.segment;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,6 @@ import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.SegmentPagerItemController;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.controller.TestStore;
-import com.clumob.segment.controller.list.SegmentItemController;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentManager;
 import com.clumob.segment.manager.SegmentNavigation;
@@ -25,7 +24,6 @@ import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.support.pager.SegmentItemProvider;
 import com.clumob.segment.support.pager.viewpager.SegmentPagerAdapter;
-import com.clumob.segment.support.pager.SegmentProvider;
 import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
 
 import java.util.ArrayList;

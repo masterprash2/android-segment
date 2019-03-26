@@ -2,10 +2,10 @@ package in.til.yogeshkumar.timesanimation.Utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.transition.TransitionManager;
-import android.support.v7.widget.AppCompatImageView;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.transition.TransitionManager;
+import androidx.appcompat.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;

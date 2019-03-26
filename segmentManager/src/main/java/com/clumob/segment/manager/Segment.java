@@ -1,14 +1,14 @@
 package com.clumob.segment.manager;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -16,10 +16,6 @@ import com.clumob.log.AppLog;
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.Storable;
-
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 
 /**

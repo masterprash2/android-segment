@@ -4,12 +4,11 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.listitem.controller.source.SourceUpdateEvent;
-import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.support.pager.SegmentItemProvider;
 

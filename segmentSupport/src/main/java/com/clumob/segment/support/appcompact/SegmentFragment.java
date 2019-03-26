@@ -4,15 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentManager;

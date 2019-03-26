@@ -1,7 +1,7 @@
 package in.til.yogeshkumar.timesanimation.adapter.segment;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentViewHolder;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.support.pager.SegmentItemProvider;
-import com.clumob.segment.support.pager.SegmentProvider;
 
 /**
  * Created by prashant.rathore on 11/07/18.

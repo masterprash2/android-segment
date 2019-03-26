@@ -6,8 +6,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.FloatRange;
-import android.support.v4.graphics.ColorUtils;
+import androidx.annotation.FloatRange;
+import androidx.core.graphics.ColorUtils;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
 

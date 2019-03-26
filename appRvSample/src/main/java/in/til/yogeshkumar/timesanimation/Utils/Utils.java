@@ -8,8 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
+import androidx.annotation.Nullable;
+
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;

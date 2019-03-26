@@ -2,7 +2,7 @@ package com.clumob.segment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.controller.Storable;
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentLifecycle;
 import com.clumob.segment.manager.SegmentView;
 import com.clumob.segment.manager.SegmentViewHolderFactory;
 import com.clumob.segment.manager.SegmentManager;

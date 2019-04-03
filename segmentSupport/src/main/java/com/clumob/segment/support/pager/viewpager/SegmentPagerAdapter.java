@@ -5,6 +5,9 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +17,53 @@ import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentLifecycle;
 import com.clumob.segment.manager.SegmentViewHolder;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by prashant.rathore on 02/07/18.
  */
 
-public abstract class SegmentPagerAdapter extends PagerAdapter implements SegmentLifecycle {
+public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     private Segment<?, ?> primaryItem;
     private SegmentViewHolder.SegmentViewState parentState = SegmentViewHolder.SegmentViewState.FRESH;
+
+    private final LifecycleOwner lifecycleOwner;
+
+    public SegmentPagerAdapter(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
+        observeLifecycleEvents();
+    }
+
+    private void observeLifecycleEvents() {
+        this.lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
+            @Override
+            public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+                switch (event) {
+                    case ON_CREATE:
+                        onCreate();
+                        break;
+                    case ON_START:
+                        onStart();
+                        break;
+                    case ON_RESUME:
+                        onResume();
+                        break;
+                    case ON_PAUSE:
+                        onPause();
+                        break;
+                    case ON_STOP:
+                        onStop();
+                        break;
+                    case ON_DESTROY:
+                        onDestroy();
+                        break;
+                    case ON_ANY:
+                        break;
+                }
+            }
+        });
+    }
 
     @NonNull
     @Override
@@ -148,37 +190,31 @@ public abstract class SegmentPagerAdapter extends PagerAdapter implements Segmen
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstance) {
+    protected void onCreate() {
         parentState = SegmentViewHolder.SegmentViewState.CREATE;
     }
 
-    @Override
-    public void onStart() {
+    protected void onStart() {
         parentState = SegmentViewHolder.SegmentViewState.START;
     }
 
-    @Override
-    public void onResume() {
+    protected void onResume() {
         parentState = SegmentViewHolder.SegmentViewState.RESUME;
         if (primaryItem != null) {
             primaryItem.onResume();
         }
     }
 
-    @Override
-    public void onPause() {
+    protected void onPause() {
         parentState = SegmentViewHolder.SegmentViewState.PAUSE;
     }
 
 
-    @Override
-    public void onStop() {
+    protected void onStop() {
         parentState = SegmentViewHolder.SegmentViewState.STOP;
     }
 
-    @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         parentState = SegmentViewHolder.SegmentViewState.DESTROY;
     }
 }

@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import androidx.lifecycle.LifecycleOwner;
 import io.reactivex.observers.DisposableObserver;
 
 import static com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter.ItemSegmentPair.pair;
@@ -32,8 +33,10 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
     private Set<ItemSegmentPair<T>> attachedSegments = new HashSet<>();
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
+
     public SegmentStatePagerAdapter(ItemControllerSource<T> dataSource,
-                                    SegmentItemProvider factory) {
+                                    SegmentItemProvider factory, LifecycleOwner lifecycleOwner) {
+        super(lifecycleOwner);
         this.dataSource = dataSource;
         this.dataSource.setViewInteractor(createViewInteractor());
         this.factory = factory;
@@ -149,15 +152,15 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstance) {
-        super.onCreate(savedInstance);
+    protected void onCreate() {
+        super.onCreate();
         for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onCreate();
         }
     }
 
     @Override
-    public void onStart() {
+    protected void onStart() {
         super.onStart();
         for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onStart();
@@ -165,17 +168,11 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
     }
 
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onPause();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outBundle) {
-//        for(Segment segment : attachedSegments) {
-//        }
     }
 
     @Override
@@ -186,7 +183,7 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
     }
 
     @Override
-    public void onStop() {
+    protected void onStop() {
         super.onStop();
         for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onStop();
@@ -194,7 +191,7 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
     }
 
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
         for (ItemSegmentPair<T> segment : attachedSegments) {
             segment.segment.onDestroy();

@@ -33,7 +33,8 @@ public class SegmentView extends FrameLayout {
     public void setSegment(Segment<?, ?> segment) {
         if (this.segment != segment) {
             if (this.segment != null) {
-                removeView(segment.getBoundedView().getView());
+                if(segment.getBoundedView() != null)
+                    removeView(segment.getBoundedView().getView());
                 segment.onDestroy();
             }
             this.segment = segment;

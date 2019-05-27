@@ -20,7 +20,12 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
+}
 
 dependencies {
     compileOnly fileTree(dir: '../libs-external', include: ['*.jar'])
@@ -35,6 +40,9 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0-rc01'
+    implementation "androidx.lifecycle:lifecycle-runtime:2.0.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.0.0"
+
     compile project(path: ':segmentController')
 
     compileOnly project(path: ':androidStubs')

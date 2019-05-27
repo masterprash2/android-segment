@@ -10,7 +10,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.Storable;
@@ -20,23 +24,73 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public abstract class SegmentViewHolder<VD, Controller extends SegmentController> {
+public abstract class SegmentViewHolder<VD, Controller extends SegmentController> implements LifecycleOwner {
 
     private Bundle savedInstance;
-    private LifecycleOwner lifecycleOwner;
 
-    void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
+    LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
+    private LifecycleOwner parentLifecycleOwner;
+    private LifecycleObserver parentLifecycleObserver;
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return mLifecycleRegistry;
     }
 
-    public LifecycleOwner getLifecycleOwner() {
-        return lifecycleOwner;
-    }
 
     protected void onConfigurationChanged(Configuration newConfig) {
         for (SegmentManager segmentManager : segmentManagers.values()) {
             segmentManager.onConfigurationChanged(newConfig);
         }
+    }
+
+    void attachLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        detachLifecycleOwner();
+        if (lifecycleOwner == null) {
+            return;
+        }
+        this.parentLifecycleOwner = lifecycleOwner;
+        this.parentLifecycleObserver = new DefaultLifecycleObserver() {
+            @Override
+            public void onCreate(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
+            }
+
+            @Override
+            public void onStart(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
+            }
+
+            @Override
+            public void onResume(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
+            }
+
+            @Override
+            public void onPause(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
+            }
+
+            @Override
+            public void onStop(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
+            }
+
+            @Override
+            public void onDestroy(@NonNull LifecycleOwner owner) {
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
+            }
+        };
+        parentLifecycleOwner.getLifecycle().addObserver(parentLifecycleObserver);
+    }
+
+    void detachLifecycleOwner() {
+        if (parentLifecycleOwner != null) {
+            parentLifecycleOwner.getLifecycle().removeObserver(parentLifecycleObserver);
+        }
+        parentLifecycleOwner = null;
+        parentLifecycleObserver = null;
     }
 
     public enum SegmentViewState {

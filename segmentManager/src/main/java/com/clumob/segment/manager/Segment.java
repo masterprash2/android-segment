@@ -71,7 +71,6 @@ public class Segment<VM, Controller extends SegmentController<VM>> implements Li
 
     public SegmentViewHolder createView(ViewGroup parentView) {
         SegmentViewHolder<?, ?> segmentViewHolder = screenFactory.create(context, layoutInflater, parentView);
-        segmentViewHolder.setLifecycleOwner(this);
         return segmentViewHolder;
     }
 
@@ -97,6 +96,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> implements Li
 
     public void bindView(SegmentViewHolder<VM, Controller> viewHolder) {
         boundedView = viewHolder;
+        boundedView.attachLifecycleOwner(this);
         boundedView.bind(this, controller.getViewData(), controller);
 //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
@@ -195,6 +195,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> implements Li
 
     public void unBindView() {
         if (boundedView != null) {
+            boundedView.detachLifecycleOwner();
             boundedView.unBind();
             boundedView = null;
         }

@@ -2,6 +2,7 @@ package com.clumob.segment.support.pager.viewpager;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,6 +10,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.PagerAdapter;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +30,18 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     private Segment<?, ?> primaryItem;
     private SegmentViewHolder.SegmentViewState parentState = SegmentViewHolder.SegmentViewState.FRESH;
-
     private final LifecycleOwner lifecycleOwner;
+    private LifecycleEventObserver lifecycleEventObserver;
 
     public SegmentPagerAdapter(LifecycleOwner lifecycleOwner) {
         this.lifecycleOwner = lifecycleOwner;
-        observeLifecycleEvents();
     }
 
     private void observeLifecycleEvents() {
-        this.lifecycleOwner.getLifecycle().addObserver(new LifecycleEventObserver() {
+        if(this.lifecycleEventObserver != null) {
+            return;
+        }
+        this.lifecycleEventObserver = new LifecycleEventObserver() {
             @Override
             public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
                 switch (event) {
@@ -62,7 +67,8 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
                         break;
                 }
             }
-        });
+        };
+        this.lifecycleOwner.getLifecycle().addObserver(lifecycleEventObserver);
     }
 
     @NonNull
@@ -123,6 +129,11 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         }
     }
 
+    @Override
+    public void registerDataSetObserver(@NonNull DataSetObserver observer) {
+        super.registerDataSetObserver(observer);
+        observeLifecycleEvents();
+    }
 
     @Override
     final public int getItemPosition(@NonNull Object object) {

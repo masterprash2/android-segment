@@ -58,7 +58,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
 
     private SegmentPagerAdapter createPagerAdapter() {
         ItemControllerSource<SegmentPagerItemController> presenterSource = createPresenterSource();
-        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory(), getLifecycleOwner());
+        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory(), this);
         return pagerAdapter;
     }
 

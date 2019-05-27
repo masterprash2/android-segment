@@ -1,10 +1,8 @@
 package com.clumob.segment.support.pager.viewpager;
 
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.Nullable;
 
 import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.listitem.controller.source.ItemControllerSource;
@@ -17,7 +15,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import androidx.lifecycle.LifecycleOwner;
 import io.reactivex.observers.DisposableObserver;
 
 import static com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter.ItemSegmentPair.pair;
@@ -35,8 +32,8 @@ public class SegmentStatePagerAdapter<T extends ItemController> extends SegmentP
 
 
     public SegmentStatePagerAdapter(ItemControllerSource<T> dataSource,
-                                    SegmentItemProvider factory, LifecycleOwner lifecycleOwner) {
-        super(lifecycleOwner);
+                                    SegmentItemProvider factory) {
+        super();
         this.dataSource = dataSource;
         this.dataSource.setViewInteractor(createViewInteractor());
         this.factory = factory;

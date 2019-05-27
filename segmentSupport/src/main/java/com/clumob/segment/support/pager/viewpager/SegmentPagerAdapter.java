@@ -3,24 +3,18 @@ package com.clumob.segment.support.pager.viewpager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.DataSetObserver;
-import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.viewpager.widget.PagerAdapter;
 
-import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.clumob.segment.manager.Segment;
-import com.clumob.segment.manager.SegmentLifecycle;
 import com.clumob.segment.manager.SegmentViewHolder;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by prashant.rathore on 02/07/18.
@@ -30,15 +24,17 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
 
     private Segment<?, ?> primaryItem;
     private SegmentViewHolder.SegmentViewState parentState = SegmentViewHolder.SegmentViewState.FRESH;
-    private final LifecycleOwner lifecycleOwner;
+    private LifecycleOwner lifecycleOwner;
     private LifecycleEventObserver lifecycleEventObserver;
 
-    public SegmentPagerAdapter(LifecycleOwner lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
+    public SegmentPagerAdapter() {
     }
 
-    private void observeLifecycleEvents() {
-        if(this.lifecycleEventObserver != null) {
+
+    public void attachLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        detachLifeCycleOwner();
+        this.lifecycleOwner = lifecycleOwner;
+        if (this.lifecycleOwner == null) {
             return;
         }
         this.lifecycleEventObserver = new LifecycleEventObserver() {
@@ -71,6 +67,15 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         this.lifecycleOwner.getLifecycle().addObserver(lifecycleEventObserver);
     }
 
+    public void detachLifeCycleOwner() {
+        if (this.lifecycleOwner != null) {
+            lifecycleEventObserver.onStateChanged(lifecycleOwner, Lifecycle.Event.ON_DESTROY);
+            this.lifecycleOwner.getLifecycle().removeObserver(lifecycleEventObserver);
+        }
+        lifecycleOwner = null;
+    }
+
+
     @NonNull
     @Override
     final public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -96,11 +101,11 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         }
     }
 
-    protected abstract Segment<?,?> retrieveSegmentFromObject(Object object);
+    protected abstract Segment<?, ?> retrieveSegmentFromObject(Object object);
 
 
     private void syncSegmentStateWithParent(Segment item) {
-        if(item == null) {
+        if (item == null) {
             return;
         }
         switch (parentState) {
@@ -113,7 +118,7 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
                 item.onStart();
                 break;
             case RESUME:
-                if(this.primaryItem == item) {
+                if (this.primaryItem == item) {
                     item.onResume();
                     break;
                 }
@@ -132,7 +137,6 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
     @Override
     public void registerDataSetObserver(@NonNull DataSetObserver observer) {
         super.registerDataSetObserver(observer);
-        observeLifecycleEvents();
     }
 
     @Override
@@ -170,7 +174,7 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
         Segment<?, ?> segment = retrieveSegmentFromObject(object);
         segment.onStop();
         segment.unBindView();
-        if(this.primaryItem == segment) {
+        if (this.primaryItem == segment) {
             this.primaryItem = null;
         }
     }
@@ -183,21 +187,21 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
     }
 
     public void onActivityResult(int code, int resultCode, Intent data) {
-        if(primaryItem != null) {
-            primaryItem.onActivityResult(code,resultCode,data);
+        if (primaryItem != null) {
+            primaryItem.onActivityResult(code, resultCode, data);
         }
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        if(primaryItem != null) {
+        if (primaryItem != null) {
             primaryItem.onConfigurationChanged(configuration);
         }
     }
 
 
     public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
-        if(primaryItem != null)
-            primaryItem.onRequestPermissionsResult(code,permissions,grantResults);
+        if (primaryItem != null)
+            primaryItem.onRequestPermissionsResult(code, permissions, grantResults);
     }
 
 
@@ -228,4 +232,5 @@ public abstract class SegmentPagerAdapter extends PagerAdapter {
     protected void onDestroy() {
         parentState = SegmentViewHolder.SegmentViewState.DESTROY;
     }
+
 }

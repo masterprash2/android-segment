@@ -53,12 +53,13 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     @Override
     protected void onBind() {
         this.pagerAdapter = createPagerAdapter();
+        this.pagerAdapter.attachLifecycleOwner(this);
         this.viewPager.setAdapter(pagerAdapter);
     }
 
     private SegmentPagerAdapter createPagerAdapter() {
         ItemControllerSource<SegmentPagerItemController> presenterSource = createPresenterSource();
-        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory(), this);
+        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
         return pagerAdapter;
     }
 
@@ -94,6 +95,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
 
     @Override
     protected void onUnBind() {
+        this.pagerAdapter.detachLifeCycleOwner();
     }
 
     private SegmentController createPresenter() {

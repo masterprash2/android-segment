@@ -12,7 +12,7 @@ import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
  */
 
 public class TestPagerAdapter extends SegmentStatePagerAdapter {
-    public TestPagerAdapter(ItemControllerSource<SegmentPagerItemController> dataSource, SegmentItemProvider factory, LifecycleOwner lifecycleOwner) {
-        super(dataSource, factory, lifecycleOwner);
+    public TestPagerAdapter(ItemControllerSource<SegmentPagerItemController> dataSource, SegmentItemProvider factory) {
+        super(dataSource, factory);
     }
 }

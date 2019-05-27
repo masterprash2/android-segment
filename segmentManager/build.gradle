@@ -26,17 +26,15 @@ dependencies {
     compileOnly fileTree(dir: '../libs-external', include: ['*.jar'])
     compileOnly fileTree(dir: '../libs-external', include: ['*.aar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
-
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
-    androidTestImplementation 'androidx.annotation:annotation:1.1.0-alpha02'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0-rc01'
     compile project(path: ':segmentController')
 
     compileOnly project(path: ':androidStubs')

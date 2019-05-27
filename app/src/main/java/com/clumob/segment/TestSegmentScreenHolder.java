@@ -1,13 +1,14 @@
 package com.clumob.segment;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 
 import com.clumob.listitem.controller.source.ArraySource;
 import com.clumob.listitem.controller.source.ItemController;
@@ -52,13 +53,12 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     @Override
     protected void onBind() {
         this.pagerAdapter = createPagerAdapter();
-        registerLifecycleListener(this.pagerAdapter);
         this.viewPager.setAdapter(pagerAdapter);
     }
 
     private SegmentPagerAdapter createPagerAdapter() {
         ItemControllerSource<SegmentPagerItemController> presenterSource = createPresenterSource();
-        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory());
+        SegmentStatePagerAdapter pagerAdapter = new SegmentStatePagerAdapter(presenterSource, createControllerFactory(), getLifecycleOwner());
         return pagerAdapter;
     }
 
@@ -72,7 +72,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
             @Override
             public Segment<?, ?> provide(ItemController itemController) {
                 SegmentPagerItemController pagerItemController = (SegmentPagerItemController) itemController;
-                return new Segment<>(pagerItemController.viewModel, createPresenter(), createScreenFactory());
+                return new Segment<>(pagerItemController.viewData, createPresenter(), createScreenFactory());
             }
         };
     }
@@ -94,7 +94,6 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
 
     @Override
     protected void onUnBind() {
-        unRegisterLifecycleListener(this.pagerAdapter);
     }
 
     private SegmentController createPresenter() {

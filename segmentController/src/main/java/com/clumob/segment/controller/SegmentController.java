@@ -1,7 +1,5 @@
 package com.clumob.segment.controller;
 
-import android.os.Parcel;
-
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
@@ -9,46 +7,21 @@ import io.reactivex.annotations.Nullable;
 /**
  * Created by prashant.rathore on 05/07/18.
  */
+public interface SegmentController<VD> {
 
-public class SegmentController<VM> {
+    public VD getViewData();
 
-    protected final Storable args;
-    private final VM viewModel;
+    public void onCreate();
 
-    public SegmentController(@Nullable Storable args, @NonNull VM viewModel) {
-        this.args = args;
-        this.viewModel = viewModel;
-    }
+    public void restoreState(Storable restorableState);
 
-    public VM getViewModel() {
-        return viewModel;
-    }
+    public void onStart();
 
-    public void onCreate() {
+    public void onResume();
 
-    }
+    public void onPause();
 
-    public void restoreState(Storable restorableState) {
+    public void onStop();
 
-    }
-
-    public void onStart() {
-
-    }
-
-    public void onResume() {
-
-    }
-
-    public void onPause() {
-
-    }
-
-    public void onStop() {
-
-    }
-
-    public void onDestroy() {
-
-    }
+    public void onDestroy();
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.clumob.listitem.controller.source.ItemController;
 import com.clumob.segment.controller.SegmentController;
+import com.clumob.segment.controller.SegmentControllerImpl;
 import com.clumob.segment.controller.SegmentInfo;
 import com.clumob.segment.manager.Segment;
 import com.clumob.segment.manager.SegmentViewHolder;
@@ -22,7 +23,7 @@ public class SampleSegmentProvide implements SegmentItemProvider {
     @Override
     public Segment<?, ?> provide(final ItemController itemController) {
         final SegmentInfo segmentInfo = new SegmentInfo((int) itemController.getId(), null);
-        return new Segment<>(segmentInfo, new SegmentController<Object>(null, null){
+        return new Segment<>(segmentInfo, new SegmentControllerImpl<Object>(null, null){
             @Override
             public void onResume() {
                 Log.d("SEGMENTRV","Resume INDEX- "+segmentInfo.getId());

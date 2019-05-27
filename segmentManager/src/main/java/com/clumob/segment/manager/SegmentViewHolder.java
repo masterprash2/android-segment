@@ -1,17 +1,16 @@
 package com.clumob.segment.manager;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.clumob.segment.controller.SegmentController;
 import com.clumob.segment.controller.Storable;
@@ -21,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public abstract class SegmentViewHolder<VM, Controller extends SegmentController> {
+public abstract class SegmentViewHolder<VD, Controller extends SegmentController> {
 
     private Bundle savedInstance;
     private LifecycleOwner lifecycleOwner;
@@ -35,7 +34,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     }
 
     protected void onConfigurationChanged(Configuration newConfig) {
-        for(SegmentManager segmentManager: segmentManagers.values()) {
+        for (SegmentManager segmentManager : segmentManagers.values()) {
             segmentManager.onConfigurationChanged(newConfig);
         }
     }
@@ -52,7 +51,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
     private final Context context;
     private Controller controller;
-    private VM viewModel;
+    private VD viewData;
     private final LayoutInflater layoutInflater;
     private final View view;
     private List<SegmentLifecycle> segmentLifecycleListeners = new LinkedList<>();
@@ -103,8 +102,8 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
         return this.view;
     }
 
-    public VM getViewModel() {
-        return viewModel;
+    public VD getViewData() {
+        return viewData;
     }
 
     public Controller getController() {
@@ -114,9 +113,9 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
     protected abstract View createView(@NonNull LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup);
 
 
-    void bind(Segment<?, ?> segment, VM viewModel, Controller controller) {
+    void bind(Segment<?, ?> segment, VD viewData, Controller controller) {
         currentState = SegmentViewState.CREATE;
-        this.viewModel = viewModel;
+        this.viewData = viewData;
         this.controller = controller;
         for (SegmentLifecycle lifecycle : segmentLifecycleListeners) {
             lifecycle.onCreate(null);
@@ -170,14 +169,14 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
 
     public void onActivityResult(int code, int resultCode, Intent data) {
-        for(SegmentManager segmentManager : segmentManagers.values()) {
-            segmentManager.onActivityResult(code,resultCode,data);
+        for (SegmentManager segmentManager : segmentManagers.values()) {
+            segmentManager.onActivityResult(code, resultCode, data);
         }
     }
 
     public void onRequestPermissionsResult(int code, String[] permissions, int[] grantResults) {
-        for(SegmentManager segmentManager : segmentManagers.values()) {
-            segmentManager.onRequestPermissionsResult(code,permissions,grantResults);
+        for (SegmentManager segmentManager : segmentManagers.values()) {
+            segmentManager.onRequestPermissionsResult(code, permissions, grantResults);
         }
     }
 
@@ -199,7 +198,7 @@ public abstract class SegmentViewHolder<VM, Controller extends SegmentController
 
 
     private SegmentManager createManagerInternal(int managerId, Bundle savedInstance) {
-        SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId),getLayoutInflater());
+        SegmentManager manager = new SegmentManager(managerId, context, getChildManagerCallbacks(managerId), getLayoutInflater());
         this.segmentManagers.put(managerId, manager);
         this.savedInstance = savedInstance;
         switch (this.currentState) {

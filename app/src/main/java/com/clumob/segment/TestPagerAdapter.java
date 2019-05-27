@@ -1,9 +1,10 @@
 package com.clumob.segment;
 
+import androidx.lifecycle.LifecycleOwner;
+
 import com.clumob.listitem.controller.source.ItemControllerSource;
 import com.clumob.segment.controller.SegmentPagerItemController;
 import com.clumob.segment.support.pager.SegmentItemProvider;
-import com.clumob.segment.support.pager.SegmentProvider;
 import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
 
 /**
@@ -11,7 +12,7 @@ import com.clumob.segment.support.pager.viewpager.SegmentStatePagerAdapter;
  */
 
 public class TestPagerAdapter extends SegmentStatePagerAdapter {
-    public TestPagerAdapter(ItemControllerSource<SegmentPagerItemController> dataSource, SegmentItemProvider factory) {
-        super(dataSource, factory);
+    public TestPagerAdapter(ItemControllerSource<SegmentPagerItemController> dataSource, SegmentItemProvider factory, LifecycleOwner lifecycleOwner) {
+        super(dataSource, factory, lifecycleOwner);
     }
 }

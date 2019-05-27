@@ -118,7 +118,6 @@ public class SegmentInfo<Args extends Storable, RestoreableState extends Storabl
             }
         }
         parcel.writeInt(-1);
-        return;
     }
 
     @Override

@@ -3,13 +3,14 @@ package com.clumob.segment;
 import android.util.Log;
 
 import com.clumob.segment.controller.SegmentController;
+import com.clumob.segment.controller.SegmentControllerImpl;
 import com.clumob.segment.controller.Storable;
 
 /**
  * Created by prashant.rathore on 20/06/18.
  */
 
-public class TestSegmentController extends SegmentController<Object> {
+public class TestSegmentController extends SegmentControllerImpl<Object> {
     public TestSegmentController(Storable args, Object viewModel) {
         super(args,viewModel);
         Log.d("SEGMENT", "");

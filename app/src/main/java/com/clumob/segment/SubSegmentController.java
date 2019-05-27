@@ -3,12 +3,13 @@ package com.clumob.segment;
 import android.util.Log;
 
 import com.clumob.segment.controller.SegmentController;
+import com.clumob.segment.controller.SegmentControllerImpl;
 
 /**
  * Created by prashant.rathore on 08/07/18.
  */
 
-class SubSegmentController extends SegmentController {
+class SubSegmentController extends SegmentControllerImpl {
 
     public SubSegmentController() {
         super(null,null);

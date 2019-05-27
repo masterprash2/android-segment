@@ -1,14 +1,14 @@
 package com.clumob.segment.controller;
 
 
+import com.clumob.listitem.controller.source.ItemControllerImpl;
 import com.clumob.listitem.controller.source.ItemUpdatePublisher;
-import com.clumob.listitem.controller.source.ViewModelItemController;
 
 /**
  * Created by prashant.rathore on 03/07/18.
  */
 @Deprecated
-public class SegmentPagerItemController extends ViewModelItemController<SegmentInfo> {
+public class SegmentPagerItemController extends ItemControllerImpl<SegmentInfo> {
 
     public SegmentPagerItemController(SegmentInfo viewModel) {
         super(viewModel);
@@ -41,7 +41,7 @@ public class SegmentPagerItemController extends ViewModelItemController<SegmentI
 
     @Override
     final public long getId() {
-        return viewModel.getId();
+        return viewData.getId();
     }
 
     public String getPageTitle() {

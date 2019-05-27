@@ -97,7 +97,7 @@ public class Segment<VM, Controller extends SegmentController<VM>> implements Li
 
     public void bindView(SegmentViewHolder<VM, Controller> viewHolder) {
         boundedView = viewHolder;
-        boundedView.bind(this, controller.getViewModel(), controller);
+        boundedView.bind(this, controller.getViewData(), controller);
 //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 

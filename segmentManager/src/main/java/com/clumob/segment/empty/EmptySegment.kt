@@ -18,7 +18,7 @@ import com.clumob.segment.manager.SegmentViewHolderFactory
 class EmptySegment(segmentInfo: SegmentInfo)
     : Segment<Storable?, SegmentController<Storable?>>(segmentInfo, SegmentControllerImpl(null, null)
         , object : SegmentViewHolderFactory {
-    override fun create(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?): SegmentViewHolder<*, *> {
+    override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
         return object : SegmentViewHolder<Any?, SegmentController<*>?>(context!!, layoutInflater!!, parentView) {
             override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
                 return View(context)

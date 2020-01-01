@@ -17,14 +17,19 @@ import com.clumob.segment.manager.Segment.SegmentState
 /**
  * Created by prashant.rathore on 23/02/18.
  */
-class SegmentManager internal constructor(private val parentSegmentManager: SegmentManager?, managerId: Int, private val context: Context?, val callbacks: SegmentCallbacks?, layoutInflater: LayoutInflater?) : SegmentLifecycle {
+class SegmentManager internal constructor(private val parentSegmentManager: SegmentManager?,
+                                          managerId: Int,
+                                          private val context: Context,
+                                          val callbacks: SegmentCallbacks?,
+                                          val layoutInflater: LayoutInflater) : SegmentLifecycle {
+
     private val mHandler = Handler()
-    private val layoutInflater: LayoutInflater?
     private var segment: Segment<*, *>? = null
     private var screenView: SegmentViewHolder<*, *>? = null
     val navigation: SegmentNavigation?
 
-    constructor(managerId: Int, context: Context?, callbacks: SegmentCallbacks?, layoutInflater: LayoutInflater?) : this(null, managerId, context, callbacks, layoutInflater) {}
+    constructor(managerId: Int, context: Context, callbacks: SegmentCallbacks?, layoutInflater: LayoutInflater)
+            : this(null, managerId, context, callbacks, layoutInflater)
 
     val rootSegmentManager: SegmentManager
         get() = if (parentSegmentManager == null) {
@@ -166,7 +171,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     override fun onSaveInstanceState(outState: Bundle) {
         try {
             val segmentInfo = segment!!.getSegmentInfo()
-            val marshall = marshall(segmentInfo!!)
+            val marshall = marshall(segmentInfo)
             outState.putByteArray("SEGMENT_INFO", marshall)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -198,6 +203,5 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
 
     init {
         navigation = callbacks!!.createSegmentNavigation(this)
-        this.layoutInflater = layoutInflater
     }
 }

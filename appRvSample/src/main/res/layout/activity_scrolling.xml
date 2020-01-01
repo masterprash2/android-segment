@@ -50,7 +50,7 @@
         app:finalWidth="20dp"
         app:finalX="340dp"
         app:finalY="16dp"
-        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:layout_behavior="com.timesanimation.Utils.CollapsingBehaviour"
         app:srcCompat="@drawable/ic_games"
         app:tint="@color/dark_grey" />
 
@@ -67,7 +67,7 @@
         app:finalWidth="20dp"
         app:finalX="340dp"
         app:finalY="16dp"
-        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:layout_behavior="com.timesanimation.Utils.CollapsingBehaviour"
         app:srcCompat="@drawable/ic_location"
         app:tint="@color/dark_grey" />
 
@@ -84,7 +84,7 @@
         app:finalWidth="20dp"
         app:finalX="340dp"
         app:finalY="16dp"
-        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:layout_behavior="com.timesanimation.Utils.CollapsingBehaviour"
         app:srcCompat="@drawable/ic_card_giftcard"
         app:tint="@color/dark_grey" />
 
@@ -101,7 +101,7 @@
         app:finalWidth="20dp"
         app:finalX="340dp"
         app:finalY="16dp"
-        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:layout_behavior="com.timesanimation.Utils.CollapsingBehaviour"
         app:srcCompat="@drawable/ic_beach"
         app:tint="@color/dark_grey" />
 
@@ -118,7 +118,7 @@
         app:finalWidth="20dp"
         app:finalX="340dp"
         app:finalY="16dp"
-        app:layout_behavior="in.til.yogeshkumar.timesanimation.Utils.CollapsingBehaviour"
+        app:layout_behavior="com.timesanimation.Utils.CollapsingBehaviour"
         app:srcCompat="@drawable/ic_insert_drive_file"
         app:tint="@color/dark_grey" />-->
 

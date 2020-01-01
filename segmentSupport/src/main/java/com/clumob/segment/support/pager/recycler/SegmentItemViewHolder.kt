@@ -27,7 +27,7 @@ abstract class SegmentItemViewHolder<VM, SC : SegmentController<VM>?>(view: View
         onBindSegment()
     }
 
-    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment<*, *>?
+    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment<*, *>
     override fun onAttached() {
         isAttached = true
         super.onAttached()

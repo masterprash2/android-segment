@@ -78,8 +78,8 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
 
     private fun createScreenFactory(): SegmentViewHolderFactory {
         return object : SegmentViewHolderFactory {
-            override fun create(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?): SegmentViewHolder<*, *> {
-                return object : SegmentViewHolder<Any?, SegmentController<Any?>>(context!!, layoutInflater!!, parentView) {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
+                return object : SegmentViewHolder<Any?, SegmentController<Any?>>(context, layoutInflater, parentView) {
                     private var oldView: View? = null
                     var frameLayout: FrameLayout? = null
                     var tv: TextView? = null

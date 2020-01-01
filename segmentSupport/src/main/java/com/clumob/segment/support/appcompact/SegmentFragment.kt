@@ -32,7 +32,7 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        segment!!.attach(context, inflater)
+        segment!!.attach(context!!, inflater)
         viewHolder = segment!!.createView(container)
         return viewHolder!!.view
     }

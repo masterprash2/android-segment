@@ -39,7 +39,7 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
     }
 
 
-    fun attach(context: Context?, layoutInflater: LayoutInflater?) {
+    fun attach(context: Context, layoutInflater: LayoutInflater) {
         this.context = context
         this.layoutInflater = layoutInflater
     }
@@ -49,7 +49,7 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
     }
 
     fun createView(parentView: ViewGroup?): SegmentViewHolder<*, *> {
-        return screenFactory.create(context, layoutInflater, parentView)
+        return screenFactory.create(context!!, layoutInflater!!, parentView)
     }
 
     fun getBoundedView(): SegmentViewHolder<*, *>? {

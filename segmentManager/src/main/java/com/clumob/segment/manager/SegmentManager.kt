@@ -17,7 +17,7 @@ import com.clumob.segment.manager.Segment.SegmentState
 /**
  * Created by prashant.rathore on 23/02/18.
  */
-class SegmentManager internal @JvmOverloads constructor(private val parentSegmentManager: SegmentManager? = null,
+class SegmentManager @JvmOverloads constructor(private val parentSegmentManager: SegmentManager? = null,
                                                             managerId: Int,
                                                             private val context: Context,
                                                             val callbacks: SegmentCallbacks,

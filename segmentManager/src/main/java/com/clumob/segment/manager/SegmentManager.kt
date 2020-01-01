@@ -22,7 +22,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     private val layoutInflater: LayoutInflater?
     private var segment: Segment<*, *>? = null
     private var screenView: SegmentViewHolder<*, *>? = null
-    val navigation: SegmentNavigation
+    val navigation: SegmentNavigation?
 
     constructor(managerId: Int, context: Context?, callbacks: SegmentCallbacks?, layoutInflater: LayoutInflater?) : this(null, managerId, context, callbacks, layoutInflater) {}
 
@@ -178,7 +178,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     }
 
     override fun handleBackPressed(): Boolean {
-        return segment != null && (segment!!.handleBackPressed() || navigation.popBackStack())
+        return segment != null && (segment!!.handleBackPressed() || navigation != null && navigation.popBackStack())
     }
 
     override fun onDestroy() {
@@ -189,7 +189,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     interface SegmentCallbacks {
         fun provideSegment(segmentInfo: SegmentInfo): Segment<*, *>?
         fun setSegmentView(view: View?)
-        fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation
+        fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation?
     }
 
     companion object {

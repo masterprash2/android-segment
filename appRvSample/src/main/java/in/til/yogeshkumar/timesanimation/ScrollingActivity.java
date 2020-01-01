@@ -83,7 +83,7 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
 
-        SegmentTabsHelper.attach(recyclerView, tabLayout, startSnapHelper);
+        SegmentTabsHelper.INSTANCE.attach(recyclerView, tabLayout, startSnapHelper);
 
 //        RecyclerView.Adapter adapter = recyclerView.getAdapter();
 //        for(int i = 0 ; i < adapter.getItemCount() ; i++) {
@@ -153,7 +153,7 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public SegmentItemViewHolder<?, ? extends SegmentController> provideViewHolder(ViewGroup viewGroup, int i) {
                 SampleSegmentView sampleSegmentView = new SampleSegmentView(viewGroup.getContext(), LayoutInflater.from(viewGroup.getContext()), viewGroup);
-                return new SegmentItemViewHolder(sampleSegmentView.view,sampleSegmentView) {
+                return new SegmentItemViewHolder(sampleSegmentView.getView(),sampleSegmentView) {
                     @Override
                     protected Segment createSegment(SegmentInfo segmentInfo) {
                         return null;

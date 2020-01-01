@@ -36,7 +36,7 @@ public class MainActivity extends SegmentAppCompatActivity  {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SegmentView segmentView = new SegmentView(this);
-        SegmentInfo<Storable, Storable> segmentInfo = new SegmentInfo<>(1, null);
+        SegmentInfo segmentInfo = new SegmentInfo(1, null);
         segmentView.setSegment(new Segment(segmentInfo, new SegmentControllerImpl(segmentInfo.getArguments(), null), new SegmentViewHolderFactory() {
             @Override
             public SegmentViewHolder<?, ?> create(Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {

@@ -7,7 +7,8 @@ import com.clumob.listitem.controller.source.ItemUpdatePublisher
  * Created by prashant.rathore on 03/07/18.
  */
 @Deprecated("")
-class SegmentPagerItemController(viewModel: SegmentInfo<*, *>?) : ItemControllerImpl<SegmentInfo<*, *>?>(viewModel) {
+class SegmentPagerItemController(viewModel: SegmentInfo) : ItemControllerImpl<SegmentInfo?>(viewModel) {
+
     override fun onCreate(publisher: ItemUpdatePublisher) {
         super.onCreate(publisher)
     }

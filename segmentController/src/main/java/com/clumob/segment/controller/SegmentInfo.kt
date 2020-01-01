@@ -8,41 +8,42 @@ import java.lang.reflect.InvocationTargetException
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-class SegmentInfo<Args : Storable?, RestoreableState : Storable?> : Storable {
+open class SegmentInfo : Storable {
+
     var id = 0
-    var arguments: Args? = null
+    var arguments: Storable? = null
         private set
-    var restorableSetmentState: RestoreableState? = null
+    var restorableSetmentState: Storable? = null
         private set
 
     internal constructor() {}
-    constructor(id: Int, args: Args) {
+    constructor(id: Int, args: Storable?) {
         this.id = id
         arguments = args
     }
 
-    protected constructor(`in`: Parcel) {
-        id = `in`.readInt()
+    protected constructor(input: Parcel) {
+        id = input.readInt()
         try {
-            arguments = readParcel<Args>(`in`)
+            arguments = readParcel<Storable>(input)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         try {
-            restorableSetmentState = readParcel<RestoreableState>(`in`)
+            restorableSetmentState = readParcel<Storable>(input)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
     @Throws(ClassNotFoundException::class, IllegalAccessException::class, InstantiationException::class, NoSuchMethodException::class, InvocationTargetException::class)
-    private fun <T> readParcel(`in`: Parcel): T? {
+    private fun <T> readParcel(input: Parcel): T? {
         var parcelable: T? = null
-        val readByteArrayLength = `in`.readInt()
+        val readByteArrayLength = input.readInt()
         if (readByteArrayLength > 0) {
-            val className = `in`.readString()
+            val className = input.readString()
             val dataArray = ByteArray(readByteArrayLength)
-            `in`.readByteArray(dataArray)
+            input.readByteArray(dataArray)
             val constructor = Class.forName(className).getDeclaredConstructor()
             constructor.isAccessible = true
             val creator: Parcelable.Creator<T> = constructor.newInstance() as Parcelable.Creator<T>
@@ -57,11 +58,11 @@ class SegmentInfo<Args : Storable?, RestoreableState : Storable?> : Storable {
 
     override fun writeToParcel(parcel: Parcel, i: Int) {
         parcel.writeInt(id)
-        writeToParcel<Args?>(arguments, parcel)
-        writeToParcel<RestoreableState?>(restorableSetmentState, parcel)
+        writeToParcel<Storable?>(arguments, parcel)
+        writeToParcel<Storable?>(restorableSetmentState, parcel)
     }
 
-    fun setRestorableSegmentState(restorableSetmentState: RestoreableState) {
+    fun setRestorableSegmentState(restorableSetmentState: Storable?) {
         this.restorableSetmentState = restorableSetmentState
     }
 
@@ -83,7 +84,7 @@ class SegmentInfo<Args : Storable?, RestoreableState : Storable?> : Storable {
         parcel.writeInt(-1)
     }
 
-    override fun creator(): Parcelable.Creator<out SegmentInfo<*, *>> {
+    override fun creator(): Parcelable.Creator<out SegmentInfo> {
         return CREATOR
     }
 
@@ -92,12 +93,12 @@ class SegmentInfo<Args : Storable?, RestoreableState : Storable?> : Storable {
         private const val KEY_PARAMS = "params"
         private const val KEY_SAVED_STATE = "savedState"
         @JvmField
-        val CREATOR: Parcelable.Creator<SegmentInfo<*, *>> = object : Parcelable.Creator<SegmentInfo<*, *>> {
-            override fun createFromParcel(`in`: Parcel): SegmentInfo<Storable, Storable> {
-                return SegmentInfo(`in`)
+        val CREATOR: Parcelable.Creator<SegmentInfo> = object : Parcelable.Creator<SegmentInfo> {
+            override fun createFromParcel(input: Parcel): SegmentInfo {
+                return SegmentInfo(input)
             }
 
-            override fun newArray(size: Int): Array<SegmentInfo<Storable, Storable>?> {
+            override fun newArray(size: Int): Array<SegmentInfo?> {
                 return arrayOfNulls(size)
             }
         }

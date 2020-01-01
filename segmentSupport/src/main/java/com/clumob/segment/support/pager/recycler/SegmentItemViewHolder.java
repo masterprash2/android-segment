@@ -17,7 +17,7 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
 
     private final SegmentViewHolder<VM, SC> segmentViewHolder;
     private Segment<VM, SC> segment;
-    private SegmentInfo<?, ?> segmentInfo;
+    private SegmentInfo segmentInfo;
     private boolean isAttached;
 
     public SegmentItemViewHolder(View view, SegmentViewHolder<VM, SC> viewHolder) {
@@ -36,7 +36,7 @@ public abstract class SegmentItemViewHolder<VM, SC extends SegmentController<VM>
         onBindSegment();
     }
 
-    protected abstract Segment createSegment(SegmentInfo<?, ?> segmentInfo);
+    protected abstract Segment createSegment(SegmentInfo segmentInfo);
 
     @Override
     protected void onAttached() {

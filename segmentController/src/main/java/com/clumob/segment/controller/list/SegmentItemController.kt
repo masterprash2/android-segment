@@ -7,5 +7,5 @@ import com.clumob.segment.controller.SegmentInfo
  * Created by prashant.rathore on 11/07/18.
  */
 interface SegmentItemController : ItemController {
-    val segmentInfo: SegmentInfo<*, *>?
+    val segmentInfo: SegmentInfo?
 }

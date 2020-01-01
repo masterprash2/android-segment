@@ -153,7 +153,7 @@ public class ScrollingActivity extends AppCompatActivity {
             @Override
             public SegmentItemViewHolder<?, ? extends SegmentController> provideViewHolder(ViewGroup viewGroup, int i) {
                 SampleSegmentView sampleSegmentView = new SampleSegmentView(viewGroup.getContext(), LayoutInflater.from(viewGroup.getContext()), viewGroup);
-                return new SegmentItemViewHolder(sampleSegmentView.getView(),sampleSegmentView) {
+                return new SegmentItemViewHolder(sampleSegmentView.view,sampleSegmentView) {
                     @Override
                     protected Segment createSegment(SegmentInfo segmentInfo) {
                         return null;

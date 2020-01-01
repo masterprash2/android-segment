@@ -21,7 +21,7 @@ import java.util.Random;
 class SubSegmentViewViewHolderFactory implements SegmentViewHolderFactory {
     @Override
     public SegmentViewHolder<?, ?> create(final Context context, LayoutInflater layoutInflater, @Nullable ViewGroup parentView) {
-        return new SegmentViewHolder<Object, SegmentController>(context,layoutInflater,parentView) {
+        return new SegmentViewHolder<Object, SegmentController<Object>>(context,layoutInflater,parentView) {
 
 
 

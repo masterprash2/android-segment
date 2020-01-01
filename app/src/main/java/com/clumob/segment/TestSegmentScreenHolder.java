@@ -88,7 +88,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
     private List<SegmentPagerItemController> createSegmentList() {
         ArrayList<SegmentPagerItemController> segmentInfos = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            segmentInfos.add(new SegmentPagerItemController(new SegmentInfo<Storable, TestStore>(i, null)));
+            segmentInfos.add(new SegmentPagerItemController(new SegmentInfo(i, null)));
         }
         return segmentInfos;
     }
@@ -126,7 +126,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
                         this.frameLayout = getView().findViewById(R.id.frameLayout);
                         this.frameLayout.setBackgroundColor(color);
                         SegmentNavigation navigation = getNavigation(1);
-                        navigation.addToBackStack(new SegmentInfo<Storable, Storable>(1, null));
+                        navigation.addToBackStack(new SegmentInfo(1, null));
                     }
 
                     @Override
@@ -135,7 +135,7 @@ public class TestSegmentScreenHolder extends SegmentViewHolder<Object, TestSegme
                     }
 
                     @Override
-                    public SegmentManager.SegmentCallbacks getChildManagerCallbacks(int navigationId) {
+                    public SegmentManager.SegmentCallbacks createChildManagerCallbacks(int navigationId) {
                         return new SegmentManager.SegmentCallbacks() {
 
 

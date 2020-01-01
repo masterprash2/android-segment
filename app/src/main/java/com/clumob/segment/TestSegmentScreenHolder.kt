@@ -103,7 +103,7 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
                                 return Segment<Any?, SegmentController<Any?>>(segmentInfo, SubSegmentController(), SubSegmentViewViewHolderFactory())
                             }
 
-                            override fun setSegmentView(view: View?) {
+                            override fun setSegmentView(view: View) {
                                 if (oldView !== view) {
                                     frameLayout!!.removeAllViews()
                                     frameLayout!!.post { frameLayout!!.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT) }
@@ -111,8 +111,8 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
                                 oldView = view
                             }
 
-                            override fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation? {
-                                return object : SegmentNavigation(segmentManager!!) {}
+                            override fun createSegmentNavigation(segmentManager: SegmentManager): SegmentNavigation {
+                                return SegmentNavigation(segmentManager)
                             }
                         }
                     }

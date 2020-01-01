@@ -1,5 +1,6 @@
 package com.clumob.segment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,11 +21,12 @@ class MainActivity : SegmentAppCompatActivity() {
         })
     }
 
+    @SuppressLint("NewApi")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val segmentView = SegmentView(this)
+        val segmentView = SegmentView(context = this)
         val segmentInfo = SegmentInfo(1, null)
-        segmentView.setSegment(Segment<Any?, SegmentController<Any?>>(segmentInfo, SegmentControllerImpl<Any?>(segmentInfo.arguments, null), object : SegmentViewHolderFactory {
+        segmentView.setSegment(Segment<Any?, SegmentController<Any?>>(segmentInfo, SegmentControllerImpl(segmentInfo.arguments, null), object : SegmentViewHolderFactory {
             override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
                 return TestSegmentScreenHolder(context, layoutInflater, parentView)
             }
@@ -33,11 +35,11 @@ class MainActivity : SegmentAppCompatActivity() {
         //        getSegmentManager().getNavigation().navigateToScreen(new SegmentInfo<Storable, Storable>(1, null));
     }
 
-    override fun setSegmentView(view: View?) {
+    override fun setSegmentView(view: View) {
         setContentView(view)
     }
 
-    override fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation? {
-        return object : SegmentNavigation(segmentManager!!) {}
+    override fun createSegmentNavigation(segmentManager: SegmentManager): SegmentNavigation {
+        return SegmentNavigation(segmentManager)
     }
 }

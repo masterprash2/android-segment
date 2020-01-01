@@ -72,7 +72,7 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
     fun bindView(viewHolder: SegmentViewHolder<*, *>) {
         boundedView = viewHolder as SegmentViewHolder<VM, Controller>
         boundedView!!.attachLifecycleOwner(this)
-        boundedView!!.bind(this, controller!!.viewData, controller)
+        boundedView!!.bind(controller!!.viewData, controller)
         //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 

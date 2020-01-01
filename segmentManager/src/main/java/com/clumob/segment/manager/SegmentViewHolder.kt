@@ -13,19 +13,62 @@ import com.clumob.segment.controller.Storable
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
 import java.util.*
 
-abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val context: Context, val layoutInflater: LayoutInflater, parentView: ViewGroup?) : LifecycleOwner {
+abstract class SegmentViewHolder<VD, Controller : SegmentController<VD>?>
+(
+        val context: Context,
+        val layoutInflater: LayoutInflater,
+        parentView: ViewGroup?
+) : LifecycleOwner {
+
+
+    enum class SegmentViewState {
+        FRESH, CREATE, START, RESUME, PAUSE, STOP, DESTROY
+    }
+
+
+    val mLifecycleRegistry = LifecycleRegistry(this)
     private var savedInstance: Bundle? = null
-    var mLifecycleRegistry = LifecycleRegistry(this)
+
     private var parentLifecycleOwner: LifecycleOwner? = null
     private var parentLifecycleObserver: LifecycleObserver? = null
+
+
+    var controller: Controller? = null
+        private set
+    var viewData: VD? = null
+        private set
+
+    private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
+    private var currentState = SegmentViewState.FRESH
+    var isAttachedToWindow = false
+    private val segmentManagers = LinkedHashMap<Int, SegmentManager>()
+
+
+     val view: View by lazy(LazyThreadSafetyMode.PUBLICATION) {
+         val view = createView(layoutInflater, parentView)
+
+         view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+             override fun onViewAttachedToWindow(view: View) {
+                 isAttachedToWindow = true
+                 onAttachedToWindow()
+             }
+
+             override fun onViewDetachedFromWindow(view: View) {
+                 isAttachedToWindow = false
+                 onDetachedFromWindow()
+             }
+         })
+         view
+     }
+
+
     override fun getLifecycle(): Lifecycle {
         return mLifecycleRegistry
     }
 
     fun onConfigurationChanged(newConfig: Configuration?) {
-        for (segmentManager in segmentManagers.values) {
+        for (segmentManager in segmentManagers.values)
             segmentManager.onConfigurationChanged(newConfig)
-        }
     }
 
     fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner?) {
@@ -70,25 +113,15 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val con
         parentLifecycleObserver = null
     }
 
-    enum class SegmentViewState {
-        FRESH, CREATE, START, RESUME, PAUSE, STOP, DESTROY
-    }
 
-    var controller: Controller? = null
-        private set
-    var viewData: VD? = null
-        private set
-    val view: View
-    private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
-    private var currentState = SegmentViewState.FRESH
-    var isAttachedToWindow = false
-    private val segmentManagers = LinkedHashMap<Int, SegmentManager>()
 
     protected fun onAttachedToWindow() {}
     protected fun onDetachedFromWindow() {}
 
     protected abstract fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View
-    fun bind(segment: Segment<*, *>?, viewData: VD, controller: Controller) {
+
+
+    internal fun bind(viewData: VD, controller: Controller) {
         currentState = SegmentViewState.CREATE
         this.viewData = viewData
         this.controller = controller
@@ -99,21 +132,22 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val con
     }
 
     protected abstract fun onBind()
-    fun onStart() {
+
+    internal fun onStart() {
         currentState = SegmentViewState.START
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onStart()
         }
     }
 
-    fun resume() {
+    internal fun resume() {
         currentState = SegmentViewState.RESUME
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onResume()
         }
     }
 
-    fun pause() {
+    internal fun pause() {
         currentState = SegmentViewState.PAUSE
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onPause()
@@ -124,14 +158,14 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val con
         return null
     }
 
-    fun onStop() {
+    internal fun onStop() {
         currentState = SegmentViewState.STOP
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onStop()
         }
     }
 
-    fun unBind() {
+    internal fun unBind() {
         currentState = SegmentViewState.DESTROY
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onDestroy()
@@ -140,6 +174,7 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val con
     }
 
     protected abstract fun onUnBind()
+
     fun onActivityResult(code: Int, resultCode: Int, data: Intent?) {
         for (segmentManager in segmentManagers.values) {
             segmentManager.onActivityResult(code, resultCode, data)
@@ -223,18 +258,4 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<*>?>(val con
         private const val KEY_SAVE_STATE = "saveViewState"
     }
 
-    init {
-        view = createView(layoutInflater, parentView)
-        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(view: View) {
-                isAttachedToWindow = true
-                onAttachedToWindow()
-            }
-
-            override fun onViewDetachedFromWindow(view: View) {
-                isAttachedToWindow = false
-                onDetachedFromWindow()
-            }
-        })
-    }
 }

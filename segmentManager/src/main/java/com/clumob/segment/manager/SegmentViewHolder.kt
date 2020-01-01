@@ -187,7 +187,7 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<VD>?>
         }
     }
 
-    fun getNavigation(navigationId: Int): SegmentNavigation? {
+    fun getNavigation(navigationId: Int): SegmentNavigation {
         var segmentManager = segmentManagers[navigationId]
         if (segmentManager == null) {
             segmentManager = createManagerInternal(navigationId, null)

@@ -17,7 +17,7 @@ abstract class SegmentAppCompatActivity : AppCompatActivity(), SegmentCallbacks 
     val context: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (segmentManager == null) segmentManager = SegmentManager(null,-1, this, this, layoutInflater)
+        if (segmentManager == null) segmentManager = SegmentManager(null, this, this, layoutInflater)
         super.onCreate(savedInstanceState)
         segmentManager!!.onCreate(savedInstanceState)
     }

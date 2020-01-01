@@ -18,10 +18,9 @@ import com.clumob.segment.manager.Segment.SegmentState
  * Created by prashant.rathore on 23/02/18.
  */
 class SegmentManager @JvmOverloads constructor(private val parentSegmentManager: SegmentManager? = null,
-                                                            managerId: Int,
-                                                            private val context: Context,
-                                                            val callbacks: SegmentCallbacks,
-                                                            val layoutInflater: LayoutInflater) : SegmentLifecycle {
+                                               private val context: Context,
+                                               val callbacks: SegmentCallbacks,
+                                               val layoutInflater: LayoutInflater) : SegmentLifecycle {
 
     private val mHandler = Handler()
     private lateinit var segment: Segment<*, *>

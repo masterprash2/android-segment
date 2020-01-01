@@ -131,7 +131,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
         return oldController.getSegmentInfo()
     }
 
-    protected fun changeView(newView: View?, onCompleHandler: Runnable?) {
+    protected fun changeView(newView: View, onCompleHandler: Runnable?) {
         callbacks.setSegmentView(newView)
         if (onCompleHandler != null) {
             mHandler.post(onCompleHandler)
@@ -186,9 +186,9 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
     }
 
     interface SegmentCallbacks {
-        fun provideSegment(segmentInfo: SegmentInfo): Segment<*, *>?
-        fun setSegmentView(view: View?)
-        fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation?
+        fun provideSegment(segmentInfo: SegmentInfo): Segment<*, *>
+        fun setSegmentView(view: View)
+        fun createSegmentNavigation(segmentManager: SegmentManager) : SegmentNavigation
     }
 
     companion object {

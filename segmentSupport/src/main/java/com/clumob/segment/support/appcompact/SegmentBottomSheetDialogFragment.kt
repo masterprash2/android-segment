@@ -141,11 +141,11 @@ abstract class SegmentBottomSheetDialogFragment : BottomSheetDialogFragment(), S
     }
 
     protected abstract fun provideSegmentInfo(): SegmentInfo?
-    override fun setSegmentView(view: View?) {
+    override fun setSegmentView(view: View) {
         throw UnsupportedOperationException()
     }
 
-    override fun createSegmentNavigation(segmentManager: SegmentManager?): SegmentNavigation? {
-        return null
+    override fun createSegmentNavigation(segmentManager: SegmentManager): SegmentNavigation {
+        return SegmentNavigation(segmentManager)
     }
 }

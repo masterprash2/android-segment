@@ -17,35 +17,30 @@ import com.clumob.segment.manager.Segment.SegmentState
 /**
  * Created by prashant.rathore on 23/02/18.
  */
-class SegmentManager internal constructor(private val parentSegmentManager: SegmentManager?,
-                                          managerId: Int,
-                                          private val context: Context,
-                                          val callbacks: SegmentCallbacks?,
-                                          val layoutInflater: LayoutInflater) : SegmentLifecycle {
+class SegmentManager internal @JvmOverloads constructor(private val parentSegmentManager: SegmentManager? = null,
+                                                            managerId: Int,
+                                                            private val context: Context,
+                                                            val callbacks: SegmentCallbacks,
+                                                            val layoutInflater: LayoutInflater) : SegmentLifecycle {
 
     private val mHandler = Handler()
-    private var segment: Segment<*, *>? = null
+    private lateinit var segment: Segment<*, *>
     private var screenView: SegmentViewHolder<*, *>? = null
-    val navigation: SegmentNavigation?
-
-    constructor(managerId: Int, context: Context, callbacks: SegmentCallbacks?, layoutInflater: LayoutInflater)
-            : this(null, managerId, context, callbacks, layoutInflater)
+    val navigation = callbacks.createSegmentNavigation(this)
 
     val rootSegmentManager: SegmentManager
-        get() = if (parentSegmentManager == null) {
-            this
-        } else parentSegmentManager.rootSegmentManager
+        get() = parentSegmentManager?.rootSegmentManager ?: this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         segment = createDefaultSegmentController(savedInstanceState)
-        segment!!.onCreate()
+        segment.onCreate()
         attachSegment()
     }
 
     private fun attachSegment() {
-        screenView = segment!!.createView(null)
+        screenView = segment.createView(null)
         changeView(screenView!!.view, null)
-        segment!!.bindView(screenView!!)
+        segment.bindView(screenView!!)
     }
 
     private fun createDefaultSegmentController(savedInstanceState: Bundle?): Segment<*, *> {
@@ -78,7 +73,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     }
 
     private fun createRestoreSegment(segmentInfo: SegmentInfo): Segment<*,*> {
-        return if (segmentInfo.id == SEGMENT_ID_EMPTY) createEmptySegment() else callbacks!!.provideSegment(segmentInfo)!!
+        return if (segmentInfo.id == SEGMENT_ID_EMPTY) createEmptySegment() else callbacks.provideSegment(segmentInfo)!!
     }
 
     fun changeSegment(segmentInfo: SegmentInfo): SegmentInfo? {
@@ -86,7 +81,7 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
         newController.attach(context, layoutInflater)
         val oldController = segment
         val newScreen = newController.createView(null)
-        when (oldController!!.currentState) {
+        when (oldController.currentState) {
             SegmentState.CREATE -> {
                 newController.onCreate()
                 newController.bindView(newScreen)
@@ -138,39 +133,39 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     }
 
     protected fun changeView(newView: View?, onCompleHandler: Runnable?) {
-        callbacks!!.setSegmentView(newView)
+        callbacks.setSegmentView(newView)
         if (onCompleHandler != null) {
             mHandler.post(onCompleHandler)
         }
     }
 
     override fun onStart() {
-        segment!!.onStart()
+        segment.onStart()
     }
 
     override fun onResume() {
-        segment!!.onResume()
+        segment.onResume()
     }
 
     fun onConfigurationChanged(newConfig: Configuration?) {
-        segment!!.onConfigurationChanged(newConfig)
+        segment.onConfigurationChanged(newConfig)
     }
 
     fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        segment!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        segment.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        segment!!.onActivityResult(requestCode, resultCode, data)
+        segment.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onPause() {
-        segment!!.onPause()
+        segment.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         try {
-            val segmentInfo = segment!!.getSegmentInfo()
+            val segmentInfo = segment.getSegmentInfo()
             val marshall = marshall(segmentInfo)
             outState.putByteArray("SEGMENT_INFO", marshall)
         } catch (e: Exception) {
@@ -179,15 +174,15 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
     }
 
     override fun onStop() {
-        segment!!.onStop()
+        segment.onStop()
     }
 
     override fun handleBackPressed(): Boolean {
-        return segment != null && (segment!!.handleBackPressed() || navigation != null && navigation.popBackStack())
+        return segment.handleBackPressed() || navigation != null && navigation.popBackStack()
     }
 
     override fun onDestroy() {
-        segment!!.onDestroy()
+        segment.onDestroy()
         screenView = null
     }
 
@@ -201,7 +196,5 @@ class SegmentManager internal constructor(private val parentSegmentManager: Segm
         const val SEGMENT_ID_EMPTY = Int.MIN_VALUE
     }
 
-    init {
-        navigation = callbacks!!.createSegmentNavigation(this)
-    }
+
 }

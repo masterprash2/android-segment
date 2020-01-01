@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.*
 import com.clumob.segment.controller.SegmentController
+import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.controller.Storable
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
 import java.util.*
@@ -200,7 +201,7 @@ abstract class SegmentViewHolder<VD, Controller : SegmentController<VD>?>
     }
 
     private fun createManagerInternal(managerId: Int, savedInstance: Bundle?): SegmentManager {
-        val manager = SegmentManager(managerId, context, createChildManagerCallbacks(managerId), layoutInflater)
+        val manager = SegmentManager(null,managerId, context, createChildManagerCallbacks(managerId)!!, layoutInflater)
         segmentManagers[managerId] = manager
         this.savedInstance = savedInstance
         when (currentState) {

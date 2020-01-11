@@ -13,6 +13,7 @@ import com.clumob.listitem.controller.source.ItemControllerSource
 import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.controller.SegmentPagerItemController
+import com.clumob.segment.controller.list.SegmentItemController
 import com.clumob.segment.manager.*
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
 import com.clumob.segment.support.pager.SegmentItemProvider
@@ -47,9 +48,9 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
 
     private fun createControllerFactory(): SegmentItemProvider {
         return object : SegmentItemProvider {
-            override fun provide(itemController: ItemController): Segment<*, *> {
+            override fun provide(itemController: SegmentItemController): Segment<*, *> {
                 val pagerItemController = itemController as SegmentPagerItemController
-                return Segment(pagerItemController.viewData!!, createPresenter(), createScreenFactory())
+                return Segment(pagerItemController.segmentInfo, createPresenter(), createScreenFactory())
             }
         }
     }

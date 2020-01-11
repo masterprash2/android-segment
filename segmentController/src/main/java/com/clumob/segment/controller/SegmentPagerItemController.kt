@@ -2,12 +2,13 @@ package com.clumob.segment.controller
 
 import com.clumob.listitem.controller.source.ItemControllerImpl
 import com.clumob.listitem.controller.source.ItemUpdatePublisher
+import com.clumob.segment.controller.list.SegmentItemControllerImpl
 
 /**
  * Created by prashant.rathore on 03/07/18.
  */
 @Deprecated("")
-class SegmentPagerItemController(viewModel: SegmentInfo) : ItemControllerImpl<SegmentInfo?>(viewModel) {
+class SegmentPagerItemController(viewModel: SegmentInfo) : SegmentItemControllerImpl(viewModel) {
 
     override fun onCreate(publisher: ItemUpdatePublisher) {
         super.onCreate(publisher)
@@ -30,9 +31,9 @@ class SegmentPagerItemController(viewModel: SegmentInfo) : ItemControllerImpl<Se
     }
 
     override fun getId(): Long {
-        return viewData!!.id.toLong()
+        return segmentInfo.id.toLong()
     }
 
-    val pageTitle: String?
+    open val pageTitle: String?
         get() = null
 }

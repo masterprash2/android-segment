@@ -7,12 +7,13 @@ import androidx.viewpager.widget.PagerAdapter
 import com.clumob.listitem.controller.source.ItemController
 import com.clumob.listitem.controller.source.ItemControllerSource
 import com.clumob.listitem.controller.source.SourceUpdateEvent
+import com.clumob.segment.controller.list.SegmentItemController
 import com.clumob.segment.manager.Segment
 import com.clumob.segment.support.pager.SegmentItemProvider
 import io.reactivex.observers.DisposableObserver
 import java.util.*
 
-open class SegmentStatePagerAdapter(val dataSource : ItemControllerSource<*>,
+open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : ItemControllerSource<T>,
                                     val factory: SegmentItemProvider) : SegmentPagerAdapter() {
 
     private val attachedSegments: MutableSet<ItemSegmentPair> = HashSet()
@@ -168,7 +169,7 @@ open class SegmentStatePagerAdapter(val dataSource : ItemControllerSource<*>,
         }
     }
 
-    fun getItem(position: Int): ItemController {
+    fun getItem(position: Int): T {
         return dataSource.getItem(position)
     }
 

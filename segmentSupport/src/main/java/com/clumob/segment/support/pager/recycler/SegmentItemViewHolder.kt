@@ -16,16 +16,16 @@ abstract class SegmentItemViewHolder(val view: View, private val segmentViewHold
     private var segmentInfo: SegmentInfo? = null
     private var isAttached = false
     override fun bindView() {
-        if (segment == null || segmentInfo !== controller!!.segmentInfo) {
+        if (segment == null || segmentInfo !== controller!!.segmentInfo()) {
             destroySegment()
-            segmentInfo = controller!!.segmentInfo
-            segment = createSegment(segmentInfo) as Segment
+            segmentInfo = controller!!.segmentInfo()
+            segment = createSegment(segmentInfo!!)
             segment!!.bindView(segmentViewHolder)
         }
         onBindSegment()
     }
 
-    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment
+    protected abstract fun createSegment(segmentInfo: SegmentInfo) : Segment
 
     override fun onAttached() {
         isAttached = true

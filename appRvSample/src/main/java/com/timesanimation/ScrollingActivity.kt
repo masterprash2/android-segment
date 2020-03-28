@@ -107,14 +107,12 @@ class ScrollingActivity : AppCompatActivity() {
         val arraySource = ArraySource<SegmentItemControllerImpl>()
         val segmentItemControllerImpls: MutableList<SegmentItemControllerImpl> = ArrayList()
         for (i in 0..99) {
-            segmentItemControllerImpls.add(object : SegmentItemControllerImpl(SegmentInfo(i, null)) {
-                override fun getType(): Int {
-                    return 0
-                }
+            segmentItemControllerImpls.add(object : SegmentItemControllerImpl(SegmentInfo(i,null)){
+                override val id: Long
+                    get() = i.toLong()
+                override val type: Int
+                    get() = i
 
-                override fun getId(): Long {
-                    return 0
-                }
             })
         }
         arraySource.setMaxLimit(4)
@@ -124,13 +122,12 @@ class ScrollingActivity : AppCompatActivity() {
 
     private fun createViewHolderProvider(): ViewHolderProvider {
         return object : ViewHolderProvider() {
-            override fun provideViewHolder(viewGroup: ViewGroup, type: Int): RvViewHolder<out ItemController> {
-                val sampleSegmentView = SampleSegmentView(viewGroup.context, LayoutInflater.from(viewGroup.context), viewGroup)
-                return object : SegmentItemViewHolder<Any?, SegmentController<Any?>>(sampleSegmentView.view, sampleSegmentView) {
-                    override fun createSegment(segmentInfo: SegmentInfo?): Segment<*, *> {
-                        return Segment(segmentInfo!!, object : SegmentController<Unit>{
-                            override val viewData: Unit
-                                get() = Unit
+
+            override fun provideViewHolder(viewGroup: ViewGroup?, type: Int): RvViewHolder<out ItemController> {
+                val sampleSegmentView = SampleSegmentView(viewGroup!!.context, LayoutInflater.from(viewGroup.context), viewGroup)
+                return object : SegmentItemViewHolder(sampleSegmentView.view, sampleSegmentView) {
+                    override fun createSegment(segmentInfo: SegmentInfo): Segment {
+                        return Segment(object : SegmentController{
 
                             override fun onCreate(args: Storable?) {
                             }
@@ -154,8 +151,8 @@ class ScrollingActivity : AppCompatActivity() {
                             }
 
                         }, object : SegmentViewHolderFactory {
-                            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
-                                return object : SegmentViewHolder<Unit, SegmentController<Unit>>(context,layoutInflater,parentView) {
+                            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder {
+                                return object : SegmentViewHolder(context,layoutInflater,parentView) {
                                     override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
                                         return View(context)
                                     }

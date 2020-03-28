@@ -25,6 +25,7 @@ class SegmentPagerItemController(viewModel: SegmentInfo) : SegmentItemController
         super.onDestroy()
     }
 
+
     override val type: Int
         get() = 0
 

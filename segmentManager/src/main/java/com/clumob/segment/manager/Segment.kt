@@ -11,14 +11,15 @@ import androidx.lifecycle.LifecycleRegistry
 import com.clumob.log.AppLog
 import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
-import com.clumob.segment.controller.Storable
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInfo, controller: Controller, private val screenFactory: SegmentViewHolderFactory) : LifecycleOwner {
+open class Segment(private val controller: SegmentController,
+                   private val screenFactory: SegmentViewHolderFactory) : LifecycleOwner {
 
     var mLifecycleRegistry = LifecycleRegistry(this)
+
     override fun getLifecycle(): Lifecycle {
         return mLifecycleRegistry
     }
@@ -27,17 +28,15 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
         FRESH, CREATE, START, RESUME, PAUSE, STOP, DESTROY
     }
 
-    private val controller: Controller
-    private var boundedView: SegmentViewHolder<Controller>? = null
-    private val segmentInfo = segmentInfoInput
+    private var boundedView: SegmentViewHolder? = null
+    private lateinit var segmentInfo: SegmentInfo
     private var context: Context? = null
     private var layoutInflater: LayoutInflater? = null
     var currentState = SegmentState.FRESH
 
-    init {
-        this.controller = controller
+    fun bindSegmentInfo(segmentInfo: SegmentInfo) {
+        this.segmentInfo = segmentInfo
     }
-
 
     fun attach(context: Context, layoutInflater: LayoutInflater) {
         this.context = context
@@ -48,11 +47,11 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
         return segmentInfo
     }
 
-    fun createView(parentView: ViewGroup?): SegmentViewHolder<*> {
+    fun createView(parentView: ViewGroup?): SegmentViewHolder {
         return screenFactory.create(context!!, layoutInflater!!, parentView)
     }
 
-    fun getBoundedView(): SegmentViewHolder<*>? {
+    fun getBoundedView(): SegmentViewHolder? {
         return boundedView
     }
 
@@ -64,13 +63,13 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
 
     private fun createInternal() {
         currentState = SegmentState.CREATE
-        controller!!.onCreate(segmentInfo.arguments)
+        controller.onCreate(segmentInfo.arguments)
         controller.restoreState(segmentInfo.restorableSetmentState)
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
     }
 
-    fun bindView(viewHolder: SegmentViewHolder<*>) {
-        boundedView = viewHolder as SegmentViewHolder< Controller>
+    fun bindView(viewHolder: SegmentViewHolder) {
+        boundedView = viewHolder as SegmentViewHolder
         boundedView!!.attachLifecycleOwner(this)
         boundedView!!.bind(controller)
         //        boundedView.restoreState(segmentInfo.getSavedViewState());
@@ -98,7 +97,7 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
 
     private fun startInternal() {
         currentState = SegmentState.START
-        controller!!.onStart()
+        controller.onStart()
         boundedView!!.onStart()
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
     }
@@ -113,7 +112,7 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
     private fun resumeInternal() {
         currentState = SegmentState.RESUME
         boundedView!!.resume()
-        controller!!.onResume()
+        controller.onResume()
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
     }
 
@@ -132,7 +131,7 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
     private fun pauseInternal() {
         currentState = SegmentState.PAUSE
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-        controller!!.onPause()
+        controller.onPause()
         boundedView!!.pause()
         val viewState = boundedView!!.createStateSnapshot()
         segmentInfo.setRestorableSegmentState(viewState)
@@ -153,7 +152,7 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
         currentState = SegmentState.STOP
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         boundedView!!.onStop()
-        controller!!.onStop()
+        controller.onStop()
     }
 
     fun unBindView() {
@@ -175,7 +174,7 @@ open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInf
     private fun destroyInternal() {
         currentState = SegmentState.DESTROY
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        controller!!.onDestroy()
+        controller.onDestroy()
     }
 
     fun dettach() {

@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.clumob.listitem.controller.source.ArraySource
-import com.clumob.listitem.controller.source.ItemController
 import com.clumob.listitem.controller.source.ItemControllerSource
 import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
@@ -24,7 +23,7 @@ import java.util.*
 /**
  * Created by prashant.rathore on 20/06/18.
  */
-class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?) : SegmentViewHolder<TestSegmentController?>(context!!, layoutInflater!!, parentView) {
+class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?) : SegmentViewHolder(context!!, layoutInflater!!, parentView) {
     private val viewPager: ViewPager
     private var pagerAdapter: SegmentPagerAdapter? = null
     override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
@@ -48,9 +47,11 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
 
     private fun createControllerFactory(): SegmentItemProvider {
         return object : SegmentItemProvider {
-            override fun provide(itemController: SegmentItemController): Segment<*> {
+            override fun provide(itemController: SegmentItemController): Segment {
                 val pagerItemController = itemController as SegmentPagerItemController
-                return Segment(pagerItemController.segmentInfo, createPresenter(), createScreenFactory())
+                val segment = Segment( createPresenter(), createScreenFactory())
+                segment.bindSegmentInfo(pagerItemController.segmentInfo)
+                return segment
             }
         }
     }
@@ -79,8 +80,8 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
 
     private fun createScreenFactory(): SegmentViewHolderFactory {
         return object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
-                return object : SegmentViewHolder<SegmentController>(context, layoutInflater, parentView) {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder {
+                return object : SegmentViewHolder(context, layoutInflater, parentView) {
                     private var oldView: View? = null
                     var frameLayout: FrameLayout? = null
                     var tv: TextView? = null
@@ -94,14 +95,16 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
                         frameLayout = view.findViewById(R.id.frameLayout)
                         frameLayout!!.setBackgroundColor(color)
                         val navigation = getNavigation(1)
-                        navigation!!.addToBackStack(SegmentInfo(1, null))
+                        navigation.addToBackStack(SegmentInfo(1, null))
                     }
 
                     override fun onUnBind() {}
                     override fun createChildManagerCallbacks(navigationId: Int): SegmentCallbacks? {
                         return object : SegmentCallbacks {
-                            override fun provideSegment(segmentInfo: SegmentInfo): Segment<*> {
-                                return Segment<SegmentController>(segmentInfo, SubSegmentController(), SubSegmentViewViewHolderFactory())
+                            override fun provideSegment(segmentInfo: SegmentInfo): Segment {
+                                val segment = Segment( SubSegmentController(), SubSegmentViewViewHolderFactory())
+                                segment.bindSegmentInfo(segmentInfo)
+                                return segment
                             }
 
                             override fun setSegmentView(view: View) {

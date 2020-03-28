@@ -72,10 +72,10 @@ open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : 
         return false
     }
 
-    class ItemSegmentPair(val segment: Segment<*>, val itemController: ItemController?) {
+    class ItemSegmentPair(val segment: Segment, val itemController: ItemController?) {
 
         companion object {
-            fun pair(segment: Segment<*>, itemController: ItemController?): ItemSegmentPair {
+            fun pair(segment: Segment, itemController: ItemController?): ItemSegmentPair {
                 return ItemSegmentPair(segment, itemController)
             }
         }
@@ -101,7 +101,7 @@ open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : 
         return attachedSegments
     }
 
-    override fun retrieveSegmentFromObject(item: Any): Segment<*> {
+    override fun retrieveSegmentFromObject(item: Any): Segment {
         return (item as ItemSegmentPair).segment
     }
 

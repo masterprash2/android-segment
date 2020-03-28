@@ -18,10 +18,10 @@ class SegmentView @JvmOverloads constructor
 
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private var segment: Segment<*>? = null
+    private var segment: Segment? = null
     private var segmentState = SegmentState.FRESH
 
-    fun setSegment(segment: Segment<*>) {
+    fun setSegment(segment: Segment) {
         if (this.segment !== segment) {
             if (this.segment != null) {
                 if (segment.getBoundedView() != null) removeView(segment.getBoundedView()!!.view)

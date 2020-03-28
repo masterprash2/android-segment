@@ -6,19 +6,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentControllerImpl
 import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.manager.*
 import com.clumob.segment.support.appcompact.SegmentAppCompatActivity
 
 class MainActivity : SegmentAppCompatActivity() {
-    override fun provideSegment(segmentInfo: SegmentInfo): Segment<*> {
-        return Segment< SegmentController>(segmentInfo, SegmentControllerImpl(), object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
+    override fun provideSegment(segmentInfo: SegmentInfo): Segment {
+        val segment = Segment(SegmentControllerImpl(), object : SegmentViewHolderFactory {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder {
                 return TestSegmentScreenHolder(context, layoutInflater, parentView)
             }
         })
+        segment.bindSegmentInfo(segmentInfo)
+        return segment
     }
 
     @SuppressLint("NewApi")
@@ -26,11 +27,13 @@ class MainActivity : SegmentAppCompatActivity() {
         super.onCreate(savedInstanceState)
         val segmentView = SegmentView(context = this)
         val segmentInfo = SegmentInfo(1, null)
-        segmentView.setSegment(Segment<SegmentController>(segmentInfo, SegmentControllerImpl(), object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
+        val segment = Segment(SegmentControllerImpl(), object : SegmentViewHolderFactory {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder {
                 return TestSegmentScreenHolder(context, layoutInflater, parentView)
             }
-        }))
+        })
+        segment.bindSegmentInfo(segmentInfo)
+        segmentView.setSegment(segment)
         setContentView(segmentView)
         //        getSegmentManager().getNavigation().navigateToScreen(new SegmentInfo<Storable, Storable>(1, null));
     }

@@ -14,8 +14,8 @@ import java.util.*
  * Created by prashant.rathore on 08/07/18.
  */
 internal class SubSegmentViewViewHolderFactory : SegmentViewHolderFactory {
-    override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
-        return object : SegmentViewHolder<SegmentController?>(context, layoutInflater, parentView) {
+    override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder {
+        return object : SegmentViewHolder(context, layoutInflater, parentView) {
             override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
                 return layoutInflater.inflate(R.layout.segment_sub_item, viewGroup, false)
             }

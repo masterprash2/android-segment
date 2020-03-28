@@ -10,5 +10,5 @@ import com.clumob.segment.manager.Segment
  * Created by prashant.rathore on 02/07/18.
  */
 interface SegmentItemProvider {
-    fun provide(segmentItem: SegmentItemController): Segment<*>
+    fun provide(segmentItem: SegmentItemController): Segment
 }

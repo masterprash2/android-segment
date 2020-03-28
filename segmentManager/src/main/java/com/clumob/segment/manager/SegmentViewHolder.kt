@@ -13,7 +13,7 @@ import com.clumob.segment.controller.Storable
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
 import java.util.*
 
-abstract class SegmentViewHolder<Controller : SegmentController?>
+abstract class SegmentViewHolder
 (
         val context: Context,
         val layoutInflater: LayoutInflater,
@@ -33,7 +33,7 @@ abstract class SegmentViewHolder<Controller : SegmentController?>
     private var parentLifecycleObserver: LifecycleObserver? = null
 
 
-    var controller: Controller? = null
+    var controller: SegmentController? = null
         private set
 
     private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
@@ -119,7 +119,7 @@ abstract class SegmentViewHolder<Controller : SegmentController?>
     protected abstract fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View
 
 
-    internal fun bind(controller: Controller) {
+    internal fun bind(controller: SegmentController) {
         currentState = SegmentViewState.CREATE
         this.controller = controller
         for (lifecycle in segmentLifecycleListeners) {

@@ -2,7 +2,6 @@ package com.clumob.segment.support.pager.recycler
 
 import android.view.View
 import com.clumob.recyclerview.adapter.RvViewHolder
-import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.controller.list.SegmentItemController
 import com.clumob.segment.manager.Segment
@@ -11,9 +10,8 @@ import com.clumob.segment.manager.SegmentViewHolder
 /**
  * Created by prashant.rathore on 11/07/18.
  */
-abstract class SegmentItemViewHolder< SC : SegmentController?>(view: View, viewHolder: SegmentViewHolder<SC>) : RvViewHolder<SegmentItemController>(view) {
-    private val segmentViewHolder: SegmentViewHolder<SC>
-    var segment: Segment<SC>? = null
+abstract class SegmentItemViewHolder(val view: View, private val segmentViewHolder: SegmentViewHolder) : RvViewHolder<SegmentItemController>(view) {
+    var segment: Segment? = null
         private set
     private var segmentInfo: SegmentInfo? = null
     private var isAttached = false
@@ -21,13 +19,13 @@ abstract class SegmentItemViewHolder< SC : SegmentController?>(view: View, viewH
         if (segment == null || segmentInfo !== controller!!.segmentInfo) {
             destroySegment()
             segmentInfo = controller!!.segmentInfo
-            segment = createSegment(segmentInfo) as Segment< SC>
+            segment = createSegment(segmentInfo) as Segment
             segment!!.bindView(segmentViewHolder)
         }
         onBindSegment()
     }
 
-    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment< *>
+    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment
 
     override fun onAttached() {
         isAttached = true
@@ -85,7 +83,4 @@ abstract class SegmentItemViewHolder< SC : SegmentController?>(view: View, viewH
         return segmentViewHolder.handleBackPressed()
     }
 
-    init {
-        segmentViewHolder = viewHolder
-    }
 }

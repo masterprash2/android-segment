@@ -23,8 +23,8 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
                                                val layoutInflater: LayoutInflater) : SegmentLifecycle {
 
     private val mHandler = Handler()
-    private lateinit var segment: Segment<*>
-    private var screenView: SegmentViewHolder<*>? = null
+    private lateinit var segment: Segment
+    private var screenView: SegmentViewHolder? = null
     val navigation = callbacks.createSegmentNavigation(this)
 
     val rootSegmentManager: SegmentManager
@@ -42,15 +42,15 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
         segment.bindView(screenView!!)
     }
 
-    private fun createDefaultSegmentController(savedInstanceState: Bundle?): Segment<*> {
-        val segment: Segment<*>
+    private fun createDefaultSegmentController(savedInstanceState: Bundle?): Segment {
+        val segment: Segment
         val segmentInfo = restoreSegment(savedInstanceState)
         segment = segmentInfo?.let { createRestoreSegment(it) } ?: createEmptySegment()
         segment.attach(context, layoutInflater)
         return segment
     }
 
-    private fun createEmptySegment(): Segment<*> {
+    private fun createEmptySegment(): Segment {
         return EmptySegment(SegmentInfo(SEGMENT_ID_EMPTY, null))
     }
 
@@ -71,7 +71,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
         return segmentInfo
     }
 
-    private fun createRestoreSegment(segmentInfo: SegmentInfo): Segment<*> {
+    private fun createRestoreSegment(segmentInfo: SegmentInfo): Segment {
         return if (segmentInfo.id == SEGMENT_ID_EMPTY) createEmptySegment() else callbacks.provideSegment(segmentInfo)!!
     }
 
@@ -186,9 +186,9 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
     }
 
     interface SegmentCallbacks {
-        fun provideSegment(segmentInfo: SegmentInfo): Segment<*>
+        fun provideSegment(segmentInfo: SegmentInfo): Segment
         fun setSegmentView(view: View)
-        fun createSegmentNavigation(segmentManager: SegmentManager) : SegmentNavigation
+        fun createSegmentNavigation(segmentManager: SegmentManager): SegmentNavigation
     }
 
     companion object {

@@ -17,7 +17,7 @@ import com.clumob.segment.manager.SegmentViewHolder.SegmentViewState
  * Created by prashant.rathore on 02/07/18.
  */
 abstract class SegmentPagerAdapter : PagerAdapter() {
-    var primaryItem: Segment< *>? = null
+    var primaryItem: Segment? = null
         private set
     private var parentState = SegmentViewState.FRESH
     private var lifecycleOwner: LifecycleOwner? = null
@@ -73,8 +73,8 @@ abstract class SegmentPagerAdapter : PagerAdapter() {
         }
     }
 
-    protected abstract fun retrieveSegmentFromObject(item: Any): Segment<*>
-    private fun syncSegmentStateWithParent(item: Segment<*>?) {
+    protected abstract fun retrieveSegmentFromObject(item: Any): Segment
+    private fun syncSegmentStateWithParent(item: Segment?) {
         if (item == null) {
             return
         }

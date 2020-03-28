@@ -7,6 +7,6 @@ import com.clumob.segment.manager.Segment
 /**
  * Created by prashant.rathore on 02/07/18.
  */
-interface SegmentProvider<VM, SC : SegmentController<VM>?> {
-    fun provide(segmentInfo: SegmentInfo?): Segment<VM, SC>?
+interface SegmentProvider< SC : SegmentController?> {
+    fun provide(segmentInfo: SegmentInfo?): Segment<SC>?
 }

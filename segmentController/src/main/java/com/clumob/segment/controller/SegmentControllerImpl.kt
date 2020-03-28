@@ -1,8 +1,8 @@
 package com.clumob.segment.controller
 
-open class SegmentControllerImpl<T>(private val args: Storable?, override val viewData: T) : SegmentController<T> {
+open class SegmentControllerImpl() : SegmentController {
 
-    override fun onCreate() {}
+    override fun onCreate(args: Storable?) {}
     override fun restoreState(restorableState: Storable?) {}
     override fun onStart() {}
     override fun onResume() {}

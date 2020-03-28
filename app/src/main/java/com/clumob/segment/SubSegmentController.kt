@@ -2,14 +2,16 @@ package com.clumob.segment
 
 import android.util.Log
 import com.clumob.segment.controller.SegmentControllerImpl
+import com.clumob.segment.controller.Storable
 
 /**
  * Created by prashant.rathore on 08/07/18.
  */
-internal class SubSegmentController : SegmentControllerImpl<Any?>(null, null) {
-    override fun onCreate() {
+internal class SubSegmentController : SegmentControllerImpl() {
+
+    override fun onCreate(args: Storable?) {
         Log.d("SEGMENTSUB", "OnCreate   -" + this.toString().split("@").toTypedArray()[1])
-        super.onCreate()
+        super.onCreate(args)
     }
 
     override fun onStart() {

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.clumob.listitem.controller.source.ArraySource
+import com.clumob.listitem.controller.source.ItemController
 import com.clumob.listitem.controller.source.ItemControllerSource
 import com.clumob.recyclerview.adapter.RvAdapter
 import com.clumob.recyclerview.adapter.RvViewHolder
@@ -123,7 +124,7 @@ class ScrollingActivity : AppCompatActivity() {
 
     private fun createViewHolderProvider(): ViewHolderProvider {
         return object : ViewHolderProvider() {
-            override fun provideViewHolder(viewGroup: ViewGroup, i: Int): SegmentItemViewHolder<Any?, SegmentController<Any?>> {
+            override fun provideViewHolder(viewGroup: ViewGroup, type: Int): RvViewHolder<out ItemController> {
                 val sampleSegmentView = SampleSegmentView(viewGroup.context, LayoutInflater.from(viewGroup.context), viewGroup)
                 return object : SegmentItemViewHolder<Any?, SegmentController<Any?>>(sampleSegmentView.view, sampleSegmentView) {
                     override fun createSegment(segmentInfo: SegmentInfo?): Segment<*, *> {
@@ -131,7 +132,7 @@ class ScrollingActivity : AppCompatActivity() {
                             override val viewData: Unit
                                 get() = Unit
 
-                            override fun onCreate() {
+                            override fun onCreate(args: Storable?) {
                             }
 
                             override fun restoreState(restorableState: Storable?) {
@@ -174,6 +175,7 @@ class ScrollingActivity : AppCompatActivity() {
                     override fun onUnbindSegment() {}
                 }
             }
+
         }
     }
 

@@ -13,9 +13,9 @@ import com.clumob.segment.manager.*
 import com.clumob.segment.support.appcompact.SegmentAppCompatActivity
 
 class MainActivity : SegmentAppCompatActivity() {
-    override fun provideSegment(segmentInfo: SegmentInfo): Segment<*, *> {
-        return Segment<Any?, SegmentController<Any?>>(segmentInfo, SegmentControllerImpl<Any?>(segmentInfo.arguments, null), object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
+    override fun provideSegment(segmentInfo: SegmentInfo): Segment<*> {
+        return Segment< SegmentController>(segmentInfo, SegmentControllerImpl(), object : SegmentViewHolderFactory {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
                 return TestSegmentScreenHolder(context, layoutInflater, parentView)
             }
         })
@@ -26,8 +26,8 @@ class MainActivity : SegmentAppCompatActivity() {
         super.onCreate(savedInstanceState)
         val segmentView = SegmentView(context = this)
         val segmentInfo = SegmentInfo(1, null)
-        segmentView.setSegment(Segment<Any?, SegmentController<Any?>>(segmentInfo, SegmentControllerImpl(segmentInfo.arguments, null), object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
+        segmentView.setSegment(Segment<SegmentController>(segmentInfo, SegmentControllerImpl(), object : SegmentViewHolderFactory {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
                 return TestSegmentScreenHolder(context, layoutInflater, parentView)
             }
         }))

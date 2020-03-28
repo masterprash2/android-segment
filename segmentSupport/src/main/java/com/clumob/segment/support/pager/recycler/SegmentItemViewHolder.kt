@@ -11,9 +11,9 @@ import com.clumob.segment.manager.SegmentViewHolder
 /**
  * Created by prashant.rathore on 11/07/18.
  */
-abstract class SegmentItemViewHolder<VM, SC : SegmentController<VM>?>(view: View?, viewHolder: SegmentViewHolder<VM, SC>) : RvViewHolder<SegmentItemController?>(view) {
-    private val segmentViewHolder: SegmentViewHolder<VM, SC>
-    var segment: Segment<VM, SC>? = null
+abstract class SegmentItemViewHolder< SC : SegmentController?>(view: View, viewHolder: SegmentViewHolder<SC>) : RvViewHolder<SegmentItemController>(view) {
+    private val segmentViewHolder: SegmentViewHolder<SC>
+    var segment: Segment<SC>? = null
         private set
     private var segmentInfo: SegmentInfo? = null
     private var isAttached = false
@@ -21,13 +21,14 @@ abstract class SegmentItemViewHolder<VM, SC : SegmentController<VM>?>(view: View
         if (segment == null || segmentInfo !== controller!!.segmentInfo) {
             destroySegment()
             segmentInfo = controller!!.segmentInfo
-            segment = createSegment(segmentInfo) as Segment<VM, SC>
+            segment = createSegment(segmentInfo) as Segment< SC>
             segment!!.bindView(segmentViewHolder)
         }
         onBindSegment()
     }
 
-    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment<*, *>
+    protected abstract fun createSegment(segmentInfo: SegmentInfo?): Segment< *>
+
     override fun onAttached() {
         isAttached = true
         super.onAttached()

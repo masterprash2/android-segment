@@ -8,7 +8,7 @@ import java.util.*
  * Created by prashant.rathore on 11/07/18.
  */
 class SegmentPageChangeHelper(private val snapHelper: SnapHelper) {
-    var currentSegmentItemViewHolder: SegmentItemViewHolder<*, *>? = null
+    var currentSegmentItemViewHolder: SegmentItemViewHolder<*>? = null
         private set
     private var currentPageIndex = -1
     private var nextPageIndex = 0
@@ -41,7 +41,7 @@ class SegmentPageChangeHelper(private val snapHelper: SnapHelper) {
             if (currentSegmentItemViewHolder == null) return
             var x: Float
             val adapterPosition = currentSegmentItemViewHolder!!.getAdapterPosition()
-            val snapView: SegmentItemViewHolder<*, *> = currentSegmentItemViewHolder!!
+            val snapView: SegmentItemViewHolder<*> = currentSegmentItemViewHolder!!
             val itemView = snapView.getItemView()
             x = itemView.left.toFloat()
             if (x <= 0 || nextPageIndex >= 0) {
@@ -63,7 +63,7 @@ class SegmentPageChangeHelper(private val snapHelper: SnapHelper) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 val view = snapHelper.findSnapView(recyclerView.layoutManager) ?: return
-                val snapView = recyclerView.getChildViewHolder(view) as SegmentItemViewHolder<*, *>
+                val snapView = recyclerView.getChildViewHolder(view) as SegmentItemViewHolder<*>
                 val pageIndex = snapView.getAdapterPosition()
                 if (pageIndex != currentPageIndex) {
                     if (currentSegmentItemViewHolder != null) {

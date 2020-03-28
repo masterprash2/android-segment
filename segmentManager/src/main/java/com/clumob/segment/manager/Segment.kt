@@ -16,7 +16,7 @@ import com.clumob.segment.controller.Storable
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: SegmentInfo, controller: Controller, private val screenFactory: SegmentViewHolderFactory) : LifecycleOwner {
+open class Segment<Controller : SegmentController?>(segmentInfoInput: SegmentInfo, controller: Controller, private val screenFactory: SegmentViewHolderFactory) : LifecycleOwner {
 
     var mLifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle {
@@ -28,7 +28,7 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
     }
 
     private val controller: Controller
-    private var boundedView: SegmentViewHolder<VM, Controller>? = null
+    private var boundedView: SegmentViewHolder<Controller>? = null
     private val segmentInfo = segmentInfoInput
     private var context: Context? = null
     private var layoutInflater: LayoutInflater? = null
@@ -48,11 +48,11 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
         return segmentInfo
     }
 
-    fun createView(parentView: ViewGroup?): SegmentViewHolder<*, *> {
+    fun createView(parentView: ViewGroup?): SegmentViewHolder<*> {
         return screenFactory.create(context!!, layoutInflater!!, parentView)
     }
 
-    fun getBoundedView(): SegmentViewHolder<*, *>? {
+    fun getBoundedView(): SegmentViewHolder<*>? {
         return boundedView
     }
 
@@ -64,15 +64,15 @@ open class Segment<VM, Controller : SegmentController<VM>?>(segmentInfoInput: Se
 
     private fun createInternal() {
         currentState = SegmentState.CREATE
-        controller!!.onCreate()
+        controller!!.onCreate(segmentInfo.arguments)
         controller.restoreState(segmentInfo.restorableSetmentState)
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
     }
 
-    fun bindView(viewHolder: SegmentViewHolder<*, *>) {
-        boundedView = viewHolder as SegmentViewHolder<VM, Controller>
+    fun bindView(viewHolder: SegmentViewHolder<*>) {
+        boundedView = viewHolder as SegmentViewHolder< Controller>
         boundedView!!.attachLifecycleOwner(this)
-        boundedView!!.bind(controller!!.viewData, controller)
+        boundedView!!.bind(controller)
         //        boundedView.restoreState(segmentInfo.getSavedViewState());
     }
 

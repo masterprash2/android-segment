@@ -24,8 +24,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
  * Created by prashant.rathore on 14/02/18.
  */
 abstract class SegmentBottomSheetDialogFragment : BottomSheetDialogFragment(), SegmentCallbacks, DialogInterface.OnKeyListener {
-    private var segment: Segment<*, *>? = null
-    private var viewHolder: SegmentViewHolder<*, *>? = null
+    private var segment: Segment<*>? = null
+    private var viewHolder: SegmentViewHolder<*>? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
     }
@@ -135,7 +135,7 @@ abstract class SegmentBottomSheetDialogFragment : BottomSheetDialogFragment(), S
         return segmentInfo
     }
 
-    protected fun createSegment(savedInstanceState: Bundle?): Segment<*, *>? {
+    protected fun createSegment(savedInstanceState: Bundle?): Segment<*>? {
         val segmentInfo = restoreSegmentInfo(savedInstanceState)
         return provideSegment(segmentInfo ?: provideSegmentInfo()!!)
     }

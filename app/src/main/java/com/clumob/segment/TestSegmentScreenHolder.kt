@@ -24,7 +24,7 @@ import java.util.*
 /**
  * Created by prashant.rathore on 20/06/18.
  */
-class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?) : SegmentViewHolder<Any?, TestSegmentController?>(context!!, layoutInflater!!, parentView) {
+class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?, parentView: ViewGroup?) : SegmentViewHolder<TestSegmentController?>(context!!, layoutInflater!!, parentView) {
     private val viewPager: ViewPager
     private var pagerAdapter: SegmentPagerAdapter? = null
     override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
@@ -48,7 +48,7 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
 
     private fun createControllerFactory(): SegmentItemProvider {
         return object : SegmentItemProvider {
-            override fun provide(itemController: SegmentItemController): Segment<*, *> {
+            override fun provide(itemController: SegmentItemController): Segment<*> {
                 val pagerItemController = itemController as SegmentPagerItemController
                 return Segment(pagerItemController.segmentInfo, createPresenter(), createScreenFactory())
             }
@@ -73,14 +73,14 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
         pagerAdapter!!.detachLifeCycleOwner()
     }
 
-    private fun createPresenter(): SegmentController<Any?> {
+    private fun createPresenter(): SegmentController {
         return TestSegmentController(null, null)
     }
 
     private fun createScreenFactory(): SegmentViewHolderFactory {
         return object : SegmentViewHolderFactory {
-            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
-                return object : SegmentViewHolder<Any?, SegmentController<Any?>>(context, layoutInflater, parentView) {
+            override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
+                return object : SegmentViewHolder<SegmentController>(context, layoutInflater, parentView) {
                     private var oldView: View? = null
                     var frameLayout: FrameLayout? = null
                     var tv: TextView? = null
@@ -100,8 +100,8 @@ class TestSegmentScreenHolder(context: Context?, layoutInflater: LayoutInflater?
                     override fun onUnBind() {}
                     override fun createChildManagerCallbacks(navigationId: Int): SegmentCallbacks? {
                         return object : SegmentCallbacks {
-                            override fun provideSegment(segmentInfo: SegmentInfo): Segment<*, *> {
-                                return Segment<Any?, SegmentController<Any?>>(segmentInfo, SubSegmentController(), SubSegmentViewViewHolderFactory())
+                            override fun provideSegment(segmentInfo: SegmentInfo): Segment<*> {
+                                return Segment<SegmentController>(segmentInfo, SubSegmentController(), SubSegmentViewViewHolderFactory())
                             }
 
                             override fun setSegmentView(view: View) {

@@ -16,10 +16,10 @@ import com.clumob.segment.manager.SegmentViewHolderFactory
  * Created by prashant.rathore on 07/07/18.
  */
 class EmptySegment(segmentInfo: SegmentInfo)
-    : Segment<Storable?, SegmentController<Storable?>>(segmentInfo, SegmentControllerImpl(null, null)
+    : Segment<SegmentController>(segmentInfo, SegmentControllerImpl()
         , object : SegmentViewHolderFactory {
-    override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*, *> {
-        return object : SegmentViewHolder<Any?, SegmentController<Any?>?>(context, layoutInflater, parentView) {
+    override fun create(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?): SegmentViewHolder<*> {
+        return object : SegmentViewHolder<SegmentController?>(context, layoutInflater, parentView) {
             override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
                 return View(context)
             }

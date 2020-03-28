@@ -19,8 +19,8 @@ import com.clumob.segment.manager.SegmentViewHolder
  * Created by prashant.rathore on 14/02/18.
  */
 abstract class SegmentFragment : Fragment(), SegmentCallbacks {
-    private var segment: Segment<*, *>? = null
-    private var viewHolder: SegmentViewHolder<*, *>? = null
+    private var segment: Segment<*>? = null
+    private var viewHolder: SegmentViewHolder<*>? = null
     override fun onAttach(context: Context) {
         super.onAttach(context)
     }
@@ -117,7 +117,7 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
         segment!!.onActivityResult(requestCode, resultCode, data)
     }
 
-    protected fun createSegment(): Segment<*, *>? {
+    protected fun createSegment(): Segment<*>? {
         return provideSegment(provideSegmentInfo()!!)
     }
 

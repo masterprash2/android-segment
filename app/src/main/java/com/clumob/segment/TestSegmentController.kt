@@ -7,10 +7,11 @@ import com.clumob.segment.controller.Storable
 /**
  * Created by prashant.rathore on 20/06/18.
  */
-class TestSegmentController(args: Storable?, viewModel: Any?) : SegmentControllerImpl<Any?>(args, viewModel) {
-    override fun onCreate() {
+class TestSegmentController(args: Storable?, viewModel: Any?) : SegmentControllerImpl() {
+
+    override fun onCreate(args: Storable?) {
         Log.d("SEGMENT", "OnCreate   -" + this.toString().split("@").toTypedArray()[1])
-        super.onCreate()
+        super.onCreate(args)
     }
 
     override fun onStart() {

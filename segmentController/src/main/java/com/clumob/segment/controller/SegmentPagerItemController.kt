@@ -1,6 +1,5 @@
 package com.clumob.segment.controller
 
-import com.clumob.listitem.controller.source.ItemControllerImpl
 import com.clumob.listitem.controller.source.ItemUpdatePublisher
 import com.clumob.segment.controller.list.SegmentItemControllerImpl
 
@@ -26,13 +25,11 @@ class SegmentPagerItemController(viewModel: SegmentInfo) : SegmentItemController
         super.onDestroy()
     }
 
-    override fun getType(): Int {
-        return 0
-    }
+    override val type: Int
+        get() = 0
 
-    override fun getId(): Long {
-        return segmentInfo.id.toLong()
-    }
+    override val id: Long
+        get() = segmentInfo.id.toLong()
 
     open val pageTitle: String?
         get() = null

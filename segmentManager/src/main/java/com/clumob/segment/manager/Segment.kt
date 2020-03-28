@@ -30,12 +30,16 @@ open class Segment(private val controller: SegmentController,
 
     private var boundedView: SegmentViewHolder? = null
     private lateinit var segmentInfo: SegmentInfo
+    private var isBounded = false
     private var context: Context? = null
     private var layoutInflater: LayoutInflater? = null
     var currentState = SegmentState.FRESH
 
     fun bindSegmentInfo(segmentInfo: SegmentInfo) {
+        if (isBounded && segmentInfo != this.segmentInfo)
+            throw IllegalAccessException("SegmentInfo already bound. Cannot be changed")
         this.segmentInfo = segmentInfo
+        isBounded = true
     }
 
     fun attach(context: Context, layoutInflater: LayoutInflater) {

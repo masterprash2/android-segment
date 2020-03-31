@@ -71,7 +71,6 @@ class ItemControllerWrapper(val controller: Controller) {
     }
 
     fun performPause() {
-        performStart(attachedSources.iterator().next())
         when (state) {
             State.RESUME -> {
                 state = State.PAUSE

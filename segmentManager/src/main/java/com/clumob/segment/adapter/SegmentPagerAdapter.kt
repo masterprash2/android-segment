@@ -23,7 +23,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
 
     override fun getLifecycle(): Lifecycle = mLifecycleRegistry
 
-    fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner) {
+    open fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner) {
         detachLifeCycleOwner()
         this.parentLifecycleOwner = lifecycleOwner
         if (this.parentLifecycleOwner == null) {
@@ -35,13 +35,14 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         this.parentLifecycleOwner!!.lifecycle.addObserver(lifecycleEventObserver!!)
     }
 
-    fun detachLifeCycleOwner() {
+    open fun detachLifeCycleOwner() {
         if (parentLifecycleOwner != null) {
             lifecycleEventObserver!!.onStateChanged(parentLifecycleOwner!!, Lifecycle.Event.ON_DESTROY)
             parentLifecycleOwner!!.lifecycle.removeObserver(lifecycleEventObserver!!)
         }
         parentLifecycleOwner = null
     }
+
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val item = instantiateItem(position)
@@ -139,21 +140,38 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         }
 
         override fun onStart(owner: LifecycleOwner) {
-            if(this == adapter.primaryItem) mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
-            else onStop(owner)
+            if (this == adapter.primaryItem) {
+                when (lifecycle.currentState) {
+                    Lifecycle.State.INITIALIZED, Lifecycle.State.CREATED -> {
+                        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+                        controller.performStart(this)
+                    }
+                }
+            } else onStop(owner)
         }
 
         override fun onResume(owner: LifecycleOwner) {
-            if (this == adapter.primaryItem) mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
-            else onStop(owner)
+            if (this == adapter.primaryItem) {
+                when (lifecycle.currentState) {
+                    Lifecycle.State.CREATED -> onStart(owner)
+                }
+                mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+                controller.performResume()
+            } else onStop(owner)
         }
 
         override fun onPause(owner: LifecycleOwner) {
-            mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            when (lifecycle.currentState) {
+                Lifecycle.State.RESUMED -> {
+                    mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+                    controller.performPause()
+                }
+            }
         }
 
         override fun onStop(owner: LifecycleOwner) {
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+            controller.performStop(this)
         }
 
         override fun onDestroy(owner: LifecycleOwner) {

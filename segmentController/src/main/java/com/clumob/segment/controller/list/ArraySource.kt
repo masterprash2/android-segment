@@ -14,11 +14,12 @@ class ArraySource : ItemControllerSource() {
     private var controller: MutableList<ItemControllerWrapper> = ArrayList()
     private var isAttached = false
     private val itemUpdatePublisher = ItemUpdatePublisher()
-    private var compositeDisposable: CompositeDisposable? = null
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     override fun onAttachToView() {
         isAttached = true
+        compositeDisposable.dispose()
         compositeDisposable = CompositeDisposable()
-        compositeDisposable!!.add(observeItemUpdates())
+        compositeDisposable.add(observeItemUpdates())
         for (item in controller) {
             item.performCreate(itemUpdatePublisher)
         }
@@ -150,7 +151,7 @@ class ArraySource : ItemControllerSource() {
     }
 
     override fun onDetachFromView() {
-        compositeDisposable!!.dispose()
+        compositeDisposable.dispose()
         isAttached = false
         controller.onEach { it.performDestroy() }
     }

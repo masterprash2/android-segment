@@ -12,13 +12,13 @@
         android:text="PagerItem"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/subText"
         android:background="#899876"
-        android:orientation="vertical"></FrameLayout>
+        android:orientation="vertical" />
 
 
 </RelativeLayout>

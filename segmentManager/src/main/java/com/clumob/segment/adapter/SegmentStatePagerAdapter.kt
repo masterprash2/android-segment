@@ -1,8 +1,10 @@
 package com.clumob.segment.adapter
 
 import android.content.res.Configuration
+import android.database.DataSetObserver
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.PagerAdapter
 import com.clumob.segment.controller.common.ItemControllerWrapper
 import com.clumob.segment.controller.list.ItemControllerSource
@@ -64,6 +66,16 @@ open class SegmentStatePagerAdapter(val dataSource: ItemControllerSource,
                 mHandler.removeCallbacks(runnable)
             }
         };
+    }
+
+    override fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner) {
+        super.attachLifecycleOwner(lifecycleOwner)
+        dataSource.onAttachToView()
+    }
+
+    override fun detachLifeCycleOwner() {
+        dataSource.onDetachFromView()
+        super.detachLifeCycleOwner()
     }
 
     private fun isComputingLayout(): Boolean {

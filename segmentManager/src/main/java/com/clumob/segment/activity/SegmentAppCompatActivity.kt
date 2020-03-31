@@ -1,4 +1,4 @@
-package com.clumob.segment.support.appcompact
+package com.clumob.segment.activity
 
 import android.content.Context
 import android.content.Intent

@@ -55,6 +55,9 @@ dependencies {
     compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'
     kapt 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
     implementation 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
+    kapt 'com.google.auto.factory:auto-factory:1.0-beta7'
+    compileOnly 'com.episode6.hackit.auto.factory:auto-factory-annotations:1.0-beta5'
+
 
 
     compileOnly 'com.jakewharton.auto.value:auto-value-annotations:1.5'

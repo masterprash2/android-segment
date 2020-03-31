@@ -11,7 +11,9 @@ import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
  * Created by prashant.rathore on 23/02/18.
  */
 abstract class SegmentActivity<SI : SegmentInfo> : Activity(), SegmentCallbacks {
+
     private var segmentManager: SegmentManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         if (segmentManager == null) segmentManager = SegmentManager(null, this, this, layoutInflater)
         super.onCreate(savedInstanceState)

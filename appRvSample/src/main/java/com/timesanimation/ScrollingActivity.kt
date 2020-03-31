@@ -13,12 +13,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.clumob.listitem.controller.source.ArraySource
-import com.clumob.listitem.controller.source.ItemController
-import com.clumob.listitem.controller.source.ItemControllerSource
-import com.clumob.recyclerview.adapter.RvAdapter
-import com.clumob.recyclerview.adapter.RvViewHolder
-import com.clumob.recyclerview.adapter.ViewHolderProvider
+import com.clumob.segment.controller.list.ArraySource
+import com.clumob.segment.controller.common.ItemControllerWrapper
+import com.clumob.segment.controller.list.ItemControllerSource
+import com.clumob.segment.adapter.RvAdapter
+import com.clumob.segment.view.RvViewHolder
+import com.clumob.segment.view.ViewHolderProvider
 import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.controller.Storable
@@ -123,7 +123,7 @@ class ScrollingActivity : AppCompatActivity() {
     private fun createViewHolderProvider(): ViewHolderProvider {
         return object : ViewHolderProvider() {
 
-            override fun provideViewHolder(viewGroup: ViewGroup?, type: Int): RvViewHolder<out ItemController> {
+            override fun provideViewHolder(viewGroup: ViewGroup?, type: Int): RvViewHolder<out ItemControllerWrapper> {
                 val sampleSegmentView = SampleSegmentView(viewGroup!!.context, LayoutInflater.from(viewGroup.context), viewGroup)
                 return object : SegmentItemViewHolder(sampleSegmentView.view, sampleSegmentView) {
                     override fun createSegment(segmentInfo: SegmentInfo): Segment {

@@ -1,4 +1,4 @@
-package com.clumob.segment.support.appcompact
+package com.clumob.segment.fragment
 
 import android.content.Context
 import android.content.DialogInterface
@@ -77,13 +77,13 @@ abstract class SegmentBottomSheetDialogFragment : BottomSheetDialogFragment(), S
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        try {
-            val segmentInfo = segment!!.getSegmentInfo()
-            val marshall = marshall(segmentInfo)
-            outState.putByteArray("SEGMENT_INFO", marshall)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        try {
+//            val segmentInfo = segment!!.getSegmentInfo()
+//            val marshall = marshall(segmentInfo)
+//            outState.putByteArray("SEGMENT_INFO", marshall)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
         super.onSaveInstanceState(outState)
     }
 

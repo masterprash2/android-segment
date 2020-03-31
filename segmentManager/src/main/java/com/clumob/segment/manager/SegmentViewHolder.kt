@@ -8,17 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.*
-import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.Storable
+import com.clumob.segment.controller.common.Controller
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
 import java.util.*
 
-abstract class SegmentViewHolder
-(
-        val context: Context,
-        val layoutInflater: LayoutInflater,
-        parentView: ViewGroup?
-) : LifecycleOwner {
+abstract class SegmentViewHolder(val context: Context,
+                                 val layoutInflater: LayoutInflater,
+                                 parentView: ViewGroup?)
+    : LifecycleOwner {
 
 
     enum class SegmentViewState {
@@ -33,7 +31,7 @@ abstract class SegmentViewHolder
     private var parentLifecycleObserver: LifecycleObserver? = null
 
 
-    var controller: SegmentController? = null
+    var controller: Controller? = null
         private set
 
     private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
@@ -42,22 +40,22 @@ abstract class SegmentViewHolder
     private val segmentManagers = LinkedHashMap<Int, SegmentManager>()
 
 
-     val view: View by lazy(LazyThreadSafetyMode.PUBLICATION) {
-         val view = createView(layoutInflater, parentView)
+    val view: View by lazy(LazyThreadSafetyMode.PUBLICATION) {
+        val view = createView(layoutInflater, parentView)
 
-         view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-             override fun onViewAttachedToWindow(view: View) {
-                 isAttachedToWindow = true
-                 onAttachedToWindow()
-             }
+        view.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(view: View) {
+                isAttachedToWindow = true
+                onAttachedToWindow()
+            }
 
-             override fun onViewDetachedFromWindow(view: View) {
-                 isAttachedToWindow = false
-                 onDetachedFromWindow()
-             }
-         })
-         view
-     }
+            override fun onViewDetachedFromWindow(view: View) {
+                isAttachedToWindow = false
+                onDetachedFromWindow()
+            }
+        })
+        view
+    }
 
 
     override fun getLifecycle(): Lifecycle {
@@ -112,14 +110,13 @@ abstract class SegmentViewHolder
     }
 
 
-
     protected fun onAttachedToWindow() {}
     protected fun onDetachedFromWindow() {}
 
     protected abstract fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View
 
 
-    internal fun bind(controller: SegmentController) {
+    fun bind(controller: Controller) {
         currentState = SegmentViewState.CREATE
         this.controller = controller
         for (lifecycle in segmentLifecycleListeners) {
@@ -178,7 +175,7 @@ abstract class SegmentViewHolder
         }
     }
 
-    fun onRequestPermissionsResult(code: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(code: Int, permissions: Array<String>, grantResults: IntArray?) {
         for (segmentManager in segmentManagers.values) {
             segmentManager.onRequestPermissionsResult(code, permissions, grantResults)
         }

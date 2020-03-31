@@ -51,7 +51,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
     }
 
     private fun createEmptySegment(): Segment {
-        return EmptySegment(SegmentInfo(SEGMENT_ID_EMPTY, null))
+        return EmptySegment(0,SEGMENT_ID_EMPTY , context).apply { bindSegmentInfo(SegmentInfo(SEGMENT_ID_EMPTY.toInt(),null )) }
     }
 
     protected fun restoreSegment(savedInstanceState: Bundle?): SegmentInfo? {
@@ -72,7 +72,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
     }
 
     private fun createRestoreSegment(segmentInfo: SegmentInfo): Segment {
-        return if (segmentInfo.id == SEGMENT_ID_EMPTY) createEmptySegment() else callbacks.provideSegment(segmentInfo)!!
+        return if (segmentInfo.id.toLong() == SEGMENT_ID_EMPTY) createEmptySegment() else callbacks.provideSegment(segmentInfo)
     }
 
     fun changeSegment(segmentInfo: SegmentInfo): SegmentInfo? {
@@ -150,7 +150,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
         segment.onConfigurationChanged(newConfig)
     }
 
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray?) {
         segment.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -192,7 +192,7 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
     }
 
     companion object {
-        const val SEGMENT_ID_EMPTY = Int.MIN_VALUE
+        const val SEGMENT_ID_EMPTY = Long.MIN_VALUE
     }
 
 

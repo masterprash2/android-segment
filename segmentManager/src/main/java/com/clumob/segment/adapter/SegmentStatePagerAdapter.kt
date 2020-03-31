@@ -1,22 +1,20 @@
-package com.clumob.segment.support.pager.viewpager
+package com.clumob.segment.adapter
 
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import androidx.viewpager.widget.PagerAdapter
-import com.clumob.listitem.controller.source.ItemController
-import com.clumob.listitem.controller.source.ItemControllerSource
-import com.clumob.listitem.controller.source.SourceUpdateEvent
-import com.clumob.segment.controller.list.SegmentItemController
-import com.clumob.segment.manager.Segment
-import com.clumob.segment.support.pager.SegmentItemProvider
+import com.clumob.segment.controller.common.ItemControllerWrapper
+import com.clumob.segment.controller.list.ItemControllerSource
+import com.clumob.segment.controller.list.SourceUpdateEvent
+import com.clumob.segment.view.SegmentViewProvider
 import io.reactivex.observers.DisposableObserver
 import java.util.*
 
-open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : ItemControllerSource<T>,
-                                    val factory: SegmentItemProvider) : SegmentPagerAdapter() {
+open class SegmentStatePagerAdapter(val dataSource: ItemControllerSource,
+                                    val provider: SegmentViewProvider) : SegmentPagerAdapter() {
 
-    private val attachedSegments: MutableSet<ItemSegmentPair> = HashSet()
+    private val attachedSegments: MutableSet<Page> = HashSet()
     private val mHandler = Handler(Looper.getMainLooper())
 
     init {
@@ -34,7 +32,7 @@ open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : 
         })
     }
 
-    private fun createViewInteractor() : ItemControllerSource.ViewInteractor {
+    private fun createViewInteractor(): ItemControllerSource.ViewInteractor {
         return object : ItemControllerSource.ViewInteractor {
             var deque: Deque<Runnable> = LinkedList()
             private var processingInProgress = false
@@ -72,46 +70,33 @@ open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : 
         return false
     }
 
-    class ItemSegmentPair(val segment: Segment, val itemController: ItemController?) {
-
-        companion object {
-            fun pair(segment: Segment, itemController: ItemController?): ItemSegmentPair {
-                return ItemSegmentPair(segment, itemController)
-            }
-        }
-
-    }
-
     override fun instantiateItem(index: Int): Any {
         val item = getItem(index)
-        val segment = factory.provide(item)
-        val pair = ItemSegmentPair.pair(segment, item)
-        attachedSegments.add(pair)
-        segment.onCreate()
-        dataSource.onItemAttached(index)
-        pair.itemController!!.onAttach(pair.segment)
-        return pair
+        val segment = provider.create(null, item.type())
+        val page = Page(item, segment, this)
+        attachedSegments.add(page)
+        return page
     }
 
     override fun getCount(): Int {
         return dataSource.itemCount
     }
 
-    fun getAttachedSegments(): Set<ItemSegmentPair?>? {
+    fun getAttachedSegments(): Set<Page?>? {
         return attachedSegments
     }
 
-    override fun retrieveSegmentFromObject(item: Any): Segment {
-        return (item as ItemSegmentPair).segment
+    override fun retrieveSegmentFromObject(item: Any): Page {
+        return (item as Page)
     }
 
     // ToDO: The lookup algorightm is slow;
     override fun computeItemPosition(inputItem: Any): Int {
-        val id = (inputItem as ItemSegmentPair).itemController!!.id
+        val id = (inputItem as Page).controller.id()
         val itemCount = dataSource.itemCount
         for (i in 0 until itemCount) {
             val item = getItem(i)
-            if (item.id == id) {
+            if (item.id() == id) {
                 return i
             }
         }
@@ -121,55 +106,19 @@ open class SegmentStatePagerAdapter<T : SegmentItemController>(val dataSource : 
 
     override fun destroyItem(item: Any) {
         super.destroyItem(item)
-        val pair = item as ItemSegmentPair
-        pair.itemController!!.onDetach(pair.segment)
-        pair.segment.onDestroy()
+        val pair = item as Page
+        pair.controller.performStop(pair.controller)
         attachedSegments.remove(pair)
     }
 
 
-    override fun onCreate() {
-        super.onCreate()
-        for (segment in attachedSegments) {
-            segment.segment.onCreate()
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        for (segment in attachedSegments) {
-            segment.segment.onStart()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        for (segment in attachedSegments) {
-            segment.segment.onPause()
-        }
-    }
-
     override fun onConfigurationChanged(configuration: Configuration?) {
         for (segment in attachedSegments) {
-            segment.segment.onConfigurationChanged(configuration)
+            segment.viewHolder.onConfigurationChanged(configuration)
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        for (segment in attachedSegments) {
-            segment.segment.onStop()
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        for (segment in attachedSegments) {
-            segment.segment.onDestroy()
-        }
-    }
-
-    fun getItem(position: Int): T {
+    fun getItem(position: Int): ItemControllerWrapper {
         return dataSource.getItem(position)
     }
 

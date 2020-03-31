@@ -1,6 +1,5 @@
 package com.clumob.segment.support.pager
 
-import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
 import com.clumob.segment.manager.Segment
 

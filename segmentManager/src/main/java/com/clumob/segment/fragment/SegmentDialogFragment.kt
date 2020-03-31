@@ -1,14 +1,19 @@
-package com.clumob.segment.support.appcompact
+package com.clumob.segment.fragment
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
+import com.clumob.log.AppLog
 import com.clumob.segment.controller.SegmentInfo
+import com.clumob.segment.controller.util.ParcelableUtil.marshall
+import com.clumob.segment.controller.util.ParcelableUtil.unmarshall
 import com.clumob.segment.manager.Segment
 import com.clumob.segment.manager.SegmentManager
 import com.clumob.segment.manager.SegmentManager.SegmentCallbacks
@@ -18,7 +23,7 @@ import com.clumob.segment.manager.SegmentViewHolder
 /**
  * Created by prashant.rathore on 14/02/18.
  */
-abstract class SegmentFragment : Fragment(), SegmentCallbacks {
+abstract class SegmentDialogFragment : DialogFragment(), SegmentCallbacks, DialogInterface.OnKeyListener {
     private var segment: Segment? = null
     private var viewHolder: SegmentViewHolder? = null
     override fun onAttach(context: Context) {
@@ -27,24 +32,26 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        segment = createSegment()
+        preSegmentCreate(savedInstanceState)
+        segment = createSegment(savedInstanceState)
         segment!!.onCreate()
     }
 
+    protected fun preSegmentCreate(savedInstanceState: Bundle?) {}
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         segment!!.attach(context!!, inflater)
         viewHolder = segment!!.createView(container)
         return viewHolder!!.view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.setOnKeyListener { view, i, keyEvent -> segment!!.handleBackPressed() }
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         segment!!.bindView(viewHolder!!)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        segment!!.onConfigurationChanged(newConfig)
+        super.onConfigurationChanged(newConfig)
     }
 
     override fun onStart() {
@@ -53,10 +60,15 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
     }
 
     override fun onResume() {
-        if (userVisibleHint) {
-            segment!!.onResume()
-        }
+        segment!!.onResume()
+        dialog!!.setOnKeyListener(this)
         super.onResume()
+    }
+
+    override fun onKey(dialogInterface: DialogInterface, i: Int, keyEvent: KeyEvent): Boolean {
+        return if (keyEvent.keyCode == KeyEvent.KEYCODE_BACK && keyEvent.action == KeyEvent.ACTION_UP) {
+            segment!!.handleBackPressed()
+        } else false
     }
 
     override fun onPause() {
@@ -64,24 +76,14 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
         super.onPause()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        segment!!.onConfigurationChanged(newConfig)
-        super.onConfigurationChanged(newConfig)
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (view == null) {
-            return
-        }
-        if (userVisibleHint) {
-            segment!!.onResume()
-        } else {
-            segment!!.onPause()
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
+//        try {
+//            val segmentInfo = segment!!.getSegmentInfo()
+//            val marshall = marshall(segmentInfo)
+//            outState.putByteArray("SEGMENT_INFO", marshall)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
         super.onSaveInstanceState(outState)
     }
 
@@ -91,7 +93,6 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
     }
 
     override fun onDestroyView() {
-        this.view!!.setOnKeyListener(null)
         segment!!.unBindView()
         viewHolder = null
         super.onDestroyView()
@@ -117,8 +118,26 @@ abstract class SegmentFragment : Fragment(), SegmentCallbacks {
         segment!!.onActivityResult(requestCode, resultCode, data)
     }
 
-    protected fun createSegment(): Segment? {
-        return provideSegment(provideSegmentInfo()!!)
+    protected fun restoreSegmentInfo(savedInstanceState: Bundle?): SegmentInfo? {
+        var segmentInfoBytes: ByteArray? = null
+        if (savedInstanceState == null) { //            segmentInfoBytes = getIntent().getByteArrayExtra("SEGMENT_INFO");
+        } else {
+            segmentInfoBytes = savedInstanceState.getByteArray("SEGMENT_INFO")
+        }
+        var segmentInfo: SegmentInfo? = null
+        try {
+            if (segmentInfoBytes != null) {
+                segmentInfo = unmarshall(segmentInfoBytes, SegmentInfo.CREATOR)
+            }
+        } catch (e: Exception) {
+            AppLog.printStack(e)
+        }
+        return segmentInfo
+    }
+
+    protected fun createSegment(savedInstanceState: Bundle?): Segment? {
+        val segmentInfo = restoreSegmentInfo(savedInstanceState)
+        return provideSegment(segmentInfo ?: provideSegmentInfo()!!)
     }
 
     protected abstract fun provideSegmentInfo(): SegmentInfo?

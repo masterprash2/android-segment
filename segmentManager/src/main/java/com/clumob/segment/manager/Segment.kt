@@ -9,14 +9,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.clumob.log.AppLog
-import com.clumob.segment.controller.SegmentController
 import com.clumob.segment.controller.SegmentInfo
+import com.clumob.segment.controller.common.Controller
+import com.clumob.segment.view.SegmentViewProvider
 
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-open class Segment(private val controller: SegmentController,
-                   private val screenFactory: SegmentViewHolderFactory) : LifecycleOwner {
+open class Segment(private val controller: Controller,
+                   private val screenFactory: SegmentViewProvider) : LifecycleOwner {
 
     var mLifecycleRegistry = LifecycleRegistry(this)
 
@@ -52,7 +53,7 @@ open class Segment(private val controller: SegmentController,
     }
 
     fun createView(parentView: ViewGroup?): SegmentViewHolder {
-        return screenFactory.create(context!!, layoutInflater!!, parentView)
+        return screenFactory.create(parentView, controller.getType())
     }
 
     fun getBoundedView(): SegmentViewHolder? {
@@ -67,8 +68,8 @@ open class Segment(private val controller: SegmentController,
 
     private fun createInternal() {
         currentState = SegmentState.CREATE
-        controller.onCreate(segmentInfo.arguments)
-        controller.restoreState(segmentInfo.restorableSetmentState)
+        controller.onCreate()
+        controller.onRestore(segmentInfo.restorableSetmentState)
         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
     }
 

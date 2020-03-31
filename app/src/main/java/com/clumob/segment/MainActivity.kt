@@ -25,17 +25,6 @@ class MainActivity : SegmentAppCompatActivity() {
     @SuppressLint("NewApi")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val segmentView = SegmentView(context = this)
-//        val segmentInfo = SegmentInfo(1, null)
-//        val segment = Segment(SubSegmentController(), object : SegmentViewProvider {
-//
-//            override fun create(parent: ViewGroup?, viewType: Int): SegmentViewHolder {
-//                return TestSegmentViewHolder(parent!!.context, layoutInflater, parent)
-//            }
-//        })
-//        segment.bindSegmentInfo(segmentInfo)
-//        segmentView.setSegment(segment)
-//        setContentView(segmentView)
         segmentManager!!.navigation.navigateToScreen(SegmentInfo(1,null))
     }
 

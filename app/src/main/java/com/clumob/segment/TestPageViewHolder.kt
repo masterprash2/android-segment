@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
+import com.clumob.segment.controller.common.Controller
 import com.clumob.segment.manager.SegmentViewHolder
 import kotlin.random.Random
 
@@ -18,10 +19,10 @@ class TestPageViewHolder(context: Context, layoutInflater: LayoutInflater, paren
 
     override fun onBind() {
         this.view.setBackgroundColor(Random(Integer.MAX_VALUE).nextInt())
-        Log.d("SEGMENTPAGE", "OnBind -" + this.controller.toString().split("@").toTypedArray()[1])
+        Log.d("SEGMENTPAGE", "OnBind -" + this.getController<Controller>().toString().split("@").toTypedArray()[1])
     }
 
     override fun onUnBind() {
-        Log.d("SEGMENTPAGE", "OnUnBind -" + this.controller.toString().split("@").toTypedArray()[1])
+        Log.d("SEGMENTPAGE", "OnUnBind -" + this.getController<Controller>().toString().split("@").toTypedArray()[1])
     }
 }

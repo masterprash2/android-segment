@@ -1,9 +1,9 @@
 package com.clumob.segment.adapter
 
 import android.content.res.Configuration
-import android.database.DataSetObserver
 import android.os.Handler
 import android.os.Looper
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager.widget.PagerAdapter
 import com.clumob.segment.controller.common.ItemControllerWrapper
@@ -13,25 +13,28 @@ import com.clumob.segment.view.SegmentViewProvider
 import io.reactivex.observers.DisposableObserver
 import java.util.*
 
-open class SegmentStatePagerAdapter(val dataSource: ItemControllerSource,
-                                    val provider: SegmentViewProvider) : SegmentPagerAdapter() {
+open class SegmentStatePagerAdapter(
+    val dataSource: ItemControllerSource,
+    val provider: SegmentViewProvider
+) : SegmentPagerAdapter() {
 
     private val attachedSegments: MutableSet<Page> = HashSet()
     private val mHandler = Handler(Looper.getMainLooper())
 
     init {
         dataSource.viewInteractor = (createViewInteractor())
-        dataSource.observeAdapterUpdates().subscribe(object : DisposableObserver<SourceUpdateEvent?>() {
-            override fun onNext(sourceUpdateEvent: SourceUpdateEvent) {
-                if (sourceUpdateEvent.type == SourceUpdateEvent.Type.UPDATE_ENDS) notifyDataSetChanged()
-            }
+        dataSource.observeAdapterUpdates()
+            .subscribe(object : DisposableObserver<SourceUpdateEvent?>() {
+                override fun onNext(sourceUpdateEvent: SourceUpdateEvent) {
+                    if (sourceUpdateEvent.type == SourceUpdateEvent.Type.UPDATE_ENDS) notifyDataSetChanged()
+                }
 
-            override fun onError(e: Throwable) {
-                e.printStackTrace()
-            }
+                override fun onError(e: Throwable) {
+                    e.printStackTrace()
+                }
 
-            override fun onComplete() {}
-        })
+                override fun onComplete() {}
+            })
     }
 
     private fun createViewInteractor(): ItemControllerSource.ViewInteractor {
@@ -82,9 +85,9 @@ open class SegmentStatePagerAdapter(val dataSource: ItemControllerSource,
         return false
     }
 
-    override fun instantiateItem(index: Int): Any {
+    override fun instantiateItemInternal(parent: ViewGroup, index: Int): Any {
         val item = getItem(index)
-        val segment = provider.create(null, item.type())
+        val segment = provider.create(parent, item.type())
         val page = Page(item, segment, this)
         attachedSegments.add(page)
         return page

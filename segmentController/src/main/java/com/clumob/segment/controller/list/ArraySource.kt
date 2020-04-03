@@ -10,7 +10,7 @@ import kotlin.collections.ArrayList
 /**
  * Created by prashant.rathore on 24/06/18.
  */
-class ArraySource : ItemControllerSource() {
+class ArraySource<T : Controller> : ItemControllerSource() {
     private var controller: MutableList<ItemControllerWrapper> = ArrayList()
     private var isAttached = false
     private val itemUpdatePublisher = ItemUpdatePublisher()
@@ -29,7 +29,7 @@ class ArraySource : ItemControllerSource() {
     val items: List<ItemControllerWrapper>
         get() = controller
 
-    fun setItems(items: List<Controller>?) {
+    fun setItems(items: List<T>?) {
         switchItems(items)
     }
 
@@ -61,16 +61,17 @@ class ArraySource : ItemControllerSource() {
                 notifyItemsChanged(0, newCount)
             }
         }
-        endUpdates()
         if (isAttached) {
             newItems.onEach { it.performCreate(itemUpdatePublisher) }
         }
+        endUpdates()
 
         oldItems.removeAll(retained)
         oldItems.onEach { it.performDestroy() }
+
     }
 
-    fun switchItems(items: List<Controller>?) {
+    fun switchItems(items: List<T>?) {
         switchItems(items, false)
     }
 

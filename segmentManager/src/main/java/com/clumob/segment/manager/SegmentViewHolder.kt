@@ -31,8 +31,10 @@ abstract class SegmentViewHolder(val context: Context,
     private var parentLifecycleObserver: LifecycleObserver? = null
 
 
-    var controller: Controller? = null
+    private var controller: Controller? = null
         private set
+
+    fun <T : Controller> getController() : T = (controller as T)
 
     private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
     private var currentState = SegmentViewState.FRESH

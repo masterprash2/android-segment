@@ -35,7 +35,7 @@ class TestSegmentViewHolder(context: Context, layoutInflater: LayoutInflater, pa
     }
 
     private fun createItems(): List<Controller> {
-        return listOf(PageController(),PageController())
+        return listOf(PageController(),PageController(),PageController(),PageController(),PageController())
     }
 
     override fun onUnBind() {

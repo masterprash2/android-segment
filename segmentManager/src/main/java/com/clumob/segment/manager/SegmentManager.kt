@@ -111,17 +111,17 @@ class SegmentManager @JvmOverloads constructor(private val parentSegmentManager:
         changeView(newScreen.view, Runnable {
             when (oldController.currentState) {
                 SegmentState.CREATE -> {
-                    oldController.unBindView()
                     oldController.onDestroy()
+                    oldController.unBindView()
                 }
                 SegmentState.PAUSE, SegmentState.RESUME, SegmentState.START -> {
                     oldController.onStop()
-                    oldController.unBindView()
                     oldController.onDestroy()
+                    oldController.unBindView()
                 }
                 SegmentState.STOP -> {
-                    oldController.unBindView()
                     oldController.onDestroy()
+                    oldController.unBindView()
                 }
                 SegmentState.DESTROY -> return@Runnable
             }

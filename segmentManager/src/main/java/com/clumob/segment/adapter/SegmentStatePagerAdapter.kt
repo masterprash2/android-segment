@@ -15,8 +15,9 @@ import java.util.*
 
 open class SegmentStatePagerAdapter(
     val dataSource: ItemControllerSource,
-    val provider: SegmentViewProvider
-) : SegmentPagerAdapter() {
+    val provider: SegmentViewProvider,
+    lifecycleOwner: LifecycleOwner
+) : SegmentPagerAdapter(lifecycleOwner) {
 
     private val attachedSegments: MutableSet<Page> = HashSet()
     private val mHandler = Handler(Looper.getMainLooper())
@@ -35,6 +36,10 @@ open class SegmentStatePagerAdapter(
 
                 override fun onComplete() {}
             })
+    }
+
+    init {
+        dataSource.onAttachToView()
     }
 
     private fun createViewInteractor(): ItemControllerSource.ViewInteractor {
@@ -71,15 +76,11 @@ open class SegmentStatePagerAdapter(
         };
     }
 
-    override fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner) {
-        super.attachLifecycleOwner(lifecycleOwner)
-        dataSource.onAttachToView()
+    override fun destroy() {
+        dataSource.onDetachFromView()
+        super.destroy()
     }
 
-    override fun detachLifeCycleOwner() {
-        dataSource.onDetachFromView()
-        super.detachLifeCycleOwner()
-    }
 
     private fun isComputingLayout(): Boolean {
         return false

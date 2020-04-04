@@ -171,8 +171,8 @@ open class Segment(private val controller: Controller,
     fun onDestroy() {
         if (currentState != SegmentState.DESTROY) {
             onStop()
-            unBindView()
             destroyInternal()
+            unBindView()
         }
     }
 

@@ -2,8 +2,10 @@ package com.clumob.segment.adapter
 
 import android.os.Handler
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.clumob.segment.controller.list.ItemControllerSource
@@ -18,14 +20,25 @@ class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider,
                             val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<RvViewHolder>() {
 
 
+    private var destroyed: Boolean = false
     private var recyclerView: RecyclerView? = null
     private var adapterUpdateEventObserver: AdapterUpdateObserver? = null
-
+    private val lifecycleEventObserver : LifecycleObserver
     private val mHandler = Handler()
 
     init {
         setHasStableIds(this.itemControllerSource.hasStableIds())
         this.itemControllerSource.viewInteractor = createViewInteractor()
+        lifecycleEventObserver = LifecycleEventObserver { source, event ->
+            if(event == Lifecycle.Event.ON_DESTROY) destroy()
+        }
+        lifecycleOwner.lifecycle.addObserver(lifecycleEventObserver)
+    }
+
+    private fun destroy() {
+        this.destroyed = true
+        lifecycleOwner.lifecycle.removeObserver(lifecycleEventObserver)
+        itemControllerSource.onDetachFromView()
     }
 
     private fun createViewInteractor(): ItemControllerSource.ViewInteractor? {
@@ -112,6 +125,7 @@ class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider,
 
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        if(destroyed) throw IllegalAccessException("Destroyed Adapter cannot be used")
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
         if (adapterUpdateEventObserver != null) {
@@ -124,6 +138,7 @@ class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider,
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        destroy()
         itemControllerSource.onDetachFromView()
         this.recyclerView = null
         if (adapterUpdateEventObserver != null) {

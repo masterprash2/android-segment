@@ -13,38 +13,42 @@ import com.clumob.segment.manager.SegmentViewHolder
 /**
  * Created by prashant.rathore on 02/07/18.
  */
-abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
+abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapter(), LifecycleOwner {
 
+    private var detroyed: Boolean = false
     var primaryItem: Page? = null
         private set
-    private var parentLifecycleOwner: LifecycleOwner? = null
-    private var lifecycleEventObserver: LifecycleEventObserver? = null
+    private var parentLifecycleOwner: LifecycleOwner? = lifecycleOwner
+    private val lifecycleEventObserver: LifecycleEventObserver
     private val mLifecycleRegistry = LifecycleRegistry(this)
 
     override fun getLifecycle(): Lifecycle = mLifecycleRegistry
 
-    open fun attachLifecycleOwner(lifecycleOwner: LifecycleOwner) {
-        detachLifeCycleOwner()
-        this.parentLifecycleOwner = lifecycleOwner
-        if (this.parentLifecycleOwner == null) {
-            return
-        }
+    init {
         lifecycleEventObserver = LifecycleEventObserver { source, event ->
             mLifecycleRegistry.handleLifecycleEvent(event)
+            if(event == Lifecycle.Event.ON_DESTROY) destroy()
         }
-        this.parentLifecycleOwner!!.lifecycle.addObserver(lifecycleEventObserver!!)
+        this.parentLifecycleOwner!!.lifecycle.addObserver(lifecycleEventObserver)
     }
 
-    open fun detachLifeCycleOwner() {
+    open fun destroy() {
+        this.detroyed = true
+        detachLifeCycleOwner()
+    }
+
+    private fun detachLifeCycleOwner() {
         if (parentLifecycleOwner != null) {
-            lifecycleEventObserver!!.onStateChanged(parentLifecycleOwner!!, Lifecycle.Event.ON_DESTROY)
-            parentLifecycleOwner!!.lifecycle.removeObserver(lifecycleEventObserver!!)
+            val owner = parentLifecycleOwner!!
+            parentLifecycleOwner = null
+            owner.lifecycle.removeObserver(lifecycleEventObserver)
+            lifecycleEventObserver.onStateChanged(owner, Lifecycle.Event.ON_DESTROY)
         }
-        parentLifecycleOwner = null
     }
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        if(detroyed) throw IllegalAccessException("Destroyed Adapter cannot be reused.")
         val item = instantiateItemInternal(container, position)
         val segment = retrieveSegmentFromObject(item)
         val view = segment.viewHolder
@@ -95,7 +99,8 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
     override fun destroyItem(container: ViewGroup, position: Int, item: Any) {
         val segment = retrieveSegmentFromObject(item)
         val view = segment.viewHolder.view
-        segment.onStop(parentLifecycleOwner!!)
+        if(parentLifecycleOwner != null)
+            segment.onStop(parentLifecycleOwner!!)
         lifecycle.removeObserver(segment)
         destroyItem(item)
         container.removeView(view)
@@ -151,6 +156,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
 
         override fun onCreate(owner: LifecycleOwner) {
             when (controller.state) {
+                ItemControllerWrapper.State.CREATE,
                 ItemControllerWrapper.State.FRESH,
                 ItemControllerWrapper.State.DESTROY -> {
                     mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -167,6 +173,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
             }
 
             when (controller.state) {
+                ItemControllerWrapper.State.START,
                 ItemControllerWrapper.State.CREATE,
                 ItemControllerWrapper.State.STOP -> {
                     mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
@@ -185,6 +192,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
                 }
 
                 when (controller.state) {
+                    ItemControllerWrapper.State.RESUME,
                     ItemControllerWrapper.State.START,
                     ItemControllerWrapper.State.PAUSE -> {
                         mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -196,6 +204,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
 
         override fun onPause(owner: LifecycleOwner) {
             when (controller.state) {
+                ItemControllerWrapper.State.PAUSE,
                 ItemControllerWrapper.State.RESUME -> {
                     mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
                     controller.performPause()
@@ -212,6 +221,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
             when (controller.state) {
                 ItemControllerWrapper.State.RESUME,
                 ItemControllerWrapper.State.PAUSE,
+                ItemControllerWrapper.State.STOP,
                 ItemControllerWrapper.State.START -> {
                     mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
                     controller.performStop(this)
@@ -222,6 +232,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         override fun onDestroy(owner: LifecycleOwner) {
             if (controller.state != ItemControllerWrapper.State.CREATE) onStop(owner)
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            controller.performDestroy()
         }
 
         override fun getLifecycle(): Lifecycle {

@@ -69,6 +69,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
     protected open fun onDetachedFromWindow() {}
 
     fun unBind() {
+        if(!isBounded) return
         unBindView()
         performDetachFromWindow()
         controller = null
@@ -91,6 +92,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
             }
 
             override fun onResume(owner: LifecycleOwner) {
+                onStart(owner)
                 updateScreenResumeState(true)
             }
 
@@ -99,16 +101,22 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
             }
 
             override fun onStop(owner: LifecycleOwner) {
+                onPause(owner)
                 updateScreenStartState(false)
             }
 
-            override fun onDestroy(owner: LifecycleOwner) {}
+            override fun onDestroy(owner: LifecycleOwner) {
+                onStop(owner)
+                unBind()
+            }
         }
         parentLifecycleOwner!!.lifecycle.addObserver(lifecycleObserver!!)
 
     }
 
     private fun updateScreenStartState(isStarted: Boolean) {
+        if(this.isScreenStared == isStarted) return
+
         this.isScreenStared = isStarted
         if (isScreenStared) onScreenStarted()
         else onScreenStopped()
@@ -122,6 +130,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
     }
 
     private fun updateScreenResumeState(isInFocus: Boolean) {
+        if(isScreenResumed == isInFocus) return
         isScreenResumed = isInFocus
         if (isScreenResumed) {
             onScreenResumed()

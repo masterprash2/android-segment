@@ -13,9 +13,9 @@ import com.clumob.segment.view.SegmentViewProvider
 import io.reactivex.observers.DisposableObserver
 import java.util.*
 
-class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider?,
+class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider,
                             val itemControllerSource: ItemControllerSource,
-                            val lifecycleOwner: LifecycleOwner?) : RecyclerView.Adapter<RvViewHolder>() {
+                            val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<RvViewHolder>() {
 
 
     private var recyclerView: RecyclerView? = null
@@ -70,8 +70,8 @@ class RvAdapter constructor(val viewHolderProvider: SegmentViewProvider?,
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvViewHolder {
-        val rvViewHolder = RvViewHolder(viewHolderProvider!!.create(parent, viewType))
-        rvViewHolder.setLifecycleOwner(lifecycleOwner!!)
+        val rvViewHolder = RvViewHolder(viewHolderProvider.create(parent, viewType))
+        rvViewHolder.setLifecycleOwner(lifecycleOwner)
         return rvViewHolder
     }
 

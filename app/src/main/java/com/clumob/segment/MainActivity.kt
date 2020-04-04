@@ -2,6 +2,7 @@ package com.clumob.segment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,24 @@ class MainActivity : SegmentAppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         segmentManager!!.navigation.navigateToScreen(SegmentInfo(1,null))
+    }
+
+    override fun onPause() {
+        Log.d("SEGMENT"," Activity Pause Begin")
+        super.onPause()
+        Log.d("SEGMENT"," Activity Pause end")
+    }
+
+    override fun onStop() {
+        Log.d("SEGMENT"," Activity Stop")
+        super.onStop()
+        Log.d("SEGMENT"," Activity Stop End")
+    }
+
+    override fun onDestroy() {
+        Log.d("SEGMENT"," Activity Destroy Start")
+        super.onDestroy()
+        Log.d("SEGMENT"," Activity Destroy End")
     }
 
     override fun createSegmentNavigation(segmentManager: SegmentManager): SegmentNavigation {

@@ -60,7 +60,10 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         segment.onCreate(parentLifecycleOwner!!)
         when (parentLifecycleOwner!!.lifecycle.currentState) {
             Lifecycle.State.STARTED -> segment.onStart(parentLifecycleOwner!!)
-            Lifecycle.State.RESUMED -> segment.onResume(parentLifecycleOwner!!)
+            Lifecycle.State.RESUMED -> {
+                segment.onStart(parentLifecycleOwner!!)
+                segment.onResume(parentLifecycleOwner!!)
+            }
         }
     }
 
@@ -147,7 +150,12 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         }
 
         override fun onCreate(owner: LifecycleOwner) {
-            mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            when (controller.state) {
+                ItemControllerWrapper.State.FRESH,
+                ItemControllerWrapper.State.DESTROY -> {
+                    mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+                }
+            }
         }
 
         override fun onStart(owner: LifecycleOwner) {
@@ -212,6 +220,7 @@ abstract class SegmentPagerAdapter : PagerAdapter(), LifecycleOwner {
         }
 
         override fun onDestroy(owner: LifecycleOwner) {
+            if (controller.state != ItemControllerWrapper.State.CREATE) onStop(owner)
             mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         }
 

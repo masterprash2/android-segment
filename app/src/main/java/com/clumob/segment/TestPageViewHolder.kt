@@ -40,7 +40,7 @@ class TestPageViewHolder(context: Context, layoutInflater: LayoutInflater, paren
 
     private fun createItems(): List<Controller>? {
         val list = ArrayList<TestRecyclerItem>()
-        for (i in 0..100) list.add(createItem(i))
+        for (i in 0..1) list.add(createItem(i))
         return list
     }
 

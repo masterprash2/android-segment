@@ -25,9 +25,7 @@ class TestSegmentViewHolder(context: Context, layoutInflater: LayoutInflater, pa
 
     override fun onBind() {
         Log.d("SEGMENTSUB", "OnBind ${this.getController<Controller>().getId()} -" + this.getController<Controller>().toString().split("@").toTypedArray()[1])
-        pager.adapter = SegmentStatePagerAdapter(createSource(), ScreenProvider(context, layoutInflater)).apply {
-            attachLifecycleOwner(this@TestSegmentViewHolder)
-        }
+        pager.adapter = SegmentStatePagerAdapter(createSource(), ScreenProvider(context, layoutInflater),this)
     }
 
     private fun createSource(): ItemControllerSource {
@@ -37,11 +35,12 @@ class TestSegmentViewHolder(context: Context, layoutInflater: LayoutInflater, pa
     }
 
     private fun createItems(): List<Controller> {
-        return listOf(PageController(),PageController(),PageController(),PageController())
+        return listOf(PageController(),PageController())
     }
 
     override fun onUnBind() {
         Log.d("SEGMENTSUB", "OnUnBind ${this.getController<Controller>().getId()} - " + this.getController<Controller>().toString().split("@").toTypedArray()[1])
-        (pager.adapter as SegmentStatePagerAdapter).detachLifeCycleOwner()
+//        (pager.adapter as SegmentStatePagerAdapter).detachLifeCycleOwner()
+//        pager.adapter = null
     }
 }

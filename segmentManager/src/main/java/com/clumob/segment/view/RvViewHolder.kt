@@ -1,6 +1,7 @@
 package com.clumob.segment.view
 
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +22,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
     private var isBounded = false
     var parentLifecycleOwner: LifecycleOwner? = null
         private set
-    private var lifecycleObserver: LifecycleObserver? = null
+    private var lifecycleObserver: DefaultLifecycleObserver? = null
 
     internal fun bind(controller: ItemControllerWrapper) {
         if (isBounded) {
@@ -34,7 +35,17 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
     }
 
     private fun bindView() {
+        val currentState = parentLifecycleOwner!!.lifecycle.currentState
         viewHolder.bind(controller!!.controller)
+        when(currentState) {
+            Lifecycle.State.STARTED -> {
+                updateScreenStartState(true)
+            }
+            Lifecycle.State.RESUMED -> {
+                updateScreenStartState(true)
+                updateScreenResumeState(true)
+            }
+        }
     }
 
     internal fun performAttachToWindow() {
@@ -94,6 +105,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
             override fun onDestroy(owner: LifecycleOwner) {}
         }
         parentLifecycleOwner!!.lifecycle.addObserver(lifecycleObserver!!)
+
     }
 
     private fun updateScreenStartState(isStarted: Boolean) {
@@ -129,7 +141,7 @@ open class RvViewHolder(private val viewHolder: SegmentViewHolder) : RecyclerVie
     private fun onScreenStopped() {
         onScreenPaused()
         when (controller?.state) {
-            ItemControllerWrapper.State.STOP,
+            ItemControllerWrapper.State.START,
             ItemControllerWrapper.State.PAUSE -> controller!!.performStop(this)
         }
     }

@@ -1,6 +1,5 @@
 package com.clumob.segment.controller.list
 
-import com.clumob.segment.controller.common.Controller
 import com.clumob.segment.controller.common.ItemControllerWrapper
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
@@ -37,7 +36,7 @@ class MultiplexSource : ItemControllerSource() {
         return false
     }
 
-    fun addAdapter(adapter: ItemControllerSource) {
+    fun addSource(adapter: ItemControllerSource) {
         addSource(adapters.size, adapter)
     }
 

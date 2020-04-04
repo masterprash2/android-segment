@@ -155,18 +155,19 @@ abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapt
         }
 
         override fun onCreate(owner: LifecycleOwner) {
-            when (controller.state) {
-                ItemControllerWrapper.State.CREATE,
-                ItemControllerWrapper.State.FRESH,
-                ItemControllerWrapper.State.DESTROY -> {
-                    mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            if(adapter.parentLifecycleOwner!!.lifecycle.currentState == Lifecycle.State.CREATED) {
+                when (controller.state) {
+                    ItemControllerWrapper.State.CREATE,
+                    ItemControllerWrapper.State.FRESH,
+                    ItemControllerWrapper.State.DESTROY -> {
+                        mLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+                    }
                 }
             }
         }
 
         override fun onStart(owner: LifecycleOwner) {
             when (adapter.parentLifecycleOwner!!.lifecycle.currentState) {
-                Lifecycle.State.INITIALIZED,
                 Lifecycle.State.CREATED,
                 Lifecycle.State.STARTED,
                 Lifecycle.State.RESUMED -> onCreate(owner)
@@ -187,7 +188,6 @@ abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapt
                 when (adapter.parentLifecycleOwner!!.lifecycle.currentState) {
                     Lifecycle.State.STARTED,
                     Lifecycle.State.CREATED,
-                    Lifecycle.State.INITIALIZED,
                     Lifecycle.State.RESUMED -> onStart(owner)
                 }
 

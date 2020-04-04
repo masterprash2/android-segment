@@ -7,8 +7,6 @@ open class BasicController(private val itemType : Int, private val  itemId : Lon
     override fun getId(): Long = itemId
     override fun getType(): Int = itemType
 
-    override fun bindArgs(args: Any) {}
-
     override fun onCreate() {}
 
     override fun onRestore(savedState: Storable?) {}

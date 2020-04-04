@@ -6,7 +6,6 @@ interface Controller {
 
     fun getType() : Int
     fun getId() : Long
-    fun bindArgs(args: Any)
     fun onCreate()
     fun onRestore(savedState: Storable?)
     fun onStart()

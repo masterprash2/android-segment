@@ -108,15 +108,15 @@ open class SegmentStatePagerAdapter(
 
     // ToDO: The lookup algorightm is slow;
     override fun computeItemPosition(inputItem: Any): Int {
-        val id = (inputItem as Page).controller.id()
+        val oldItem = (inputItem as Page).controller
         val itemCount = dataSource.itemCount
         for (i in 0 until itemCount) {
             val item = getItem(i)
-            if (item.id() == id) {
+            if (oldItem == item) {
                 return i
             }
         }
-        return PagerAdapter.POSITION_NONE
+        return POSITION_NONE
     }
 
 

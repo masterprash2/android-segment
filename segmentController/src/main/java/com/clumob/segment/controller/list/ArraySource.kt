@@ -47,6 +47,9 @@ class ArraySource<T : Controller> : ItemControllerSource() {
         val oldItems = controller
         controller = newItems
         beginUpdates()
+        if (isAttached) {
+            newItems.onEach { it.performCreate(itemUpdatePublisher) }
+        }
         if (useDiffProcess) {
             diffResult.dispatchUpdatesTo(this@ArraySource)
         } else {
@@ -61,9 +64,6 @@ class ArraySource<T : Controller> : ItemControllerSource() {
                 notifyItemsChanged(0, newCount)
             }
         }
-        if (isAttached) {
-            newItems.onEach { it.performCreate(itemUpdatePublisher) }
-        }
         endUpdates()
 
         oldItems.removeAll(retained)
@@ -72,11 +72,11 @@ class ArraySource<T : Controller> : ItemControllerSource() {
     }
 
     fun switchItems(items: List<T>?) {
-        switchItems(items, false)
+        switchItems(items, true)
     }
 
-    fun switchItemsWithDiffRemovalAndInsertions(items: MutableList<Controller>?) {
-        switchItems(items, true)
+    fun switchItemsWithoutDiff(items: MutableList<Controller>?) {
+        switchItems(items, false)
     }
 
     private fun diffResults(oldItems: List<ItemControllerWrapper>, newItems: MutableList<ItemControllerWrapper>, retained: MutableSet<ItemControllerWrapper>): DiffUtil.DiffResult {

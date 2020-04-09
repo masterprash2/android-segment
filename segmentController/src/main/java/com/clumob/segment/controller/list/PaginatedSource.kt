@@ -482,4 +482,9 @@ class PaginatedSource(loadingItemController: Controller,
         notifyItemsInserted(0, itemCount)
         bloatPagesOnContentChange()
     }
+
+    override fun destroy() {
+        onDetachFromView()
+        sources.onEach { it.source.destroy() }
+    }
 }

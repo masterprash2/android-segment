@@ -10,6 +10,8 @@ import com.clumob.segment.controller.common.ItemControllerWrapper
 import com.clumob.segment.controller.list.ItemControllerSource
 import com.clumob.segment.controller.list.SourceUpdateEvent
 import com.clumob.segment.view.SegmentViewProvider
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 import java.util.*
 
@@ -21,21 +23,22 @@ open class SegmentStatePagerAdapter(
 
     private val attachedSegments: MutableSet<Page> = HashSet()
     private val mHandler = Handler(Looper.getMainLooper())
+    private val disposable : DisposableObserver<*>
 
     init {
         dataSource.viewInteractor = (createViewInteractor())
-        dataSource.observeAdapterUpdates()
-            .subscribe(object : DisposableObserver<SourceUpdateEvent?>() {
-                override fun onNext(sourceUpdateEvent: SourceUpdateEvent) {
-                    if (sourceUpdateEvent.type == SourceUpdateEvent.Type.UPDATE_ENDS) notifyDataSetChanged()
-                }
+        disposable = object : DisposableObserver<SourceUpdateEvent?>() {
+            override fun onNext(sourceUpdateEvent: SourceUpdateEvent) {
+                if (sourceUpdateEvent.type == SourceUpdateEvent.Type.UPDATE_ENDS) notifyDataSetChanged()
+            }
 
-                override fun onError(e: Throwable) {
-                    e.printStackTrace()
-                }
+            override fun onError(e: Throwable) {
+                e.printStackTrace()
+            }
 
-                override fun onComplete() {}
-            })
+            override fun onComplete() {}
+        }
+        dataSource.observeAdapterUpdates().subscribe(disposable)
     }
 
     init {
@@ -77,6 +80,7 @@ open class SegmentStatePagerAdapter(
     }
 
     override fun destroy() {
+        disposable.dispose()
         dataSource.onDetachFromView()
         super.destroy()
     }

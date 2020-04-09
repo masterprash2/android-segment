@@ -25,4 +25,8 @@ class EmptyItemSource : ItemControllerSource() {
     override fun computeItemCount(): Int {
         return 0
     }
+
+    override fun destroy() {
+
+    }
 }

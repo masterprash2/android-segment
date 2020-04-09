@@ -8,15 +8,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.clumob.segment.adapter.RvAdapter
+import com.clumob.segment.adapter.SegmentStatePagerAdapter
 import com.clumob.segment.controller.common.Controller
 import com.clumob.segment.controller.list.ArraySource
 import com.clumob.segment.controller.list.MultiplexSource
 import com.clumob.segment.manager.SegmentViewHolder
+import se.emilsjolander.flipviewPager.FlipView
+import se.emilsjolander.flipviewPager.OverFlipMode
 
 class TestPageViewHolder(context: Context, layoutInflater: LayoutInflater, parentView: ViewGroup?)
     : SegmentViewHolder(context, layoutInflater, parentView) {
 
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: FlipView
 
     override fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View {
         return layoutInflater.inflate(R.layout.segment_sub_item, viewGroup, false)
@@ -28,8 +31,9 @@ class TestPageViewHolder(context: Context, layoutInflater: LayoutInflater, paren
         Log.d("SEGMENTPAGE", "OnBind -" + this.getController<Controller>().toString().split("@").toTypedArray()[1])
         val multiplexSource = MultiplexSource()
         multiplexSource.addSource(createArraySource())
-        recyclerView.adapter = RvAdapter(RvViewHolderProvider(context, layoutInflater), multiplexSource, this)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = SegmentStatePagerAdapter(multiplexSource,RvViewHolderProvider(context, layoutInflater), this)
+        recyclerView.peakNext(false)
+        recyclerView.overFlipMode = OverFlipMode.RUBBER_BAND
     }
 
     private fun createArraySource(): ArraySource<Controller> {

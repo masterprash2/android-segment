@@ -15,7 +15,6 @@ import com.clumob.segment.manager.SegmentViewHolder
  */
 abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapter(), LifecycleOwner {
 
-    private var detroyed: Boolean = false
     var primaryItem: Page? = null
         private set
     private var parentLifecycleOwner: LifecycleOwner? = lifecycleOwner
@@ -33,7 +32,6 @@ abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapt
     }
 
     open fun destroy() {
-        this.detroyed = true
         detachLifeCycleOwner()
     }
 
@@ -42,13 +40,12 @@ abstract class SegmentPagerAdapter(lifecycleOwner : LifecycleOwner) : PagerAdapt
             val owner = parentLifecycleOwner!!
             parentLifecycleOwner = null
             owner.lifecycle.removeObserver(lifecycleEventObserver)
-            lifecycleEventObserver.onStateChanged(owner, Lifecycle.Event.ON_DESTROY)
+//            lifecycleEventObserver.onStateChanged(owner, Lifecycle.Event.ON_DESTROY)
         }
     }
 
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        if(detroyed) throw IllegalAccessException("Destroyed Adapter cannot be reused.")
         val item = instantiateItemInternal(container, position)
         val segment = retrieveSegmentFromObject(item)
         val view = segment.viewHolder

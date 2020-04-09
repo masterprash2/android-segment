@@ -169,4 +169,9 @@ class MultiplexSource : ItemControllerSource() {
             updateObserver = adapter.observeAdapterUpdates().subscribe(Consumer { event: SourceUpdateEvent -> transformUpdateEvent(event) } as Consumer<SourceUpdateEvent>)
         }
     }
+
+    override fun destroy() {
+        onDetachFromView()
+        adapters.onEach { it.adapter.destroy() }
+    }
 }

@@ -138,4 +138,9 @@ public class WrapperSource extends ItemControllerSource {
         }
     }
 
+    @Override
+    public void destroy() {
+        onDetachFromView();
+        source.destroy();
+    }
 }

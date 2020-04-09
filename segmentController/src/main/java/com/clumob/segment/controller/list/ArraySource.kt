@@ -104,6 +104,11 @@ class ArraySource<T : Controller> : ItemControllerSource() {
             override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
                 return areItemsTheSame(oldPosition, newPosition)
             }
+
+            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any {
+                return oldItems[oldItemPosition]
+            }
+
         }, false)
     }
 
@@ -154,6 +159,10 @@ class ArraySource<T : Controller> : ItemControllerSource() {
     override fun onDetachFromView() {
         compositeDisposable.dispose()
         isAttached = false
+    }
+
+    override fun destroy() {
+        onDetachFromView()
         controller.onEach { it.performDestroy() }
     }
 }

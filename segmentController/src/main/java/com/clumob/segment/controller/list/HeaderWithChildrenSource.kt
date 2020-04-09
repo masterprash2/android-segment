@@ -133,4 +133,10 @@ class HeaderWithChildrenSource : ItemControllerSource() {
             updateObserver = adapter.observeAdapterUpdates().subscribe(Consumer { event: SourceUpdateEvent -> transformUpdateEvent(event) } as Consumer<SourceUpdateEvent>)
         }
     }
+
+    override fun destroy() {
+        onDetachFromView()
+        headerItemSource?.adapter?.destroy()
+        childrenItemSource?.adapter?.destroy()
+    }
 }

@@ -17,7 +17,7 @@ class AdapterListUpdateCallback(private val mAdapter: ItemControllerSource) : Li
         mAdapter.notifyItemsMoved(fromPosition, toPosition)
     }
 
-    override fun onChanged(position: Int, count: Int, payload: Any) {
+    override fun onChanged(position: Int, count: Int, payload: Any?) {
         mAdapter.notifyItemsChanged(position, count)
     }
 

@@ -489,19 +489,6 @@ public class DiffUtil {
         }
     }
 
-    public abstract static class ItemCallback<T> {
-        public ItemCallback() {
-        }
-
-        public abstract boolean areItemsTheSame(T var1, T var2);
-
-        public abstract boolean areContentsTheSame(T var1, T var2);
-
-        public Object getChangePayload(T oldItem, T newItem) {
-            return null;
-        }
-    }
-
     public abstract static class Callback {
         public Callback() {
         }
@@ -513,7 +500,6 @@ public class DiffUtil {
         public abstract boolean areItemsTheSame(int var1, int var2);
 
         public abstract boolean areContentsTheSame(int var1, int var2);
-
 
         public Object getChangePayload(int oldItemPosition, int newItemPosition) {
             return null;

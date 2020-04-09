@@ -105,10 +105,6 @@ class ArraySource<T : Controller> : ItemControllerSource() {
                 return areItemsTheSame(oldPosition, newPosition)
             }
 
-            override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any {
-                return oldItems[oldItemPosition]
-            }
-
         }, false)
     }
 

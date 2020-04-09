@@ -50,7 +50,7 @@ class BatchingListUpdateCallback(val mWrapped: ListUpdateCallback) : ListUpdateC
         mWrapped.onMoved(fromPosition, toPosition)
     }
 
-    override fun onChanged(position: Int, count: Int, payload: Any) {
+    override fun onChanged(position: Int, count: Int, payload: Any?) {
         if (mLastEventType == 3 && position <= mLastEventPosition + mLastEventCount && position + count >= mLastEventPosition && mLastEventPayload === payload) {
             val previousEnd = mLastEventPosition + mLastEventCount
             mLastEventPosition = Math.min(position, mLastEventPosition)

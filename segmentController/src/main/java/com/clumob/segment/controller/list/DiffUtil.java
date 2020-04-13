@@ -399,9 +399,11 @@ public class DiffUtil {
                         case 8:
                             int pos = this.mNewItemStatuses[globalIndex + i] >> 5;
                             update = removePostponedUpdate(postponedUpdates, pos, true);
-                            updateCallback.onMoved(update.currentPos, start);
-                            if (status == 4) {
-                                updateCallback.onChanged(start, 1, this.mCallback.getChangePayload(pos, globalIndex + i));
+                            if(update != null) {
+                                updateCallback.onMoved(update.currentPos, start);
+                                if (status == 4) {
+                                    updateCallback.onChanged(start, 1, this.mCallback.getChangePayload(pos, globalIndex + i));
+                                }
                             }
                             break;
                         case 16:
@@ -440,9 +442,11 @@ public class DiffUtil {
                         case 8:
                             int pos = this.mOldItemStatuses[globalIndex + i] >> 5;
                             update = removePostponedUpdate(postponedUpdates, pos, false);
-                            updateCallback.onMoved(start + i, update.currentPos - 1);
-                            if (status == 4) {
-                                updateCallback.onChanged(update.currentPos - 1, 1, this.mCallback.getChangePayload(globalIndex + i, pos));
+                            if (update != null) {
+                                updateCallback.onMoved(start + i, update.currentPos - 1);
+                                if (status == 4) {
+                                    updateCallback.onChanged(update.currentPos - 1, 1, this.mCallback.getChangePayload(globalIndex + i, pos));
+                                }
                             }
                             break;
                         case 16:

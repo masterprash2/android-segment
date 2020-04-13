@@ -14,7 +14,7 @@ class BatchingListUpdateCallback(val mWrapped: ListUpdateCallback) : ListUpdateC
             when (mLastEventType) {
                 1 -> mWrapped.onInserted(mLastEventPosition, mLastEventCount)
                 2 -> mWrapped.onRemoved(mLastEventPosition, mLastEventCount)
-                3 -> mWrapped.onChanged(mLastEventPosition, mLastEventCount, mLastEventPayload!!)
+                3 -> mWrapped.onChanged(mLastEventPosition, mLastEventCount, mLastEventPayload)
             }
             mLastEventPayload = null
             mLastEventType = 0

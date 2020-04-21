@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 import com.clumob.segment.manager.Segment.SegmentState
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class SegmentView @JvmOverloads constructor
+class SegmentViewLayout @JvmOverloads constructor
 (
         context: Context,
         attrs: AttributeSet? = null,

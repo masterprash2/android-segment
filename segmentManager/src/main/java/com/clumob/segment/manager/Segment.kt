@@ -16,8 +16,8 @@ import com.clumob.segment.view.SegmentViewProvider
 /**
  * Created by prashant.rathore on 02/02/18.
  */
-open class Segment(private val controller: Controller,
-                   private val screenFactory: SegmentViewProvider) : LifecycleOwner {
+open class Segment(protected val controller: Controller,
+                   protected val screenFactory: SegmentViewProvider) : LifecycleOwner {
 
     var mLifecycleRegistry = LifecycleRegistry(this)
 

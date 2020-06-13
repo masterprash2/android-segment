@@ -31,10 +31,11 @@ abstract class SegmentViewHolder(val context: Context,
     private var parentLifecycleObserver: LifecycleObserver? = null
 
 
-    private var controller: Controller? = null
+    private var controllerInternal: Controller? = null
         private set
 
-    fun <T : Controller> getController() : T = (controller as T)
+    protected open val controller : Controller
+        get() = controllerInternal!!
 
     private val segmentLifecycleListeners: MutableList<SegmentLifecycle> = LinkedList()
     private var currentState = SegmentViewState.FRESH
@@ -118,9 +119,9 @@ abstract class SegmentViewHolder(val context: Context,
     protected abstract fun createView(layoutInflater: LayoutInflater, viewGroup: ViewGroup?): View
 
 
-    fun bind(controller: Controller) {
+    internal fun bind(controller: Controller) {
         currentState = SegmentViewState.CREATE
-        this.controller = controller
+        this.controllerInternal = controller
         for (lifecycle in segmentLifecycleListeners) {
             lifecycle.onCreate(null)
         }

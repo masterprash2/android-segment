@@ -24,8 +24,9 @@ class SegmentViewLayout @JvmOverloads constructor
     fun setSegment(segment: Segment) {
         if (this.segment !== segment) {
             if (this.segment != null) {
-                if (segment.getBoundedView() != null) removeView(segment.getBoundedView()!!.view)
-                segment.onDestroy()
+                if (this.segment!!.getBoundedView() != null)
+                    removeView(this.segment!!.getBoundedView()!!.view)
+                this.segment!!.onDestroy()
             }
             this.segment = segment
             if (this.segment != null) {
